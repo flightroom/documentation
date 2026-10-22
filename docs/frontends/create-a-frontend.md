@@ -1,20 +1,20 @@
 ---
 sidebar_position: 2
-title: Create a microfrontend
-sidebar_label: Create a microfrontend
-description: Add a microfrontend from a template, which scaffolds a repository and a build pipeline for you, or by registering code that already exists elsewhere.
-keywords: [create microfrontend, templates, scaffolding, registration]
+title: Create a frontend
+sidebar_label: Create a frontend
+description: Add a frontend from a template, which scaffolds a repository and a build pipeline for you, or by registering code that already exists elsewhere.
+keywords: [create frontend, templates, scaffolding, registration]
 ---
 
-# Create a microfrontend
+# Create a frontend
 
-There are two ways to add a microfrontend to a project: start from a **template**, which
-scaffolds a working repository and a build pipeline for you, or register a microfrontend whose
+There are two ways to add a frontend to a project: start from a **template**, which
+scaffolds a working repository and a build pipeline for you, or register a frontend whose
 code already exists somewhere else.
 
 ## From a template (recommended)
 
-This is the fastest path from nothing to a deployable microfrontend. Flightroom creates
+This is the fastest path from nothing to a deployable frontend. Flightroom creates
 the repository in your Git provider, fills it with a working Module Federation project, adds a
 build-and-deploy pipeline, and injects the API key the pipeline needs to upload artifacts back
 to the platform.
@@ -27,13 +27,13 @@ A connected code repository. If you have not connected one yet, follow
 
 ### Steps
 
-1. From the **Microfrontends** page, click **Add New Microfrontend**. Next to it,
+1. From the **Frontends** page, click **Add New Frontend**. Next to it,
    **Import from repository** takes the other route, starting from code you already have.
 
-   ![The Microfrontends page header with the search field, the domain filter, the view switcher and the Add New Microfrontend button](../assets/add-new-microfrontend.png)
+   ![The Frontends page header with the search field, the domain filter, the view switcher and the Add New Frontend button](../assets/add-new-frontend.png)
 
    Both depend on a connected code repository. Without one, **Import from repository** is hidden and
-   **Add New Microfrontend** skips the templates library and opens the empty form directly — the
+   **Add New Frontend** skips the templates library and opens the empty form directly — the
    [from scratch](#from-scratch) route.
 
 2. Choose a template from the [templates library](../templates/templates-library.md), which opens
@@ -43,36 +43,36 @@ A connected code repository. If you have not connected one yet, follow
 
    ![The templates library page: the framework, compiler and type filters above the template cards grouped by framework](../assets/choose-a-template.png)
 
-3. Fill in the microfrontend details. The form is the same one you get when editing later, minus
+3. Fill in the frontend details. The form is the same one you get when editing later, minus
    the danger zone: a **Release** card on top, then the tabs.
 
    **Release**
 
-   - **Version** — required, the version this microfrontend starts on. Pre-filled with `1.0.0`
+   - **Version** — required, the version this frontend starts on. Pre-filled with `1.0.0`
    - **Canary Settings** — off by default, and there is no reason to turn it on while creating.
      When you do, the type starts on **Session** and the deployment type on **Based on Version**.
      See [canary releases](./canary-releases.md)
 
    **General**
 
-   - **Kind** — **Microfrontend** (served by Flightroom, the default) or **Frontend** (served by
-     its Docker container). See [Microfrontend or Frontend](#microfrontend-or-frontend)
+   - **Kind** — **Bundle** (served by Flightroom, the default) or **Docker** (served by
+     its Docker container). See [Bundle or Docker](#bundle-or-docker)
    - **Name** — the display name, 3 to 100 characters
    - **Slug** — 3 to 50 characters. While you type the name, the slug is derived from it: lowercase,
      with every character other than a letter or a digit turned into `-`. You can still edit it
      before saving. It ends up in your public URLs, so choose carefully
    - **Description** — optional
    - **Domain** — optional, the [functional domain](../core-concepts.md#functional-domain) the
-     microfrontend belongs to
+     frontend belongs to
 
    ![The creation form: the Release card with the version, then the General tab with kind, name Wishlist, slug wishlist, description and domain](../assets/frontend-fill-information.png)
 
-   **AI context** — optional Markdown notes for the AI agents that work on this microfrontend, at
-   most 20,000 characters. What applies to every microfrontend belongs in the project context, in
+   **AI context** — optional Markdown notes for the AI agents that work on this frontend, at
+   most 20,000 characters. What applies to every frontend belongs in the project context, in
    **Settings**.
 
-   **Hosting** — see [hosting options](./hosting-options.md). A **Frontend** has a **Container** tab
-   here instead.
+   **Hosting** — see [hosting options](./hosting-options.md). A **Docker** frontend has a **Container**
+   tab here instead.
 
    **Repository** — only shown when the project has a code repository connection. Created from a
    template, its **Code Repository** switch is already on:
@@ -95,9 +95,9 @@ Creating from a template is not just a `git init`. Flightroom:
 2. **Downloads the template** archive and pushes its contents as the initial commit.
 3. **Injects a build pipeline** matching your provider and compiler — a GitHub Actions workflow
    (`.github/workflows/build-and-deploy.yml`), a GitLab CI file (`.gitlab-ci.yml`) or an Azure
-   DevOps pipeline (`azure-pipelines.yml`). The pipeline is pre-filled with your microfrontend's
+   DevOps pipeline (`azure-pipelines.yml`). The pipeline is pre-filled with your frontend's
    slug and the API base URL of this installation.
-4. **Registers the microfrontend** in the project, linked to the new repository, with the
+4. **Registers the frontend** in the project, linked to the new repository, with the
    template's entry point and stack.
 
 The pipeline authenticates its upload with the secret `MICROFRONTEND_ORCHESTRATOR_API_KEY`. Most of
@@ -117,7 +117,7 @@ with an authentication error, that is the first thing to check.
 
 ## From scratch
 
-Pick **Create From Scratch** in the templates library — or click **Add New Microfrontend** in a
+Pick **Create From Scratch** in the templates library — or click **Add New Frontend** in a
 project with no code repository connection — when the code already exists, or when you want to
 bring your own project layout. You fill in the same release and general information, plus the
 hosting configuration:
@@ -132,56 +132,56 @@ See [Hosting options](./hosting-options.md) for the details of each, and
 The **Code Repository** switch of the **Repository** tab starts off. Turned on at creation, it
 creates a **new, empty** repository; there is no template to push and no pipeline to add. To link a
 repository that already exists, save first and pick it under **Select Repository** when editing, or
-use **Import from repository** on the Microfrontends page, which creates one microfrontend for each
-repository you tick among those of a connection — repositories already linked to a microfrontend or
+use **Import from repository** on the Frontends page, which creates one frontend for each
+repository you tick among those of a connection — repositories already linked to a frontend or
 a service are skipped. A linked repository enables the
-**Build** action on the microfrontend card, but Flightroom will not add a pipeline to a repository
+**Build** action on the frontend card, but Flightroom will not add a pipeline to a repository
 it did not create. To use the same automation, copy the relevant pipeline from the
 [template-pipelines repository](https://github.com/mfe-orchestrator/template-pipelines); the API key
 it needs is usually already there from the connection (see above), and otherwise you
 [create one](../ci-cd/api-keys.md) yourself.
 
-## Microfrontend or Frontend
+## Bundle or Docker
 
 The **Kind** at the top of the **General** tab decides who serves the code:
 
-| | Microfrontend | Frontend |
+| | Bundle | Docker |
 | --- | --- | --- |
 | Served by | Flightroom, from the hub, your bucket or a custom URL | Its own Docker container |
 | Configured in | **Hosting** tab | **Container** tab — runtime, image, URLs, environment, config maps and secrets, as for a [service](../kubernetes/services.md) |
 | Version | Chosen in **Release** | Read-only: set by the pipeline each time it registers an image version |
 | Canary | Available | None: Flightroom cannot split the traffic of a container |
 | Parents | Any | None. It cannot be the remote of a host, so in the Diagram view no link can end on it |
-| Bundle upload | Accepted | Refused with `FRONTEND_UPLOAD_NOT_ALLOWED`: its pipeline registers the image of each version instead |
+| Bundle upload | Accepted | Refused with `DOCKER_FRONTEND_UPLOAD_NOT_ALLOWED`: its pipeline registers the image of each version instead |
 
-A microfrontend created under a parent — from a link dropped on empty canvas in the Diagram view —
-is always a **Microfrontend**, and one that already has parents cannot be switched to **Frontend**.
-The templates scaffold a pipeline that uploads a bundle: pick **Frontend** on a template and the
+A frontend created under a parent — from a link dropped on empty canvas in the Diagram view —
+is always a **Bundle**, and one that already has parents cannot be switched to **Docker**.
+The templates scaffold a pipeline that uploads a bundle: pick **Docker** on a template and the
 form warns you to change the pipeline so it builds the Docker image and registers its version.
 
-A Frontend never appears in the manifest of [`/serve/all`](../integration/serve-api.md): no host
+A Docker frontend never appears in the manifest of [`/serve/all`](../integration/serve-api.md): no host
 loads it as a remote.
 
-## Editing a microfrontend
+## Editing a frontend
 
-Opening a microfrontend from its card leads to the same form in edit mode — directly through
+Opening a frontend from its card leads to the same form in edit mode — directly through
 **Configuration**, or, when the card offers **Edit with AI**, through the **Details & settings** tab
 next to the AI workspace. **Release** sits at the top, outside the tabs, because the version and the
 canary are what decide which bytes a browser gets; everything else is behind a tab:
 
 | Where | Contains |
 | --- | --- |
-| Release (above the tabs) | Version, and **Canary Settings** — progressive rollout, see [Canary releases](./canary-releases.md). A Frontend shows its version read-only and no canary |
+| Release (above the tabs) | Version, and **Canary Settings** — progressive rollout, see [Canary releases](./canary-releases.md). A Docker frontend shows its version read-only and no canary |
 | General | Kind, name, slug (read-only), description, domain |
 | AI context | Markdown notes for AI agents, at most 20,000 characters |
-| Hosting | Hosting type, storage or URL, entry point. **Container** instead, for a Frontend |
+| Hosting | Hosting type, storage or URL, entry point. **Container** instead, for a Docker frontend |
 | Repository | The linked repository — only when the project has a code repository connection |
-| Danger Zone | Delete this microfrontend |
+| Danger Zone | Delete this frontend |
 
 In **Repository**, **Select Repository** lists the repositories of the chosen connection, so you can
 link one or change it. Once a repository is linked and saved, **Rename repository** renames it at the
 provider; local clones then have to update their remote URL — GitHub and GitLab redirect the old one,
-Azure DevOps does not. The card of a microfrontend with a linked repository also carries **Clone
+Azure DevOps does not. The card of a frontend with a linked repository also carries **Clone
 repo**, with the HTTPS and SSH clone commands and shortcuts to clone in VS Code or IntelliJ IDEA.
 
 Switching tab keeps what you typed: every panel stays mounted, so a value entered under **Hosting**
@@ -189,7 +189,7 @@ survives a detour through **General**. A tab whose fields failed validation is m
 and submitting an invalid form jumps to the first one — an error is never hidden behind an inactive
 tab.
 
-![The Add New Microfrontend form: the Release card with the version and the canary switch, above the General, AI context and Hosting tabs](../assets/microfrontend-form.png)
+![The Add New Frontend form: the Release card with the version and the canary switch, above the General, AI context and Hosting tabs](../assets/frontend-form.png)
 
 Remember that edits take effect for your users only after the next
 [deployment](../deployments/overview.md).

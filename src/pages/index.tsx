@@ -60,7 +60,7 @@ const AI_REQUEST = `Expenses › Edit with AI
   travel policy and flags the ones over the limit.
 
 Proposed   expense-review     service · Python & FastAPI
-Proposed   expenses           microfrontend · React (Vite)
+Proposed   expenses           frontend · React (Vite)
 
 ✓ 2 repositories created from templates, CI included
 ✓ First version pushed to an ai/… branch of each
@@ -247,7 +247,7 @@ const DOC_SECTIONS: DocSection[] = [
     title: 'Templates',
     links: [
       {label: 'Service templates', to: '/docs/templates/service-templates'},
-      {label: 'Microfrontend templates', to: '/docs/templates/templates-library'},
+      {label: 'Frontend templates', to: '/docs/templates/templates-library'},
     ],
   },
   {
@@ -259,11 +259,11 @@ const DOC_SECTIONS: DocSection[] = [
     ],
   },
   {
-    title: 'Microfrontends',
+    title: 'Frontends',
     links: [
-      {label: 'Quick start', to: '/docs/microfrontends/quick-start'},
-      {label: 'Overview', to: '/docs/microfrontends/overview'},
-      {label: 'Hosts and remotes', to: '/docs/microfrontends/host-and-remotes'},
+      {label: 'Quick start', to: '/docs/frontends/quick-start'},
+      {label: 'Overview', to: '/docs/frontends/overview'},
+      {label: 'Hosts and remotes', to: '/docs/frontends/host-and-remotes'},
       {label: 'Deployments', to: '/docs/deployments/overview'},
       {label: 'Module Federation', to: '/docs/integration/overview'},
       {label: 'Storage', to: '/docs/buckets/overview'},
@@ -506,7 +506,7 @@ function Ecosystem() {
   return (
     <section className={styles.sectionNarrow}>
       <p className={styles.ecosystemLabel}>
-        Composing web interfaces with Module Federation? Microfrontends served
+        Composing web interfaces with Module Federation? Frontends served
         by Flightroom keep their versions, canary releases and one-click
         rollback, with templates for Vite, Webpack and Web Components.
       </p>
@@ -515,8 +515,8 @@ function Ecosystem() {
           <Logo key={logo.alt} {...logo} />
         ))}
       </div>
-      <Link className={styles.inlineLink} to="/docs/microfrontends/quick-start">
-        Microfrontend quick start →
+      <Link className={styles.inlineLink} to="/docs/frontends/quick-start">
+        Frontend quick start →
       </Link>
     </section>
   );

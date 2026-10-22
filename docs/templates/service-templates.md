@@ -60,7 +60,7 @@ The templates are MIT licensed and live on GitHub as `flightroom/template-servic
 
 ## Web interfaces
 
-Web interfaces start from the [microfrontend templates library](./templates-library.md): React,
+Web interfaces start from the [frontend templates library](./templates-library.md): React,
 Angular and Vue with Vite or Webpack, plus Web Component, single-spa and micro-lc. When the AI
 generates a domain, it proposes a template for each component, and you can change it before
 anything is created.

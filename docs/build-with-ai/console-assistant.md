@@ -8,7 +8,7 @@ keywords: [maestro, assistant, ai agent, chat, confirmation, audit]
 
 # Maestro, the console assistant
 
-**Maestro** is the AI assistant of the console. It looks up and changes the microfrontends, services,
+**Maestro** is the AI assistant of the console. It looks up and changes the frontends, services,
 builds, deployments, environments and variables of the project you have open, and searches the
 Flightroom documentation. It acts **as you**: with your permissions, on the current project only.
 
@@ -16,7 +16,7 @@ Maestro is available when the project can use at least one [AI](./ai-models.md).
 hidden.
 
 The console opens on Maestro (`/assistant`) when you sign in. In a project without an AI it opens on
-**Microfrontends** instead.
+**Frontends** instead.
 
 ![The Maestro page answering a project overview request, with the tools it called and Recent conversations on the right](../assets/assistant-overview.png)
 
@@ -63,7 +63,7 @@ Actions that need confirmation include:
 - scaffolding a repository from a template, renaming a repository;
 - setting canary users.
 
-The card names what the action acts on (users, environments, microfrontends with version and host,
+The card names what the action acts on (users, environments, frontends with version and host,
 services, domains, the AI change with its request and files) instead of raw ids. A deploy card shows,
 for each environment, which versions, hosts and variables change compared with the active deployment.
 **Input sent by Maestro** shows exactly what the model asked for.
@@ -72,7 +72,7 @@ A card can be answered **once** and **expires after 15 minutes**. After that, as
 
 ## Starting AI code changes
 
-The **New AI job** button in the panel starts an agent on microfrontends and services you pick,
+The **New AI job** button in the panel starts an agent on frontends and services you pick,
 across domains. Jobs open as tabs in Maestro, where you follow them, chat with the agent and apply
 the proposals. See [Change code with AI](./ai-changes.md#change-several-components-outside-a-domain).
 

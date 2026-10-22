@@ -88,7 +88,7 @@ This shows all resources that will be created, including:
 
 There are no `docker_volume` resources: each container gets a **host bind mount** under
 `${path.root}/volumes/` — `volumes/mongodb`, `volumes/redis` and `volumes/mfe-orchestrator` for the
-uploaded microfrontends, mounted at `/var/microfrontends` in the container (the module sets
+uploaded frontends, mounted at `/var/microfrontends` in the container (the module sets
 `MICROFRONTEND_HOST_FOLDER` to match). The directories are created next to the root module, so the state of the
 installation lives in your working copy and is deleted with it.
 
