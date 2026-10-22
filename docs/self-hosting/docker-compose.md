@@ -68,7 +68,7 @@ services:
       REDIS_URL: redis://redis:6379
       MICROFRONTEND_HOST_FOLDER: /upload-microfrontends
       # Once a day this installation sends an anonymous ping with aggregate
-      # counters only (version, number of projects/microfrontends/environments/
+      # counters only (version, number of projects/frontends/environments/
       # users, deployments of the last week). No names, no URLs, no personal
       # data. Uncomment the line below to turn it off.
       # TELEMETRY_DISABLED: "true"

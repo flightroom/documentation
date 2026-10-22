@@ -2,7 +2,7 @@
 sidebar_position: 4
 title: Store builds on Google Cloud Storage
 sidebar_label: Google Cloud Storage
-description: Connect a Google Cloud Storage bucket to Flightroom with a service account JSON key, so microfrontend builds are stored in your own Google Cloud project.
+description: Connect a Google Cloud Storage bucket to Flightroom with a service account JSON key, so frontend builds are stored in your own Google Cloud project.
 keywords: [google cloud storage, gcs, service account, object storage]
 ---
 
@@ -19,7 +19,7 @@ Flightroom authenticates to Google Cloud Storage with a **service account JSON k
 
 In the Cloud console, open **Cloud Storage → Buckets → Create**:
 
-- **Name** — globally unique, e.g. `acme-microfrontends`
+- **Name** — globally unique, e.g. `acme-frontends`
 - **Location** — a region close to your users
 - **Storage class** — Standard
 - **Access control** — **Uniform** (simpler and recommended; IAM only, no per-object ACLs)
@@ -81,7 +81,7 @@ Storage**:
 | Field | Value |
 | --- | --- |
 | **Name** | A label, e.g. *Production GCS* |
-| **Bucket Name** | `acme-microfrontends` |
+| **Bucket Name** | `acme-frontends` |
 | **Path** | Optional prefix inside the bucket, e.g. `mfe` |
 | **Service Account JSON Key** | Paste the **entire contents** of the JSON key file |
 
@@ -93,13 +93,13 @@ Cloud Storage. Paste the whole JSON document, not just the private key — the p
 
 Click **Test connection** to check the key and the permissions before saving, then **Create**.
 
-## Step 6: Point a microfrontend at it
+## Step 6: Point a frontend at it
 
-Open a microfrontend, set **Hosting type** to **Custom Source**, select this storage, and save. New
+Open a frontend, set **Hosting type** to **Custom Source**, select this storage, and save. New
 versions land at:
 
 ```
-<path>/<projectSlug>-<projectId>/<microfrontendSlug>/<version>/…
+<path>/<projectSlug>-<projectId>/<frontendSlug>/<version>/…
 ```
 
 Then [deploy](../deployments/overview.md) the environment.
@@ -130,7 +130,7 @@ Check the bucket name for typos, and that the service account belongs to a proje
 
 **Files upload but the app 404s**
 
-Check the **Entry Point** on the microfrontend. Vite Module Federation emits
+Check the **Entry Point** on the frontend. Vite Module Federation emits
 `assets/remoteEntry.js`; browse the version prefix in the Cloud console to see the actual layout.
 
 ## Key rotation

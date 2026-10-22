@@ -58,7 +58,7 @@ For a given project, the question *can this user open it?* has exactly two ways 
 
 If neither holds, the project is not returned in any listing and every endpoint touching it is
 refused. The rule lives in a single gate shared by every backend service, so it applies uniformly to
-microfrontends, environments, variables, storages, repositories, builds and deployments — there is
+frontends, environments, variables, storages, repositories, builds and deployments — there is
 no endpoint where it was forgotten.
 
 | Organization role | Project membership | Result |
@@ -68,7 +68,7 @@ no endpoint where it was forgotten.
 | Member | Admin | Reaches that project only, with full rights on it, members included |
 | Member | Editor | Reaches that project only; cannot manage its members or change its delivery settings |
 | Member | Viewer | Reaches that project only; on top of the Editor's limits, cannot write to its Git provider or its cloud |
-| Member | Editor / Viewer on **Specific domains** | As above, and confined to the microfrontends and services of the domains they were given |
+| Member | Editor / Viewer on **Specific domains** | As above, and confined to the frontends and services of the domains they were given |
 | Member | none | Does not reach the project at all |
 | none | any | Does not reach the project at all |
 
@@ -76,11 +76,11 @@ no endpoint where it was forgotten.
 The project role is enforced on a defined set of actions. Managing the members of a project needs a
 project **Admin** of the whole project, or an organization Owner or Admin. A **Viewer** is refused
 committing to the GitOps repositories, creating, editing or deleting storages and databases, and
-creating a code repository — including the one created with a new microfrontend or service. An
+creating a code repository — including the one created with a new frontend or service. An
 organization Owner or Admin is never refused any of these, whatever their project role.
 
 Everything outside that set is still open to whoever reaches the project, Viewers included —
-renaming it, editing microfrontends, environments and variables among others. So a Viewer is not
+renaming it, editing frontends, environments and variables among others. So a Viewer is not
 read-only. The full list is in
 [What the role decides](../project-settings/users-and-roles.md#what-the-role-decides); keep somebody
 out of the project, or out of the organization, if they must not change it at all.

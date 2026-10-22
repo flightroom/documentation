@@ -1,22 +1,22 @@
 ---
 sidebar_position: 3
-title: Build status of your microfrontends
+title: Build status of your frontends
 sidebar_label: Build status
-description: "The Builds page collects the CI runs of every microfrontend of a project in one table, next to the version each environment serves, and streams status live."
+description: "The Builds page collects the CI runs of every frontend of a project in one table, next to the version each environment serves, and streams status live."
 keywords: [builds, ci status, pipeline, github actions, gitlab pipelines, azure devops, server-sent events]
 ---
 
 # Build status
 
-Every microfrontend is built by the CI of the provider its repository lives on. Without a place
+Every frontend is built by the CI of the provider its repository lives on. Without a place
 that collects those runs, checking whether the last pipeline passed means one browser tab per
 repository.
 
-The **Builds** page is that place: one row per microfrontend and per backend service, the outcome
+The **Builds** page is that place: one row per frontend and per backend service, the outcome
 of its latest run, the recent history behind it, and the version each environment is currently
 serving.
 
-![The Builds page: one row per microfrontend and backend service, with its type, last build, last built version and the version each environment serves](../assets/builds-page.png)
+![The Builds page: one row per frontend and backend service, with its type, last build, last built version and the version each environment serves](../assets/builds-page.png)
 
 :::info[Nothing is stored]
 The runs are read from the providers when you open the page, and re-read while you keep it open.
@@ -26,17 +26,17 @@ nothing more.
 
 ## Reading the table
 
-One row per microfrontend of the current project, then one per backend service, each group sorted
+One row per frontend of the current project, then one per backend service, each group sorted
 by name:
 
 | Column | Content |
 | --- | --- |
 | **Name** | Name and slug |
-| **Type** | **Frontend** for a microfrontend, **Backend** for a service |
+| **Type** | **Frontend** or **Backend** (a service) |
 | **Last build** | Status label of the most recent run, with a link to it on the provider, or why no run could be read |
 | **Tag / branch** | The ref that run was started from, tags included |
 | **Last built version** | The most recent version whose bundle actually reached the platform |
-| One column per environment | The version that environment serves — for a microfrontend, taken from its **active deployment** |
+| One column per environment | The version that environment serves — for a frontend, taken from its **active deployment** |
 
 The environment columns come after the fixed ones, in the order the environments are configured on
 the project, and the production one is flagged with a badge.
@@ -47,13 +47,13 @@ Three version columns sound redundant until an incident makes the difference mat
 - The **environment columns** are what a [deployment](./overview.md) froze. A deployment ships a
   fixed set of versions, so an environment keeps serving what it was given even after a newer
   bundle exists.
-- Expand a row and a third one appears, the **selected version**: what the microfrontend currently
+- Expand a row and a third one appears, the **selected version**: what the frontend currently
   points at, which is what the next deployment would pick up.
 
 A newer *last built version* than the one in the production column is not a fault — it is the gap
 between "built" and "deployed", and this page is where you see it.
 
-Expanding a row also shows the repository the microfrontend is linked to and the **last five runs**
+Expanding a row also shows the repository the frontend is linked to and the **last five runs**
 of that repository, newest first, each with its status, ref, workflow name, start moment, who
 started it, and a link to the run on the provider. *Who started it* never appears on GitLab: the
 pipelines list endpoint does not carry it, so the field is left unset and the run is shown without
@@ -91,18 +91,18 @@ A row without runs says why, instead of showing an empty history:
 
 | Reason | Shown as | Cause |
 | --- | --- | --- |
-| `NO_REPOSITORY` | No linked repository | No code repository is connected to the microfrontend or service, or the connection is disabled |
+| `NO_REPOSITORY` | No linked repository | No code repository is connected to the frontend or service, or the connection is disabled |
 | `REPOSITORY_NOT_FOUND` | Linked repository not found | It points at a code repository connection that no longer exists |
 | `PROVIDER_ERROR` | Unable to read builds from the provider | The provider call failed — revoked token, network error, missing Azure configuration |
 
 `PROVIDER_ERROR` is confined to the row that produced it: one unreachable provider never blanks the
-page, and the row keeps its versions. A microfrontend whose repository is reachable but has never
+page, and the row keeps its versions. A frontend whose repository is reachable but has never
 run a pipeline carries no reason at all and an empty run list.
 
 ## Where the runs come from
 
 The runs are read through the [code repository connection](../repositories/connect/github.md) the
-microfrontend points at, with the token stored on that connection:
+frontend points at, with the token stored on that connection:
 
 | Provider | Addressed by | Read from |
 | --- | --- | --- |
@@ -141,7 +141,7 @@ Both endpoints are authenticated and scoped to the project carried by the `Proje
 | `GET` | `/api/builds/stream` | The same snapshot, pushed over SSE as it changes |
 
 Neither takes a query parameter or a body. The snapshot carries the environments of the project,
-then a `microfrontends` and a `services` list; each entry has its `selectedVersion`,
+then a `frontends` and a `services` list; each entry has its `selectedVersion`,
 `latestBuiltVersion`, a `versionByEnvironmentId` map and up to five `builds`, and one that could not
 be read carries `unavailableReason` and an empty `builds`. For a service, `latestBuiltVersion` is the
 last image its CI registered and the environment versions are the latest deploys its pipeline
@@ -155,7 +155,7 @@ cannot send any of them. Consume the stream with `fetch`, as the console does.
 
 ## Limits worth knowing
 
-- Only the **last five runs** per microfrontend are read, and only for the repository as a whole.
+- Only the **last five runs** per frontend are read, and only for the repository as a whole.
 - On Azure DevOps only builds of **Azure Repos Git** repositories are matched; a pipeline defined
   on a repository hosted elsewhere is not listed.
 - Nothing is persisted: no trend, no duration, no failure rate.
@@ -165,6 +165,6 @@ cannot send any of them. Consume the stream with `fetch`, as the console does.
 
 ## Where to go next
 
-- [Versions and builds](../microfrontends/versions-and-builds.md) — how a version comes into
+- [Versions and builds](../frontends/versions-and-builds.md) — how a version comes into
   existence and reaches the platform
 - [Deployments overview](./overview.md) — turning built versions into what an environment serves

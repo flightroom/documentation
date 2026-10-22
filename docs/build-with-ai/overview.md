@@ -23,9 +23,9 @@ Flightroom already manages:
 
 | What you ask for | What it is in the console |
 | --- | --- |
-| The web interface of an app | A **microfrontend**. Its **Kind** is *Microfrontend* (served by Flightroom) or *Frontend* (served by its Docker container) |
+| The web interface of an app | A **frontend**. Its **Kind** is *Bundle* (served by Flightroom) or *Docker* (served by its Docker container) |
 | The backend or API of an app | A **service**, listed under **Backend services** |
-| An app as a whole | A **functional domain** (**Domains** in the sidebar), which groups the microfrontends and services of one business capability |
+| An app as a whole | A **functional domain** (**Domains** in the sidebar), which groups the frontends and services of one business capability |
 | An AI agent | A **service** whose code the AI writes to call an AI model and your systems |
 
 An agent has no separate runtime. It is a service like any other: it lives in its repository, goes
@@ -51,7 +51,7 @@ Once the proposal is ready you choose: **Apply** it to the base branch, **Open a
 | Starting point | Where | Page |
 | --- | --- | --- |
 | A new app from nothing | An empty functional domain, **Edit with AI** tab | [Generate a domain](./generate-a-domain.md) |
-| A change to a microfrontend, a service or a whole domain | Its **Edit with AI** tab | [Change code with AI](./ai-changes.md) |
+| A change to a frontend, a service or a whole domain | Its **Edit with AI** tab | [Change code with AI](./ai-changes.md) |
 | Questions and actions on the project, in a chat | **Maestro**, ⌘J / Ctrl+J or **AI agent** in the sidebar | [Console assistant](./console-assistant.md) |
 | Your own AI client (Claude, ChatGPT, Gemini, Cursor…) | The Flightroom MCP server, on installations that turn it on | [MCP server](./mcp-server.md) |
 
@@ -71,7 +71,7 @@ An administrator prepares the ground; after that, project members build.
    conventions, rules), up to 20,000 characters each:
    - for the whole project, in **Settings → General → Project AI context**;
    - for a functional domain, in the **AI context** field of the domain form;
-   - for a microfrontend or a service, in its **AI context** tab.
+   - for a frontend or a service, in its **AI context** tab.
 
    The agent always receives the context of what it works on, of its domain and of the project.
 
@@ -97,7 +97,7 @@ apply or discard one. Elsewhere in the console the project role is still a label
 ## From the branch to production
 
 The AI's work ends in your repository. From there the usual path applies: CI builds the branch you
-merged or applied to, and you deploy the result to an environment. To run your microfrontends and
+merged or applied to, and you deploy the result to an environment. To run your frontends and
 services on your own cluster, see [Deploy to Kubernetes](../kubernetes/overview.md).
 
 ## Where to go next

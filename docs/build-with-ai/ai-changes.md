@@ -2,24 +2,24 @@
 sidebar_position: 3
 title: Change code with AI
 sidebar_label: Change code with AI
-description: "Ask for a change to a microfrontend, a service or a whole domain: the agent proposes it on a branch, you refine it in a chat, then apply it, open a pull request or discard it."
+description: "Ask for a change to a frontend, a service or a whole domain: the agent proposes it on a branch, you refine it in a chat, then apply it, open a pull request or discard it."
 keywords: [edit with ai, ai change, proposal, pull request, merge request, apply, discard, feature branch]
 ---
 
 # Change code with AI
 
-Every microfrontend, service and functional domain opens on its **Edit with AI** tab. There you
+Every frontend, service and functional domain opens on its **Edit with AI** tab. There you
 describe a change, an agent proposes it on a branch of the repository, and you decide what to do
 with it. The other tabs are:
 
 | Opened on | Tabs |
 | --- | --- |
-| A microfrontend | **Edit with AI**, **Details & settings** |
+| A frontend | **Edit with AI**, **Details & settings** |
 | A service | **Edit with AI**, **Overview**, **Details & settings** |
 | A [functional domain](../domains/overview.md) | **Edit with AI**, **Structure** |
 
 It is available when the project can use an [AI](./ai-models.md) and what you are changing has a
-code repository linked. Otherwise, on a microfrontend or a service the **Edit with AI** tab is
+code repository linked. Otherwise, on a frontend or a service the **Edit with AI** tab is
 hidden and the page opens on **Details & settings** (on **Overview** for a service). A domain always
 shows the tab: without an AI it reads *AI editing is not available in this project: the organization
 has no AI it can use.*
@@ -109,7 +109,7 @@ fresh one from the base branch.
 
 ## Change a whole domain
 
-**Edit with AI** on a functional domain starts **one agent on every microfrontend and service of the
+**Edit with AI** on a functional domain starts **one agent on every frontend and service of the
 domain that has a code repository**, at most 10. It sees them all at once, so a single request can
 span a backend endpoint and the screens that call it.
 
@@ -131,7 +131,7 @@ An empty domain, or one whose members have no repository yet, is handled first b
 ## Change several components outside a domain
 
 In [Maestro](./console-assistant.md), the **New AI job** button starts one agent on the
-microfrontends and services you pick, in any domain: choose them (or **All microfrontends and
+frontends and services you pick, in any domain: choose them (or **All frontends and
 services**, every one with a linked repository, at most 10), describe the change and press **Start
 job**. The job opens as a tab in Maestro, where you follow it, chat with the agent and apply its
 proposals.
@@ -158,7 +158,7 @@ running in this project: wait for one to finish.* Other limits are listed in
 ## Tips for good requests
 
 - Write the rules the agent should always follow (conventions, vocabulary, what not to touch) in the
-  **AI context** of the project, domain, microfrontend or service, rather than repeating them in
+  **AI context** of the project, domain, frontend or service, rather than repeating them in
   every request.
 - One change per request. Refine it in the chat rather than starting over.
 - Read the diff before **Apply**: the agent cannot run your tests, and Apply skips review.

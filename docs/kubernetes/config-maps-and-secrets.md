@@ -18,8 +18,8 @@ deploy commits to the configuration repository.
 | In the console | Visible to anyone who can see the project | Encrypted at rest and never shown again once saved |
 | In Kubernetes | A ConfigMap per environment | A Secret per environment, values base64 encoded |
 
-:::info[Not the same as microfrontend environment variables]
-These values are for containers running in Kubernetes. The variables a microfrontend reads in the
+:::info[Not the same as frontend environment variables]
+These values are for containers running in Kubernetes. The variables a frontend reads in the
 browser are [runtime environment variables](../environments/environment-variables.md), served by
 Flightroom and never committed to Git.
 :::

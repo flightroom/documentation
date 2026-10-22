@@ -60,13 +60,13 @@ export default defineConfig({
 with these already set; if you configure a remote by hand, keep them.
 :::
 
-The built `remoteEntry.js` lands in `dist/assets/`, so set the microfrontend's **Entry Point** in
+The built `remoteEntry.js` lands in `dist/assets/`, so set the frontend's **Entry Point** in
 Flightroom to `assets/remoteEntry.js`.
 
 ## Configure the host
 
 This is the part Flightroom generates. Open **Integration → Frontend Integration**, select
-your host, set **Bundler** to Vite (or leave it on Automatic if that is the microfrontend's stored
+your host, set **Bundler** to Vite (or leave it on Automatic if that is the frontend's stored
 stack) and copy the **Module Federation** tab:
 
 ![The Module Federation tab with React and Vite selected, the install command and the generated vite.config.js with the remotes of the selected host](../assets/integration-vite.png)
@@ -89,7 +89,7 @@ export default defineConfig({
         './App': './src/App'
       },
       remotes: {
-        // One entry per microfrontend this host consumes. The key is the name you import
+        // One entry per frontend this host consumes. The key is the name you import
         // from ("catalog/Button"), the string passed to remoteUrl() is the slug in
         // the orchestrator. Never write a url here: the backend resolves the version.
         catalog: {
@@ -136,7 +136,7 @@ configure({
   projectId: import.meta.env.VITE_MFE_PROJECT_ID,
   // Only a canary targeted on users reads this, and nothing else can supply it.
   // A getter is resolved right before the request, so an auth round trip is in
-  // time; later than that, use setUserId(). Without it those microfrontends
+  // time; later than that, use setUserId(). Without it those frontends
   // serve everyone the stable version.
   // userId: () => auth.currentUser?.id,
   ...(environment ? { environment } : {})
@@ -145,7 +145,7 @@ configure({
 ```
 
 This is a whole `vite.config.js`, not a fragment: the framework plugin (`@vitejs/plugin-react`,
-`@vitejs/plugin-vue` or `@analogjs/vite-plugin-angular`) is part of it. A microfrontend registered as
+`@vitejs/plugin-vue` or `@analogjs/vite-plugin-angular`) is part of it. A frontend registered as
 a **host** also gets an `exposes` block with its root component — `./src/App` for React,
 `./src/App.vue` for Vue, `./src/app/app.component.ts` for Angular — because a host can itself be
 consumed as a remote. The bootstrap comment names the entry point of the framework: `src/main.tsx`,
@@ -158,7 +158,7 @@ import time and the URL comes from the [client SDK](./client-sdk.md).
 
 That is what keeps the resolution server-side: neither a version, nor an environment, nor a fixed
 CDN path is compiled into your host, so the configuration survives version bumps, works unchanged
-across environments, and lets a [canary release](../microfrontends/canary-releases.md) decide which
+across environments, and lets a [canary release](../frontends/canary-releases.md) decide which
 version *this* browser receives. See [Allowed domains](../environments/domains.md) for how the
 environment is resolved.
 
@@ -203,7 +203,7 @@ it holds something covers both.
 
 ## Remote names
 
-The keys in `remotes` come from the microfrontend slug with every `/` replaced by `_` and every `-`
+The keys in `remotes` come from the frontend slug with every `/` replaced by `_` and every `-`
 removed:
 
 | Slug | Key to import from |
@@ -243,7 +243,7 @@ declare module 'catalog/App' {
 The generated host config shares the framework core only — `react` and `react-dom` for a React host,
 `vue` for Vue, `@angular/core`, `@angular/common`, `@angular/platform-browser` and `rxjs` for Angular
 — and pins no `requiredVersion`, so federation reads the range out of your own `package.json`. Keep
-the shared list consistent across every microfrontend in the graph: a library shared by the host but
+the shared list consistent across every frontend in the graph: a library shared by the host but
 not by a remote gets loaded twice, and for React that means broken hooks rather than a clear error.
 
 If you share other libraries — a state manager, a design system — add them to the `shared` array

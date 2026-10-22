@@ -97,8 +97,8 @@ To get started, you need to create an account. You have two options:
 5. Create your organization on the **Create your organization** screen. The
    [five-step project wizard](./project-settings/projects.md#creating-a-project) then opens inside
    it: name, environments, storage, repositories, collaborators
-6. On **Project ready!**, choose **Start deploying your microfrontends**. The console opens on the
-   **AI agent** page, or on **Microfrontends** while your organization has no AI yet — Step 3 adds one
+6. On **Project ready!**, choose **Start deploying your frontends**. The console opens on the
+   **AI agent** page, or on **Frontends** while your organization has no AI yet — Step 3 adds one
 
 ![Creating an account with email and password](./assets/console-register.png)
 
@@ -161,7 +161,7 @@ it. See [AI models](./build-with-ai/ai-models.md).
    and services of one business capability, for example *Expenses* or *Onboarding*
 2. On the domain's **Edit with AI** tab, describe what the team needs and press
    **Generate proposal**
-3. The AI proposes the components the request needs: up to three **microfrontends** (web
+3. The AI proposes the components the request needs: up to three **frontends** (web
    interfaces) and three **services** (backends and agents). Adjust names, repositories and
    templates, then confirm
 4. Flightroom creates each repository from its template, CI pipeline included, and the AI writes
@@ -175,15 +175,15 @@ Your base branch is untouched until someone acts on the proposal. See
 **Congratulations!** 🎉 You have your first app in your own repositories. To put it in front of
 users, [deploy it to Kubernetes](./kubernetes/overview.md).
 
-## Alternative: Create a Microfrontend by Hand
+## Alternative: Create a Frontend by Hand
 
 If you would rather start from a template without the AI — for example a web interface served by
-Flightroom and composed into a host with Module Federation — create a microfrontend directly.
+Flightroom and composed into a host with Module Federation — create a frontend directly.
 
-1. Open **Microfrontends** in the sidebar
-2. Click **Add New Microfrontend**, at the top right of the page
+1. Open **Frontends** in the sidebar
+2. Click **Add New Frontend**, at the top right of the page
 
-   ![The Microfrontends page header with the search field, the domain filter, the view switcher and the Add New Microfrontend button](./assets/add-new-microfrontend.png)
+   ![The Frontends page header with the search field, the domain filter, the view switcher and the Add New Frontend button](./assets/add-new-frontend.png)
 
 3. Choose a template from the list
 
@@ -195,7 +195,7 @@ Flightroom and composed into a host with Module Federation — create a microfro
 
    ![The creation form: the Release card with the version, then the General tab with kind, name Wishlist, slug wishlist, description and domain](./assets/frontend-fill-information.png)
 
-   * **General → name**: A descriptive name for your microfrontend
+   * **General → name**: A descriptive name for your frontend
    * **General → slug**: A URL-friendly identifier (e.g., "my-app"). It is filled in from the name as
      you type, and cannot be changed after creation
    * **Repository → source code provider**: The repository connection to create the new repository in.
@@ -211,13 +211,13 @@ Flightroom and composed into a host with Module Federation — create a microfro
 :::info[Automatic Setup]
 Flightroom will automatically:
 - ✅ **Create the repository** in your selected source code provider with the chosen template
-- ✅ **Initialize the microfrontend** with all necessary configurations
+- ✅ **Initialize the frontend** with all necessary configurations
 - ✅ **Set up the deployment pipeline** ready for your first deployment
 
 This process usually takes a few seconds. You'll see a success message once everything is ready!
 :::
 
-Your microfrontend now exists. The [microfrontend quick start](./microfrontends/quick-start.mdx) takes it from here to a deployed version and a rollback.
+Your frontend now exists. The [frontend quick start](./frontends/quick-start.mdx) takes it from here to a deployed version and a rollback.
 
 ## Next steps
 
@@ -228,7 +228,7 @@ Your microfrontend now exists. The [microfrontend quick start](./microfrontends/
 3. **[Deploy to Kubernetes](./kubernetes/overview.md)** — connect a GitOps repository and your
    Argo CD once, then ship with one click.
 4. **[Keep improving with AI](./build-with-ai/ai-changes.md)** — ask for the next change on any
-   microfrontend, service or domain.
+   frontend, service or domain.
 
 ### Going further
 
@@ -236,7 +236,7 @@ Your microfrontend now exists. The [microfrontend quick start](./microfrontends/
   review and roles keep it in check
 - **[Console assistant](./build-with-ai/console-assistant.md)** — ask the console to act for you,
   with a confirmation before anything destructive
-- **[Microfrontends](./microfrontends/overview.md)** — versions, hosting options, canary releases
+- **[Frontends](./frontends/overview.md)** — versions, hosting options, canary releases
   and generated [Module Federation configuration](./integration/overview.md)
 - **[Organizations](./organizations/overview.md)** — the tenant that owns your projects, and who
   reaches which one

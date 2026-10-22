@@ -15,7 +15,7 @@ because that is where your apps run.
 
 :::info[Words you will see in the console]
 The site speaks of *apps* and *agents*. The console names the pieces they are made of: a web
-interface is a **microfrontend**, a backend or an agent is a **service**, and a **functional
+interface is a **frontend**, a backend or an agent is a **service**, and a **functional
 domain** groups the ones that serve the same business capability. An agent is a service that
 calls the AI model you chose. See [Build with AI](./build-with-ai/overview.md).
 :::
@@ -26,7 +26,7 @@ Open **[console.flightroom.dev](https://console.flightroom.dev)** and register w
 Google. With email, follow the activation link you receive before signing in: until you do, the
 account cannot be used. You are then asked to create an **organization**, the tenant that owns your
 projects, and the project wizard opens inside it. When it is done, the console opens on the
-**AI agent** page — or on **Microfrontends** until your organization has an AI, which step 2 adds.
+**AI agent** page — or on **Frontends** until your organization has an AI, which step 2 adds.
 
 Details: [Get started with Flightroom](./intro.mdx)
 
@@ -52,7 +52,7 @@ Details: [Connect GitHub](./repositories/connect/github.md) ·
 3. Press **Generate proposal**.
 
 Because the domain is empty, the AI first proposes the components the request needs, at most
-three microfrontends and three services. Edit the names, slugs, repositories and templates, untick
+three frontends and three services. Edit the names, slugs, repositories and templates, untick
 what you do not want, and confirm. Flightroom creates each repository from its template, CI
 pipeline included, and the AI writes a first version on a branch of its own.
 
@@ -92,7 +92,7 @@ Details: [Deploy to Kubernetes](./kubernetes/overview.md)
   deployments, and how they relate.
 - **[Console assistant](./build-with-ai/console-assistant.md)**: press ⌘J and ask the console
   to create environments, check versions or start a deploy.
-- **[Microfrontend quick start](./microfrontends/quick-start.mdx)**: the path for a web
+- **[Frontend quick start](./frontends/quick-start.mdx)**: the path for a web
   interface served by Flightroom and composed with Module Federation.
 - **[Self-hosting](./self-hosting/helm.md)**: run Flightroom on your own Kubernetes, with your
   single sign-on and your models.

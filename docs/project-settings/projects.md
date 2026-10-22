@@ -8,7 +8,7 @@ keywords: [projects, access control, boundary, settings, organization]
 
 # Projects and access control
 
-A **project** is the container every configuration object belongs to: microfrontends, environments,
+A **project** is the container every configuration object belongs to: frontends, environments,
 storages, code repositories, API keys and members all belong to exactly one project.
 
 The project in turn belongs to exactly one **organization**, which is the tenant that owns it and
@@ -18,11 +18,11 @@ the level deciding who reaches the project at all. See
 ## What belongs in one project
 
 A good rule of thumb: **one project per application**, where an application is a set of
-microfrontends deployed together and sharing a host.
+frontends deployed together and sharing a host.
 
 Signs you want a second project rather than a bigger one:
 
-- The microfrontends are never deployed together
+- The frontends are never deployed together
 - Different teams should not see each other's configuration
 - The release cadences are unrelated
 - The environments genuinely differ (not just in values, but in which environments exist)
@@ -33,7 +33,7 @@ Signs you want one project:
 - They are promoted through the same stages
 - The same people manage all of them
 
-Bear in mind that microfrontends can only be wired into a host graph *within* a project, and API
+Bear in mind that frontends can only be wired into a host graph *within* a project, and API
 keys are project-scoped. Splitting an application across projects means losing the relation graph
 that generates your Module Federation configuration — usually not worth it.
 
@@ -82,11 +82,11 @@ project, the list starts with the environments it proposed. See
 
 ### 3. Storage
 
-*Where do we host your microfrontends?* shows the same form as a new
+*Where do we host your frontends?* shows the same form as a new
 [storage](../buckets/overview.md), with **Save and continue**, or **Skip**.
 
 :::note[This step is not essential]
-Without a storage, the bundles of your microfrontends are hosted by Flightroom itself. You can
+Without a storage, the bundles of your frontends are hosted by Flightroom itself. You can
 connect an external storage at any time from the project settings.
 :::
 
@@ -115,15 +115,15 @@ is sent.
 
 ### Project ready
 
-The wizard ends on **Project ready!**, which offers **Go to dashboard** (the microfrontends of the new
-project) and **Add microfrontend**. During onboarding it offers **Start deploying your
-microfrontends** instead, which opens the console on the
-[AI agent page](../build-with-ai/console-assistant.md), or on **Microfrontends** when the project can
+The wizard ends on **Project ready!**, which offers **Go to dashboard** (the frontends of the new
+project) and **Add frontend**. During onboarding it offers **Start deploying your
+frontends** instead, which opens the console on the
+[AI agent page](../build-with-ai/console-assistant.md), or on **Frontends** when the project can
 use no AI.
 
-![The Project ready! screen at the end of onboarding, with Start deploying your microfrontends](../assets/project-wizard-ready.png)
+![The Project ready! screen at the end of onboarding, with Start deploying your frontends](../assets/project-wizard-ready.png)
 
-The close button (**✕**) at the top right leaves the wizard for **Microfrontends** at any step. It is
+The close button (**✕**) at the top right leaves the wizard for **Frontends** at any step. It is
 not shown during onboarding.
 
 Storage, repositories and collaborators are skippable, and every step can be done later from
@@ -152,13 +152,13 @@ wizard is not offered to them at all. See
 
 The project selector sits in the console header, next to the
 [organization selector](../organizations/managing-an-organization.md#the-header-menu). Everything
-below it — microfrontends, deployments, settings — follows the selection.
+below it — frontends, deployments, settings — follows the selection.
 
 ![The project switcher, which also creates a new project](../assets/project-switcher.png)
 
 The list only ever offers projects of the organization you are in. If a page looks empty, check the
 selected project — and the selected organization — before anything else. It is the most common cause
-of "my microfrontends disappeared".
+of "my frontends disappeared".
 
 ## Project settings
 
@@ -172,7 +172,7 @@ The **General** tab holds the project's own data, top to bottom:
 
 - **Project Information** — the name, the description and the identifiers, described below.
 - **Project AI context** — free markdown notes for AI agents (MCP clients and the console assistant)
-  that apply to the whole project: domain, conventions, rules shared by the microfrontends. Up to
+  that apply to the whole project: domain, conventions, rules shared by the frontends. Up to
   20,000 characters. See [Build with AI](../build-with-ai/overview.md).
 - **Danger Zone** — [deleting the project](#deleting-a-project).
 
@@ -228,7 +228,7 @@ organization Owner or Admin — see
 | **GitOps** | Every deploy commits what it ships to a Git repository. See [GitOps](../kubernetes/gitops.md) |
 | **Exposure** | The domain the environments are exposed on. See [Exposure](../kubernetes/exposure.md) |
 | **Argo CD** | Argo CD deploys the environments from the GitOps repositories. See [Argo CD](../kubernetes/argo-cd.md) |
-| **Pipeline templates** | Where the pipeline of a new microfrontend or service comes from, described below |
+| **Pipeline templates** | Where the pipeline of a new frontend or service comes from, described below |
 
 **Exposure** and **Argo CD** appear only once GitOps is on and saved with a repository: both work on
 what GitOps commits.
@@ -236,7 +236,7 @@ what GitOps commits.
 ![The Delivery tab of a project with GitOps off, showing only the GitOps and Pipeline templates cards](../assets/project-settings-delivery.png)
 
 **Pipeline templates** decides the CI pipeline a repository gets when it is created for a new
-microfrontend or service. By default it comes from the official
+frontend or service. By default it comes from the official
 [`template-pipelines`](https://github.com/mfe-orchestrator/template-pipelines) repository. Turn on
 **Use the pipeline templates of a repository of the project** to pick one of your own instead,
 reached through one of the project's code repository connections, with a **Branch or tag** (left
@@ -263,10 +263,10 @@ be aware the slug appears in bucket paths when auditing storage.
 ## Deleting a project
 
 **Settings → General → Danger Zone → Delete Project** removes the project and everything scoped to it, in one
-transaction: microfrontends, environments, variables, deployments and their history, API keys, member
+transaction: frontends, environments, variables, deployments and their history, API keys, member
 and invitation rows, **storage connections**, **code repository connections**, the record of every
-built frontend uploaded for those microfrontends, and any
-[canary user enrolment](../microfrontends/canary-releases.md) on those deployments.
+built version uploaded for those frontends, and any
+[canary user enrolment](../frontends/canary-releases.md) on those deployments.
 
 You must type the project name to confirm. There is no undo and no soft delete.
 
@@ -279,7 +279,7 @@ What is *not* deleted:
 
 :::caution[Deleting a project breaks live applications]
 Every public serve endpoint for that project stops answering immediately. Any application currently
-loading microfrontends through it will fail to load them. Make sure nothing is serving from the
+loading frontends through it will fail to load them. Make sure nothing is serving from the
 project before you delete it.
 :::
 

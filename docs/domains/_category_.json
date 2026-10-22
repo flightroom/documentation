@@ -4,6 +4,6 @@
   "link": {
     "type": "generated-index",
     "title": "Functional domains",
-    "description": "Group the microfrontends and services of one business capability, map how the domains relate, see which versions run where, and change or deploy a whole domain at once."
+    "description": "Group the frontends and services of one business capability, map how the domains relate, see which versions run where, and change or deploy a whole domain at once."
   }
 }

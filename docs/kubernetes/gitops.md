@@ -15,7 +15,7 @@ GitOps lives under **Settings → Delivery**, in the section **GitOps for enviro
 and secrets**.
 
 The same tab holds, once GitOps is saved, the [Exposure](./exposure.md) and [Argo CD](./argo-cd.md)
-sections, and, whether GitOps is on or not, the **Pipeline templates** a new microfrontend or service
+sections, and, whether GitOps is on or not, the **Pipeline templates** a new frontend or service
 gets when its repository is created. See
 [Your own pipeline templates](../templates/templates-library.md#your-own-pipeline-templates).
 

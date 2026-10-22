@@ -8,7 +8,7 @@ keywords: [dependencies, peer dependencies, npm registry, alignment, semver, mon
 
 # Dependency analysis and peer dependency alignment
 
-Every microfrontend of a project lives in its own repository, so nothing stops two of them
+Every frontend of a project lives in its own repository, so nothing stops two of them
 from pinning a different version of React, of the design system, or of any other shared
 library. This feature walks those repositories, reports what each one declares, flags what is
 behind the npm registry, and can rewrite the misaligned `peerDependencies` for you.
@@ -18,19 +18,19 @@ behind the npm registry, and can rewrite the misaligned `peerDependencies` for y
 Open **Dependencies** in the sidebar (`/dependencies`). The page scans the project when it opens and
 shows, top to bottom:
 
-- **Branches to compare**: one row per microfrontend with a connected repository, on its default
+- **Branches to compare**: one row per frontend with a connected repository, on its default
   branch. Pick another branch for any of them; a row on a non-default branch reads *Different from
   the default branch*, and **Rescan** becomes **Apply the selected branches** until you press it.
-- Four counters: **Scanned microfrontends**, **Distinct packages**, **Outdated packages** and
+- Four counters: **Scanned frontends**, **Distinct packages**, **Outdated packages** and
   **Misaligned peer dependencies**.
 - **Peer dependencies to align**, then **Shared dependencies with different versions** (reported
   for visibility only), each with the **Suggested range**. Hovering a declaration tells whether it is
   *Already aligned* or *Will be aligned to* the suggested range.
-- **Dependencies by microfrontend**: every declared package with its **Type**, **Declared range**,
+- **Dependencies by frontend**: every declared package with its **Type**, **Declared range**,
   **Latest version** and **Status**. **Show outdated only** hides what is up to date, and a package
   marked deprecated on the registry carries a **Deprecated** badge.
 
-![The Dependencies page of a project with no microfrontend connected to a repository: zero counters, nothing to align and Align peer dependencies disabled](../assets/dependencies.png)
+![The Dependencies page of a project with no frontend connected to a repository: zero counters, nothing to align and Align peer dependencies disabled](../assets/dependencies.png)
 
 The header has three actions:
 
@@ -48,27 +48,27 @@ repository: the branch committed to, *Already aligned*, or *Failed* with the rea
 
 ## What the scan does
 
-1. Lists the microfrontends of the current project that have a
+1. Lists the frontends of the current project that have a
    [code repository connected](./connect/github.md).
 2. Reads the `package.json` at the root of each repository, on the branch chosen for that
-   microfrontend, through the provider API (GitHub, GitLab or Azure DevOps — no clone involved).
+   frontend, through the provider API (GitHub, GitLab or Azure DevOps — no clone involved).
 3. Resolves every distinct package name against the npm registry and compares the declared
    range with the version published as `latest`.
-4. Groups the declarations across microfrontends to find the ones that disagree.
+4. Groups the declarations across frontends to find the ones that disagree.
 
 The scan is read-only and is never cached in the database: it always reflects the current state
 of the repositories. Registry answers are cached in memory for one hour.
 
 ### Choosing the branch
 
-Each microfrontend is compared on its own branch, picked independently of the others. The
+Each frontend is compared on its own branch, picked independently of the others. The
 default is the **default branch of its repository**, so the scan works out of the box; the UI
-lists the available branches per microfrontend and lets you point one at `develop`, a release
+lists the available branches per frontend and lets you point one at `develop`, a release
 branch, or anything else before rescanning.
 
-`GET /api/dependencies/targets` returns what the scan would walk — one entry per microfrontend
+`GET /api/dependencies/targets` returns what the scan would walk — one entry per frontend
 with its `defaultBranch` and the `branches` available — and the three `POST` endpoints accept a
-`branches` map keyed by microfrontend id. Microfrontends left out of the map — and every request
+`branches` map keyed by frontend id. Frontends left out of the map — and every request
 to the two `GET` report endpoints, which take no body — fall back to the default branch.
 
 ### Update status
@@ -86,7 +86,7 @@ with the registry `latest`:
 
 ### Alignment issues
 
-A package is reported as misaligned when at least two microfrontends declare it and the
+A package is reported as misaligned when at least two frontends declare it and the
 declared ranges are not all identical. The **suggested range** is the highest range already in
 use inside the project — never a version nobody has validated yet — with ties broken by the
 most frequently declared range, so that the alignment touches as few repositories as possible.
@@ -122,7 +122,7 @@ the path.
 
 | Method | Path                                    | Description                                                       |
 | ------ | --------------------------------------- | ----------------------------------------------------------------- |
-| `GET`  | `/api/dependencies/targets`             | Microfrontends the scan would walk, with default and available branches |
+| `GET`  | `/api/dependencies/targets`             | Frontends the scan would walk, with default and available branches |
 | `GET`  | `/api/dependencies`                     | Full report on the default branches                                |
 | `GET`  | `/api/projects/:projectId/dependencies` | Same report, with the project in the path                          |
 | `POST` | `/api/dependencies/report`              | Full report on the branches given in the body                      |
@@ -134,8 +134,8 @@ the two alignment endpoints accept every field:
 
 ```jsonc
 {
-  "branches": { "<microfrontendId>": "develop" }, // branch to compare, defaults to the repository default
-  "microfrontendIds": ["..."], // restrict to these microfrontends, defaults to all
+  "branches": { "<frontendId>": "develop" }, // branch to compare, defaults to the repository default
+  "frontendIds": ["..."], // restrict to these frontends, defaults to all
   "packages": ["react"],       // restrict to these packages, defaults to every misaligned one
   "branchName": "chore/align-peer-dependencies",
   "commitMessage": "chore(deps): align peer dependencies"
@@ -152,13 +152,13 @@ On a self-hosted instance this is set like every other
 [environment variable](../self-hosting/environment-variables.md).
 
 When the registry cannot be reached the report is still produced: the update status of every
-dependency falls back to `UNKNOWN`, `registryAvailable` is `false`, and the cross-microfrontend
+dependency falls back to `UNKNOWN`, `registryAvailable` is `false`, and the cross-frontend
 comparison — including the peer dependency alignment — keeps working.
 
 ## Limitations
 
 - Only the `package.json` at the **root** of the repository is analysed; monorepo workspaces
-  inside a microfrontend repository are not walked.
+  inside a frontend repository are not walked.
 - Ranges are compared through a minimal semver implementation: the floor of the range is used,
   complex unions (`1.x || 2.x`) are reduced to their first version token.
 - Private packages that are not published on the configured registry are reported as `UNKNOWN`,
