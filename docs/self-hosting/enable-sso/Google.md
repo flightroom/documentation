@@ -1,18 +1,18 @@
 ---
 title: Enable SSO with Google
 sidebar_label: Google
-description: Create a Google OAuth 2.0 client and point a self-hosted MFE Orchestrator at it, so users sign in with their Google account.
+description: Create a Google OAuth 2.0 client and point a self-hosted Flightroom at it, so users sign in with their Google account.
 keywords: [google oauth, sso, authentication, self-hosting]
 ---
 
 # Enable SSO with Google
 
-This guide will walk you through the process of enabling Google OAuth authentication for your MFE Orchestrator instance.
+This guide will walk you through the process of enabling Google OAuth authentication for your Flightroom instance.
 
 ## Prerequisites
 - A Google Cloud Platform (GCP) account
 - A project in the Google Cloud Console
-- Docker environment for MFE Orchestrator
+- Docker environment for Flightroom
 
 ## Step 1: Create a New OAuth 2.0 Client ID
 
@@ -31,7 +31,7 @@ This guide will walk you through the process of enabling Google OAuth authentica
 1. In the Google Cloud Console, go to **APIs & Services** > **OAuth consent screen**
 2. Select **External** user type and click **Create**
 3. Fill in the required app information:
-   - App name: "MFE Orchestrator"
+   - App name: "Flightroom"
    - User support email: Your email
    - Developer contact information: Your email
 4. Click **Save and Continue**
@@ -59,7 +59,7 @@ If you are using Docker Compose, add these variables to your `docker-compose.yml
 
 ```yaml
 services:
-  mfe-orchestrator:
+  flightroom:
     environment:
       - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
       - GOOGLE_REDIRECT_URI=${GOOGLE_REDIRECT_URI}

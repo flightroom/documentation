@@ -2,13 +2,13 @@
 sidebar_position: 1
 title: Integration overview
 sidebar_label: Overview
-description: How your application consumes what you deployed with MFE Orchestrator — Module Federation configuration, runtime variables and the serve API.
+description: How your application consumes what you deployed with Flightroom — Module Federation configuration, runtime variables and the serve API.
 keywords: [integration, module federation, generated configuration, serve api]
 ---
 
 # Integration overview
 
-So far everything has happened inside MFE Orchestrator. This section is about the other side:
+So far everything has happened inside Flightroom. This section is about the other side:
 how your application actually consumes what you deployed.
 
 ## The Integration page
@@ -32,7 +32,7 @@ always from the point of view of one host, listing its remotes.
 
 ## The two integration models
 
-There are two quite different ways to consume MFE Orchestrator, and the right choice depends on
+There are two quite different ways to consume Flightroom, and the right choice depends on
 how dynamic you need to be.
 
 ### Generated bundler configuration
@@ -68,7 +68,7 @@ remotes starts changing often.
 
 ## Inject in Repository
 
-If the host's repository is connected to MFE Orchestrator, the Integration page shows an **Inject
+If the host's repository is connected to Flightroom, the Integration page shows an **Inject
 in Repository** button next to the microfrontend selector. It writes the generated configuration
 directly into the repository instead of leaving you to copy, paste and commit.
 

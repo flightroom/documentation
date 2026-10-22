@@ -2,13 +2,13 @@
 sidebar_position: 3
 title: Deploy with GitHub Actions
 sidebar_label: GitHub Actions
-description: The build-and-deploy workflow MFE Orchestrator commits when it scaffolds a GitHub repository, the secret it creates, and how to add one by hand.
+description: The build-and-deploy workflow Flightroom commits when it scaffolds a GitHub repository, the secret it creates, and how to add one by hand.
 keywords: [github actions, workflow, ci cd, secrets, deploy]
 ---
 
 # Deploy with GitHub Actions
 
-When MFE Orchestrator creates a repository from a template on GitHub, it commits a
+When Flightroom creates a repository from a template on GitHub, it commits a
 `.github/workflows/build-and-deploy.yml` workflow and creates the secret the workflow needs. This
 page explains that workflow, and how to add one to a repository the platform did not create.
 
@@ -52,12 +52,12 @@ jobs:
     - name: 🏗️ Build
       run: pnpm build
 
-    - name: 🚀 Publish to MFE Orchestrator
+    - name: 🚀 Publish to Flightroom
       uses: mfe-orchestrator-hub/github-action@0.0.29
       with:
         apikey: ${{ secrets.MICROFRONTEND_ORCHESTRATOR_API_KEY }}
         microfrontend-slug: catalog
-        domain: https://console.mfe-orchestrator.dev
+        domain: https://console.flightroom.dev
         file-path: './dist'
         version: ${{ inputs.version || github.ref_name }}
 ```
@@ -85,9 +85,9 @@ if you add others.
 
 | Input | Meaning |
 | --- | --- |
-| `apikey` | An MFE Orchestrator [API key](./api-keys.md) with the `MANAGER` role |
+| `apikey` | A Flightroom [API key](./api-keys.md) with the `MANAGER` role |
 | `microfrontend-slug` | The slug of the microfrontend to publish to |
-| `domain` | Base URL of your MFE Orchestrator installation |
+| `domain` | Base URL of your Flightroom installation |
 | `file-path` | The build output directory, e.g. `./dist` |
 | `version` | The version to publish |
 
@@ -96,7 +96,7 @@ directory, not at a zip you made yourself.
 
 ## The secret
 
-The workflow reads `secrets.MICROFRONTEND_ORCHESTRATOR_API_KEY`. For repositories MFE Orchestrator
+The workflow reads `secrets.MICROFRONTEND_ORCHESTRATOR_API_KEY`. For repositories Flightroom
 created, this already exists — created as a `MANAGER` key valid for one year and written to your
 GitHub organization or repository.
 
@@ -107,7 +107,7 @@ When it does, builds succeed and the publish step fails. Create a new
 
 ## Adding this to an existing repository
 
-For a repository MFE Orchestrator did not create:
+For a repository Flightroom did not create:
 
 1. Create an [API key](./api-keys.md) with the `MANAGER` role.
 2. Add it as a repository secret named `MICROFRONTEND_ORCHESTRATOR_API_KEY`

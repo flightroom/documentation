@@ -2,13 +2,13 @@
 sidebar_position: 4
 title: Container environment variables
 sidebar_label: Environment variables
-description: "Every environment variable that configures the MFE Orchestrator container: database connections, authentication providers, email services and more."
+description: "Every environment variable that configures the Flightroom container: database connections, authentication providers, email services and more."
 keywords: [environment variables, container configuration, self-hosting, reference]
 ---
 
 # Container environment variables
 
-Environment variables allow you to configure the MFE Orchestrator container according to your specific needs. These variables control various aspects of the application, from database connections to authentication providers and email services.
+Environment variables allow you to configure the Flightroom container according to your specific needs. These variables control various aspects of the application, from database connections to authentication providers and email services.
 
 ## How to Configure
 

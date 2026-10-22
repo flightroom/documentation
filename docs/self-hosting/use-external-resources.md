@@ -1,6 +1,6 @@
 ---
 sidebar_position: 6
-description: Point a self-hosted MFE Orchestrator at an external MongoDB and Redis instead of the embedded ones, for reliability, performance and horizontal scalability in production.
+description: Point a self-hosted Flightroom at an external MongoDB and Redis instead of the embedded ones, for reliability, performance and horizontal scalability in production.
 title: Use an external MongoDB and Redis
 sidebar_label: External resources
 keywords: [mongodb, redis, external database, production, scalability]

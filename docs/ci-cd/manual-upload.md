@@ -33,7 +33,7 @@ cd ..
 curl -X POST \
   -H "api-key: $MFE_ORCHESTRATOR_API_KEY" \
   -F "file=@dist.zip" \
-  "https://console.mfe-orchestrator.dev/api/microfrontends/by-slug/catalog/upload/1.4.0"
+  "https://console.flightroom.dev/api/microfrontends/by-slug/catalog/upload/1.4.0"
 ```
 
 ## Zipping correctly
@@ -109,7 +109,7 @@ set -euo pipefail
 : "${VERSION:?missing version}"
 
 SLUG="catalog"
-API_BASE="https://console.mfe-orchestrator.dev/api"
+API_BASE="https://console.flightroom.dev/api"
 
 npm ci
 npm run build
