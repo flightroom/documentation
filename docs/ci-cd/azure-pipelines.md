@@ -2,13 +2,13 @@
 sidebar_position: 4
 title: Deploy with Azure Pipelines
 sidebar_label: Azure Pipelines
-description: The azure-pipelines.yml MFE Orchestrator commits when it scaffolds an Azure DevOps repository, the variable group it creates, and how to add a pipeline by hand.
+description: The azure-pipelines.yml Flightroom commits when it scaffolds an Azure DevOps repository, the variable group it creates, and how to add a pipeline by hand.
 keywords: [azure pipelines, azure devops, ci cd, variable group, deploy key]
 ---
 
 # Deploy with Azure Pipelines
 
-When MFE Orchestrator creates a repository from a template in Azure DevOps, it commits an
+When Flightroom creates a repository from a template in Azure DevOps, it commits an
 `azure-pipelines.yml`, creates the pipeline definition, and stores the deploy key in a variable
 group.
 
@@ -95,7 +95,7 @@ is derived from the tag name by stripping `refs/tags/`.
 ## The variable group
 
 The publish task reads `$(MICROFRONTEND_ORCHESTRATOR_API_KEY)` from a variable group named
-**`MFE_ORCHESTRATOR_SECRETS`**, which MFE Orchestrator creates in your Azure DevOps project along
+**`MFE_ORCHESTRATOR_SECRETS`**, which Flightroom creates in your Azure DevOps project along
 with a `MANAGER` API key valid for one year.
 
 The group is created at **project** scope, so several microfrontend repositories in the same Azure
@@ -114,7 +114,7 @@ before a pipeline can use it.
 
 | Input | Meaning |
 | --- | --- |
-| `apiKey` | An MFE Orchestrator [API key](./api-keys.md) with the `MANAGER` role |
+| `apiKey` | A Flightroom [API key](./api-keys.md) with the `MANAGER` role |
 | `microfrontendSlug` | The slug of the microfrontend to publish to |
 | `filePath` | The directory containing the build output |
 | `version` | The version to publish |
@@ -131,8 +131,8 @@ organization does not permit third-party extensions, replace the task with a scr
     curl --fail --show-error --silent -X POST \
       -H "api-key: $(MICROFRONTEND_ORCHESTRATOR_API_KEY)" \
       -F "file=@$(Build.ArtifactStagingDirectory)/dist.zip" \
-      "https://console.mfe-orchestrator.dev/api/microfrontends/by-slug/catalog/upload/$(VERSION)"
-  displayName: '🚀 Upload to MFE Orchestrator'
+      "https://console.flightroom.dev/api/microfrontends/by-slug/catalog/upload/$(VERSION)"
+  displayName: '🚀 Upload to Flightroom'
 ```
 :::
 

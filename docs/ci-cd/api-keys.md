@@ -51,12 +51,12 @@ creating the new key first, updating the consumer, then deleting the old one.
 | **MANAGER** | Publishing builds and managing project resources — what CI needs |
 | **VIEWER** | Read-only access |
 
-Keys created automatically when MFE Orchestrator scaffolds a repository are `MANAGER`, valid for one
+Keys created automatically when Flightroom scaffolds a repository are `MANAGER`, valid for one
 year.
 
 ## Keys created for you
 
-You often do not need to create a key at all. When MFE Orchestrator creates a repository from a
+You often do not need to create a key at all. When Flightroom creates a repository from a
 template, it also creates a `MANAGER` key and stores it in your Git provider:
 
 | Provider | Where the key is stored |

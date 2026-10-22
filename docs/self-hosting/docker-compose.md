@@ -2,15 +2,15 @@
 sidebar_position: 2
 title: Self-host with Docker Compose
 sidebar_label: Docker Compose
-description: Install MFE Orchestrator Hub with Docker Compose, bringing up MongoDB, Redis and the application together from the official image on Docker Hub.
+description: Install Flightroom with Docker Compose, bringing up MongoDB, Redis and the application together from the official image on Docker Hub.
 keywords: [docker compose, self-hosting, installation, mongodb, redis]
 ---
 
 # Self-host with Docker Compose
 
-This page provides instructions to install MFE Orchestrator Hub using Docker Compose.
+This page provides instructions to install Flightroom using Docker Compose.
 
-You can find the official docker repo on [dockerhub](https://hub.docker.com/r/lory1990/mfe-orchestrator-hub)
+You can find the official docker repo on [dockerhub](https://hub.docker.com/r/lory1990/flightroom)
 
 ## Prerequisites
 
@@ -21,7 +21,7 @@ Before you begin, ensure you have the following prerequisites:
 
 ## Start the configuration container
 
-1. Download the follwoing [docker-compose.yaml](https://github.com/mfe-orchestrator/mfe-orchestrator/blob/main/docker-compose.yaml) file or create a `docker-compose.yaml` file with the following content:
+1. Download the follwoing [docker-compose.yaml](https://github.com/flightroom/flightroom/blob/main/docker-compose.yaml) file or create a `docker-compose.yaml` file with the following content:
 
 ```
 services:
@@ -57,9 +57,9 @@ services:
       timeout: 5s
       retries: 5
 
-  mfe-orchestrator:
-    image: lory1990/mfe-orchestrator:latest
-    container_name: mfe-orchestrator
+  flightroom:
+    image: lory1990/flightroom:latest
+    container_name: flightroom
     restart: always
     ports:
       - '8080:80'
@@ -84,8 +84,8 @@ volumes:
 docker compose up -d
 ```
 
-2.  Open `http://localhost:8080` and wait for the server to come up. This can take up to 2 minutes. Once the server is up and running, you can access MFE Orchestrator at `http://localhost:8080`.
+2.  Open `http://localhost:8080` and wait for the server to come up. This can take up to 2 minutes. Once the server is up and running, you can access Flightroom at `http://localhost:8080`.
 
-3. Once the page loads you can enter your `email`, `password` and first project name to start using the Hub
+3. Once the page loads you can enter your `email`, `password` and first project name to start using Flightroom
 
 

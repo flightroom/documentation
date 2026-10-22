@@ -8,7 +8,7 @@ keywords: [members, roles, permissions, invitations, access control]
 
 # Project members and roles
 
-Access to MFE Orchestrator is granted per project. A user can be a member of several projects, with
+Access to Flightroom is granted per project. A user can be a member of several projects, with
 a different role in each.
 
 Members live under **Settings → Team Members**.

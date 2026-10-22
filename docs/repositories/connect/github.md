@@ -1,13 +1,13 @@
 ---
 title: Connect a GitHub repository
 sidebar_label: GitHub
-description: Connect GitHub, cloud or self-hosted, to MFE Orchestrator with a Personal Access Token, so it can read your repositories and scaffold new microfrontends into them.
+description: Connect GitHub, cloud or self-hosted, to Flightroom with a Personal Access Token, so it can read your repositories and scaffold new microfrontends into them.
 keywords: [github, personal access token, repository, connection]
 ---
 
 # Connect a GitHub repository
 
-This guide will walk you through connecting your GitHub repositories to MFE Orchestrator.
+This guide will walk you through connecting your GitHub repositories to Flightroom.
 
 ## Prerequisites
 
@@ -17,13 +17,13 @@ This guide will walk you through connecting your GitHub repositories to MFE Orch
 
 :::info GitHub uses OAuth, not a token
 Unlike [GitLab](./gitlab.md) and [Azure DevOps](./azure.dev-ops.md), GitHub does not ask you for a
-Personal Access Token. You authorize MFE Orchestrator on GitHub instead, and it holds the
+Personal Access Token. You authorize Flightroom on GitHub instead, and it holds the
 resulting credential for you.
 :::
 
 ## Step 1: Navigate to Code Repositories
 
-1. Go to **[Code Repositories](https://console.mfe-orchestrator.dev/code-repositories)** in MFE Orchestrator
+1. Go to **[Code Repositories](https://console.flightroom.dev/code-repositories)** in Flightroom
 ![The Code Repositories page](../../assets/code-repositories.png)
 2. Click the **Add Repository** button
 ![The Add Repository dialog, listing the available providers](../../assets/add-repository-provider.png)
@@ -32,7 +32,7 @@ resulting credential for you.
 ## Step 2: Authorize on GitHub
 
 Selecting GitHub sends you to GitHub's own authorization page. Sign in if you are not already, then
-review the access being requested and confirm. GitHub asks for the scopes MFE Orchestrator needs to
+review the access being requested and confirm. GitHub asks for the scopes Flightroom needs to
 read your repositories, create one from a template, and store the deploy secret its pipeline uses:
 `repo`, `public_repo`, `read:user`, `read:org`, `workflow` and `admin:org`.
 

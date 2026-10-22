@@ -2,14 +2,14 @@
 sidebar_position: 3
 title: Microfrontend hosting options
 sidebar_label: Hosting options
-description: "Every microfrontend declares where its files live: the MFE Orchestrator hub, a storage bucket you own, or a URL you already serve. What each option changes."
+description: "Every microfrontend declares where its files live: the Flightroom Hub, a storage bucket you own, or a URL you already serve. What each option changes."
 keywords: [hosting type, hub, bucket, custom url, remoteEntry]
 ---
 
 # Microfrontend hosting options
 
 Every microfrontend declares **where its files live**. This is the *hosting type*, set under
-**Hosting information** on the microfrontend form. It determines how MFE Orchestrator resolves
+**Hosting information** on the microfrontend form. It determines how Flightroom resolves
 a request for `remoteEntry.js` into actual bytes.
 
 There are three options.
@@ -21,10 +21,10 @@ There are three options.
 [storage](../buckets/overview.md) configured.
 :::
 
-## MFE Orchestrator Hub
+## Flightroom Hub
 
-The platform stores the build itself. You upload a ZIP of your `dist` folder and MFE
-Orchestrator extracts and serves it.
+The platform stores the build itself. You upload a ZIP of your `dist` folder and Flightroom
+extracts and serves it.
 
 - **Best for**: getting started, internal tools, self-hosted installations where you already
   own the disk.
@@ -61,7 +61,7 @@ you configured and streamed to the browser through the serve API.
 ## Custom URL
 
 The files are already published somewhere — a CDN, an existing static host, another team's
-infrastructure — and you just want MFE Orchestrator to keep track of versions and hand the
+infrastructure — and you just want Flightroom to keep track of versions and hand the
 right URL to your host application.
 
 - **Best for**: microfrontends you do not build, or an existing CDN setup you do not want to
@@ -94,7 +94,7 @@ is enough to point your users at different files on your CDN, with no rebuild of
 
 | | Hub | Custom Source | Custom URL |
 | --- | --- | --- | --- |
-| Who stores the files | MFE Orchestrator | You (bucket) | You (anywhere) |
+| Who stores the files | Flightroom | You (bucket) | You (anywhere) |
 | Upload via API/CI | ✅ | ✅ | ❌ |
 | Artifacts stay in your cloud | ❌ (unless self-hosted) | ✅ | ✅ |
 | Setup effort | None | Bucket + credentials | Publish pipeline of your own |

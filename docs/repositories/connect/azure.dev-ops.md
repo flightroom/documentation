@@ -1,13 +1,13 @@
 ---
 title: Connect an Azure DevOps repository
 sidebar_label: Azure DevOps
-description: Connect an Azure DevOps organization to MFE Orchestrator with a Personal Access Token, so it can read your repositories and scaffold new microfrontends into them.
+description: Connect an Azure DevOps organization to Flightroom with a Personal Access Token, so it can read your repositories and scaffold new microfrontends into them.
 keywords: [azure devops, personal access token, repository, connection]
 ---
 
 # Connect an Azure DevOps repository
 
-This guide will walk you through connecting your Azure DevOps repositories to MFE Orchestrator.
+This guide will walk you through connecting your Azure DevOps repositories to Flightroom.
 
 ## Prerequisites
 
@@ -17,7 +17,7 @@ This guide will walk you through connecting your Azure DevOps repositories to MF
 
 ## Step 1: Navigate to Code Repositories
 
-1. Go to **[Code Repositories](https://console.mfe-orchestrator.dev/code-repositories)** in MFE Orchestrator
+1. Go to **[Code Repositories](https://console.flightroom.dev/code-repositories)** in Flightroom
 ![The Code Repositories page](../../assets/code-repositories.png)
 2. Click the **Add Repository** button
 ![The Add Repository dialog, listing the available providers](../../assets/add-repository-provider.png)
@@ -26,7 +26,7 @@ This guide will walk you through connecting your Azure DevOps repositories to MF
 
 ## Step 2: Create a Personal Access Token (PAT)
 
-A Personal Access Token is required to authenticate MFE Orchestrator with your Azure DevOps account.
+A Personal Access Token is required to authenticate Flightroom with your Azure DevOps account.
 
 ### 2.1 Access Token Settings
 
@@ -39,7 +39,7 @@ A Personal Access Token is required to authenticate MFE Orchestrator with your A
 
 Fill in the token configuration:
 
-- **Name**: Enter a descriptive name (e.g., "MFE Orchestrator")
+- **Name**: Enter a descriptive name (e.g., "Flightroom")
 - **Organization**: Select the organization(s) you want to connect
   - You can select **All accessible organizations** if you have multiple organizations
 - **Expiration**: Set an expiration date
@@ -49,7 +49,7 @@ Fill in the token configuration:
 ### 2.3 Required Token Scopes
 
 :::warning Critical: Select the Correct Scopes
-Make sure to select these **exact scopes** for MFE Orchestrator to function properly:
+Make sure to select these **exact scopes** for Flightroom to function properly:
 :::
 
 In the **Scopes** section of the token creation dialog, configure the following permissions:
@@ -79,7 +79,7 @@ In the **Scopes** section of the token creation dialog, configure the following 
    1. Find the **Variable Groups** section in the scopes list
    2. Select **Read, create, & manage**
 
-   > *This lets MFE Orchestrator create the `MFE_ORCHESTRATOR_SECRETS` variable group where the API key its pipeline uses is stored*
+   > *This lets Flightroom create the `MFE_ORCHESTRATOR_SECRETS` variable group where the API key its pipeline uses is stored*
 
 :::tip Quick Check
 After selecting all scopes, verify that you have:
@@ -99,9 +99,9 @@ The connection screen lists the same four next to the form.
 3. **Copy the token immediately** and save it securely, you won't be able to see this token again!
 
 
-## Step 3: Configure Connection in MFE Orchestrator
+## Step 3: Configure Connection in Flightroom
 
-Now that you have your PAT, return to MFE Orchestrator to complete the connection.
+Now that you have your PAT, return to Flightroom to complete the connection.
 
 ### 3.1 Fill in Connection Details
 
@@ -146,10 +146,10 @@ If the connection test fails, check the following:
 If you see a permissions error after connecting:
 
 1. Go back to Azure DevOps - Personal Access Tokens
-2. Find your MFE Orchestrator token
+2. Find your Flightroom token
 3. Click **Edit** or **Revoke** and create a new token
 4. Ensure all required scopes are selected
-5. Update the token in MFE Orchestrator settings
+5. Update the token in Flightroom settings
 
 ### Cannot See My Project
 
@@ -178,4 +178,4 @@ If you encounter any issues or need assistance:
 
 - Check the [Azure DevOps documentation](https://docs.microsoft.com/en-us/azure/devops/)
 - Review the [PAT documentation](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate)
-- Contact MFE Orchestrator support
+- Contact Flightroom support

@@ -2,7 +2,7 @@
 sidebar_position: 1
 title: Microfrontends overview
 sidebar_label: Overview
-description: How the Microfrontends page of the MFE Orchestrator console lists, groups and gives you access to every microfrontend registered in a project.
+description: How the Microfrontends page of the Flightroom console lists, groups and gives you access to every microfrontend registered in a project.
 keywords: [microfrontends, console, host, remote, versions]
 ---
 
@@ -25,7 +25,7 @@ A project normally has one host per application and any number of remotes. A rem
 be a host of other remotes — the relations form a graph, not just a two-level tree.
 
 Relations are what make the platform useful: once you declare that `checkout` and `catalog` are
-children of `shell`, MFE Orchestrator can generate the exact `remotes` configuration `shell`
+children of `shell`, Flightroom can generate the exact `remotes` configuration `shell`
 needs, pointing at the versions that are actually deployed in each environment. See
 [Hosts and remotes](./host-and-remotes.md).
 

@@ -2,13 +2,13 @@
 sidebar_position: 5
 title: Deploy with GitLab CI
 sidebar_label: GitLab CI
-description: The .gitlab-ci.yml MFE Orchestrator commits when it scaffolds a GitLab repository, the group-level CI/CD variable it creates, and how to add a pipeline by hand.
+description: The .gitlab-ci.yml Flightroom commits when it scaffolds a GitLab repository, the group-level CI/CD variable it creates, and how to add a pipeline by hand.
 keywords: [gitlab ci, pipeline, ci cd, ci variables, deploy]
 ---
 
 # Deploy with GitLab CI
 
-When MFE Orchestrator creates a repository from a template in GitLab, it commits a `.gitlab-ci.yml`
+When Flightroom creates a repository from a template in GitLab, it commits a `.gitlab-ci.yml`
 and creates a group-level CI/CD variable holding the deploy key.
 
 ## The generated pipeline
@@ -90,7 +90,7 @@ build:
 
 :::caution Add the publish step yourself
 Unlike the GitHub and Azure DevOps templates, the generated GitLab pipeline stops at **build** — it
-produces `dist/` as an artifact but does not publish it to MFE Orchestrator. Add the deploy job
+produces `dist/` as an artifact but does not publish it to Flightroom. Add the deploy job
 below to complete it.
 :::
 
@@ -113,7 +113,7 @@ deploy:
     - build
   variables:
     MFE_SLUG: "catalog"
-    API_BASE: "https://console.mfe-orchestrator.dev/api"
+    API_BASE: "https://console.flightroom.dev/api"
   before_script:
     - apk add --no-cache curl zip
   script:
@@ -140,7 +140,7 @@ Points worth noting:
 
 ## The CI/CD variable
 
-The job reads `MICROFRONTEND_ORCHESTRATOR_API_KEY`. For repositories MFE Orchestrator created, this
+The job reads `MICROFRONTEND_ORCHESTRATOR_API_KEY`. For repositories Flightroom created, this
 already exists as a **group-level** CI/CD variable — created as a `MANAGER` key valid for one year.
 
 Group scope means every microfrontend repository in that GitLab group can publish without further

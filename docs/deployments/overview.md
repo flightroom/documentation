@@ -2,7 +2,7 @@
 sidebar_position: 1
 title: Deployments overview
 sidebar_label: Overview
-description: A deployment in MFE Orchestrator is an immutable snapshot of every microfrontend, variable and storage setting an environment needs, activated when you press Deploy.
+description: A deployment in Flightroom is an immutable snapshot of every microfrontend, variable and storage setting an environment needs, activated when you press Deploy.
 keywords: [deployment, immutable snapshot, activation, release]
 ---
 
@@ -16,7 +16,7 @@ five minutes.
 
 ## What gets captured
 
-When you deploy an environment, MFE Orchestrator copies into the snapshot:
+When you deploy an environment, Flightroom copies into the snapshot:
 
 - **Every microfrontend** in the project — its selected version, hosting configuration, entry
   point, canary settings and relation graph

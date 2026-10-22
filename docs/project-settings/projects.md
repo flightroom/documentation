@@ -2,13 +2,13 @@
 sidebar_position: 1
 title: Projects and access control
 sidebar_label: Projects
-description: A project is the top-level container and the access-control boundary in MFE Orchestrator. What belongs in one, and how to decide where to draw the line.
+description: A project is the top-level container and the access-control boundary in Flightroom. What belongs in one, and how to decide where to draw the line.
 keywords: [projects, access control, boundary, settings]
 ---
 
 # Projects and access control
 
-A **project** is the top-level container in MFE Orchestrator and the boundary for access control.
+A **project** is the top-level container in Flightroom and the boundary for access control.
 Microfrontends, environments, storages, code repositories, API keys and members all belong to
 exactly one project.
 

@@ -2,14 +2,14 @@
 sidebar_position: 3
 title: Core concepts and object model
 sidebar_label: Core concepts
-description: "Projects, environments, microfrontends, versions, deployments and storages: the objects MFE Orchestrator is built around, and how they relate to each other."
+description: "Projects, environments, microfrontends, versions, deployments and storages: the objects Flightroom is built around, and how they relate to each other."
 keywords: [object model, projects, environments, deployments, microfrontends]
 ---
 
 # Core concepts and object model
 
 Before diving into the individual features, it helps to understand the handful of objects
-MFE Orchestrator is built around. Everything you do in the console — and every call you make
+Flightroom is built around. Everything you do in the console — and every call you make
 to the API — maps onto one of them.
 
 :::tip Prefer a picture?
@@ -70,7 +70,7 @@ A **microfrontend** is a versioned frontend bundle registered in a project. It i
 - a **remote** — a microfrontend consumed by a host.
 
 Hosts and remotes are wired together by declaring parent/child relations in the console, and
-MFE Orchestrator turns those relations into the `remotes` block of your Module Federation
+Flightroom turns those relations into the `remotes` block of your Module Federation
 configuration.
 
 ![The microfrontends of a project, drawn as a host with its remotes](./assets/microfrontends-diagram-view.png)
@@ -96,7 +96,7 @@ instead of to the hub, which keeps your artifacts inside your own cloud account.
 ### Code repository
 
 A **code repository** is a connection to GitHub, GitLab or Azure DevOps. With one connected,
-MFE Orchestrator can scaffold a new repository from a template, inject a build pipeline, and
+Flightroom can scaffold a new repository from a template, inject a build pipeline, and
 create the deploy secret the pipeline needs. See [Code Repositories](./repositories/connect/github.md).
 
 ### Deployment
@@ -105,7 +105,7 @@ A **deployment** is an immutable snapshot of everything an environment needs at 
 time: the full list of microfrontends with their versions and hosting configuration, the
 environment's variables, and the storage configuration.
 
-This is the single most important idea in MFE Orchestrator:
+This is the single most important idea in Flightroom:
 
 :::tip Editing is not deploying
 Changing a microfrontend's version, adding a variable, or connecting a bucket does **not**
@@ -145,7 +145,7 @@ Putting it together, this is the path a code change takes from commit to browser
 1. Commit                Your microfrontend repository
       │
 2. Build & upload        CI builds the bundle and uploads it to
-      │                  MFE Orchestrator (hub or your own bucket),
+      │                  Flightroom (hub or your own bucket),
       │                  tagged with a version
       │
 3. Register version      The version becomes selectable on the
@@ -158,19 +158,19 @@ Putting it together, this is the path a code change takes from commit to browser
                          which URLs to load; the active deployment answers
 ```
 
-Steps 2 and 3 are automated by the pipelines MFE Orchestrator injects into your repository —
+Steps 2 and 3 are automated by the pipelines Flightroom injects into your repository —
 see [CI/CD](./ci-cd/api-keys.md). Step 5 is described in
 [Integration](./integration/overview.md).
 
 ## Two ways to run the platform
 
 Everything above applies identically whether you use the hosted console at
-[console.mfe-orchestrator.dev](https://console.mfe-orchestrator.dev) or run the container
+[console.flightroom.dev](https://console.flightroom.dev) or run the container
 yourself. The only difference is the base URL of the API:
 
 | Setup | API base URL |
 | --- | --- |
-| Hosted console | `https://console.mfe-orchestrator.dev/api` |
+| Hosted console | `https://console.flightroom.dev/api` |
 | Self-hosted | `<FRONTEND_URL>/api`, or `BACKEND_URL` if you set it explicitly |
 
 Throughout this documentation, `<API_BASE>` refers to whichever of the two applies to you.

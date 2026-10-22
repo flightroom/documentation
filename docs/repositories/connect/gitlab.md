@@ -1,13 +1,13 @@
 ---
 title: Connect a GitLab repository
 sidebar_label: GitLab
-description: Connect GitLab, cloud or self-hosted, to MFE Orchestrator with a Personal Access Token, so it can read your repositories and scaffold new microfrontends into them.
+description: Connect GitLab, cloud or self-hosted, to Flightroom with a Personal Access Token, so it can read your repositories and scaffold new microfrontends into them.
 keywords: [gitlab, personal access token, repository, connection]
 ---
 
 # Connect a GitLab repository
 
-This guide will walk you through connecting your GitLab repositories to MFE Orchestrator.
+This guide will walk you through connecting your GitLab repositories to Flightroom.
 
 ## Prerequisites
 
@@ -17,7 +17,7 @@ This guide will walk you through connecting your GitLab repositories to MFE Orch
 
 ## Step 1: Navigate to Code Repositories
 
-1. Go to **[Code Repositories](https://console.mfe-orchestrator.dev/code-repositories)** in MFE Orchestrator
+1. Go to **[Code Repositories](https://console.flightroom.dev/code-repositories)** in Flightroom
 ![The Code Repositories page](../../assets/code-repositories.png)
 2. Click the **Add Repository** button
 ![The Add Repository dialog, listing the available providers](../../assets/add-repository-provider.png)
@@ -26,7 +26,7 @@ This guide will walk you through connecting your GitLab repositories to MFE Orch
 
 ## Step 2: Create a Personal Access Token (PAT)
 
-A Personal Access Token is required to authenticate MFE Orchestrator with your GitLab account.
+A Personal Access Token is required to authenticate Flightroom with your GitLab account.
 
 ### 2.1 Access Token Settings
 
@@ -44,7 +44,7 @@ A Personal Access Token is required to authenticate MFE Orchestrator with your G
 
 Fill in the token configuration:
 
-- **Token name**: Enter a descriptive name (e.g., "MFE Orchestrator")
+- **Token name**: Enter a descriptive name (e.g., "Flightroom")
 - **Expiration date**: Set an expiration date
   - Recommended: 90 days or custom date
   - For security, avoid tokens without expiration dates
@@ -52,7 +52,7 @@ Fill in the token configuration:
 ### 2.3 Required Token Scopes
 
 :::warning Critical: Select the Correct Scopes
-Make sure to select these **exact scopes** for MFE Orchestrator to function properly:
+Make sure to select these **exact scopes** for Flightroom to function properly:
 :::
 
 In the **Scopes** section of the token creation dialog, configure the following permissions:
@@ -61,7 +61,7 @@ In the **Scopes** section of the token creation dialog, configure the following 
    1. Find the **api** checkbox in the scopes list
    2. Check the **api** checkbox
 
-   > *This grants complete read/write access to the API, including all groups and projects, the container registry, and the package registry - required for full integration with MFE Orchestrator*
+   > *This grants complete read/write access to the API, including all groups and projects, the container registry, and the package registry - required for full integration with Flightroom*
 
 **2. Configure Read User Scope**
    1. Find the **read_user** checkbox in the scopes list
@@ -94,9 +94,9 @@ the `api` scope already covers.
 3. **Copy the token immediately** and save it securely, you won't be able to see this token again!
 
 
-## Step 3: Configure Connection in MFE Orchestrator
+## Step 3: Configure Connection in Flightroom
 
-Now that you have your PAT, return to MFE Orchestrator to complete the connection.
+Now that you have your PAT, return to Flightroom to complete the connection.
 
 ### 3.1 Fill in Connection Details
 
@@ -135,17 +135,17 @@ If the connection test fails, check the following:
 - **Insufficient Permissions**: Ensure you selected all three required scopes (api, read_repository, write_repository)
 - **Expired Token**: Check if your PAT has expired and create a new one if needed
 - **Network Issues**: Verify that you have internet connectivity and can access GitLab
-- **Self-Hosted GitLab**: If using a self-hosted instance, make sure MFE Orchestrator can reach your GitLab server (check firewall rules)
+- **Self-Hosted GitLab**: If using a self-hosted instance, make sure Flightroom can reach your GitLab server (check firewall rules)
 
 ### Token Permissions Error
 
 If you see a permissions error after connecting:
 
 1. Go back to GitLab - User Settings - Access Tokens
-2. Find your MFE Orchestrator token
+2. Find your Flightroom token
 3. Click **Revoke** and create a new token
 4. Ensure all required scopes are selected (api, read_repository, write_repository)
-5. Update the token in MFE Orchestrator settings
+5. Update the token in Flightroom settings
 
 ### Cannot Access My Repositories
 
@@ -161,7 +161,7 @@ If your repositories don't appear or you can't access them:
 For self-hosted GitLab installations:
 
 - **SSL Certificate Errors**: Ensure your GitLab instance has a valid SSL certificate
-- **Firewall**: Make sure MFE Orchestrator can access your GitLab instance (port 443 for HTTPS)
+- **Firewall**: Make sure Flightroom can access your GitLab instance (port 443 for HTTPS)
 - **Version Compatibility**: Check that your GitLab version supports Personal Access Tokens (GitLab 8.8+)
 
 ## Security Best Practices
@@ -183,4 +183,4 @@ If you encounter any issues or need assistance:
 
 - Check the [GitLab documentation](https://docs.gitlab.com/)
 - Review the [Personal Access Tokens documentation](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
-- Contact MFE Orchestrator support
+- Contact Flightroom support

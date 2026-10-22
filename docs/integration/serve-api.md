@@ -15,7 +15,7 @@ All examples use `<API_BASE>`:
 
 | Setup | `<API_BASE>` |
 | --- | --- |
-| Hosted console | `https://console.mfe-orchestrator.dev/api` |
+| Hosted console | `https://console.flightroom.dev/api` |
 | Self-hosted | `<FRONTEND_URL>/api`, or `BACKEND_URL` if set |
 
 :::info No authentication
@@ -69,7 +69,7 @@ curl "<API_BASE>/serve/all/68f1a2.../prod"
   ],
   "microfrontends": [
     {
-      "url": "https://console.mfe-orchestrator.dev/api/serve/mfe/files/auto/68f1.../catalog/assets/remoteEntry.js",
+      "url": "https://console.flightroom.dev/api/serve/mfe/files/auto/68f1.../catalog/assets/remoteEntry.js",
       "slug": "catalog",
       "name": "Catalog",
       "nameToIntegrate": "catalog",
@@ -77,7 +77,7 @@ curl "<API_BASE>/serve/all/68f1a2.../prod"
       "continuousDeployment": false
     },
     {
-      "url": "https://console.mfe-orchestrator.dev/api/serve/mfe/files/auto/68f1.../checkout-new/_v/1.5.0-rc1/assets/remoteEntry.js",
+      "url": "https://console.flightroom.dev/api/serve/mfe/files/auto/68f1.../checkout-new/_v/1.5.0-rc1/assets/remoteEntry.js",
       "slug": "checkout-new",
       "name": "Checkout",
       "nameToIntegrate": "checkoutnew",
