@@ -8,12 +8,11 @@ keywords: [organization roles, owner, admin, member, permissions, project visibi
 
 # Organization roles and project visibility
 
-Access in Flightroom is decided at two levels, but only one of them restricts anything today.
-The **organization role** decides which projects you can reach at all, and it is enforced. The
-**project role** is a label: it is stored, shown and carried in invitation emails, but no
-authorization check consults it, so reaching a project at all is what grants full control of it. See
-[Project members and roles](../project-settings/users-and-roles.md) for the detail and the
-consequences.
+Access in Flightroom is decided at two levels. The **organization role** decides which projects
+you can reach at all. The **project role** decides part of what you may change inside one: the
+members list, the delivery settings, the AI and everything that writes to your Git provider or your
+cloud. The rest of a project's configuration is open to every member. See
+[Project members and roles](../project-settings/users-and-roles.md) for the detail.
 
 ## The three organization roles
 
@@ -70,7 +69,7 @@ no endpoint where it was forgotten.
 | Member | none | Does not reach the project at all |
 | none | any | Does not reach the project at all |
 
-:::danger Nobody is limited by a project role
+:::danger[Nobody is limited by a project role]
 Giving somebody the *Viewer* role on a project does not make them read-only — not an organization
 admin, and not a plain member either. The single gate that authorizes every project write asks
 whether you are a member, never which role you hold, so anyone who reaches a project can rename it,
@@ -114,7 +113,7 @@ Two safeguards apply:
   when a project invitation that was never accepted is revoked, and the account itself is deleted if
   it only ever existed to be invited.
 
-:::info A removed member stays in the organization
+:::info[A removed member stays in the organization]
 Removing somebody from a project after they accepted does **not** remove them from the organization:
 they stay as a plain member with no project, which is what the members table shows as *0 projects*.
 Take them out of the organization as well if you want them gone entirely.
@@ -133,9 +132,10 @@ Their account, and their membership of projects in *other* organizations, are un
 The project-level roles — Admin, Editor, Viewer — are documented in
 [Project members and roles](../project-settings/users-and-roles.md). Read the two levels this way:
 
-> The organization role answers *which projects*. Project membership answers *whether this one* — and
-> nothing yet answers *what, inside it*.
+> The organization role answers *which projects*. The project role answers part of *what, inside
+> it* — see [What the role decides](../project-settings/users-and-roles.md#what-the-role-decides).
 
 For machine access, [API keys](../ci-cd/api-keys.md) are project-scoped and unaffected by
-organization membership. They record a role, but it is not enforced either, and neither is their
-expiry — see [API keys](../ci-cd/api-keys.md).
+organization membership. Their role is checked by the MCP server and when a pipeline registers the
+version of a service or a Docker frontend, and an expired or revoked key is refused — see
+[API keys](../ci-cd/api-keys.md).

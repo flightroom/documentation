@@ -172,7 +172,7 @@ governs microfrontend versions, and it means a configuration rollback is just a
 
 ## Security
 
-:::caution Public endpoint
+:::caution[Public endpoint]
 `/serve/global-variables/...` is unauthenticated. Anyone with your project and environment id can
 read every variable in it. Put only public configuration here — API base URLs, feature flags,
 tracking ids, public keys. Never secrets.

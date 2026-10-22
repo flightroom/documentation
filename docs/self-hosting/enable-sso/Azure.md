@@ -31,7 +31,7 @@ This guide will walk you through the process of enabling Azure Active Directory 
    console's own origin as the redirect URI — `https://console.example.com`, or
    `http://localhost:8080` for a local installation. Not a path under it: the origin itself.
 
-:::caution The redirect URI is the console origin, and is not configurable
+:::caution[The redirect URI is the console origin, and is not configurable]
 The console signs in with MSAL in the browser, and MSAL is constructed with
 `redirectUri: window.location.origin` in the frontend source. Whatever you put in
 `AZURE_ENTRAID_REDIRECT_URI` is never sent, so a callback path registered in Entra ID — anything

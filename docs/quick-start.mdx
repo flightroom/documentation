@@ -1,97 +1,99 @@
 ---
 sidebar_position: 1
-title: "Quick start: from zero to rollback in 10 minutes"
+title: "Quick start: from a description to a live app"
 sidebar_label: Quick start
-description: "The shortest path through Flightroom on the free hosted console: create a microfrontend, publish, deploy, integrate the host, roll back. No installation."
-keywords: [quick start, quickstart, getting started, tutorial, rollback, microfrontends]
+description: "The shortest path through Flightroom: describe an app or an AI agent, let the AI write it in your repositories, review the change, and deploy it to Kubernetes in one click."
+keywords: [quick start, quickstart, getting started, tutorial, build with ai, ai agents, one-click deploy, kubernetes]
 ---
 
-import Link from '@docusaurus/Link';
+# Quick start: from a description to a live app
 
-# Quick start: from zero to rollback in 10 minutes
+This is the golden path: describe what your team needs, let the AI write it in your own
+repositories, review what comes back, and ship it with one click. Steps 1 to 4 run on the
+**free hosted console**, with nothing to install. Step 5 needs a Kubernetes cluster with Argo CD,
+because that is where your apps run.
 
-This is the golden path: the fewest steps that take you from nothing to a deployed
-microfrontend — and back, because a deploy you cannot undo is not one you should trust.
-It uses the **free hosted console**, so there is nothing to install.
-
-:::info Prefer your own infrastructure?
-Everything below also works on a [self-hosted installation](./self-hosting/docker-compose.md).
-Run through it on the console first — it is the fastest way to judge whether the platform
-fits — and move to self-hosting when you need the bundles to stay in your network.
+:::info[Words you will see in the console]
+The site speaks of *apps* and *agents*. The console names the pieces they are made of: a web
+interface is a **microfrontend**, a backend or an agent is a **service**, and a **functional
+domain** groups the ones that serve the same business capability. An agent is a service that
+calls the AI model you chose. See [Build with AI](./build-with-ai/overview.md).
 :::
 
-## 1. Create an account — no install
+## 1. Create an account
 
-Open **[console.flightroom.dev](https://console.flightroom.dev)** and register with
-email or Google SSO. You are then asked to create an **organization** — the tenant that owns your
-projects — and the project wizard opens inside it. That is the whole setup.
+Open **[console.flightroom.dev](https://console.flightroom.dev)** and register with email or
+Google. You are asked to create an **organization**, the tenant that owns your projects, and the
+project wizard opens inside it.
 
 Details: [Get started with Flightroom](./intro.mdx)
 
-## 2. Connect a repository and create a microfrontend
+## 2. Set it up once: a Git provider and an AI
 
-1. In **Settings → Code Repositories**, connect GitHub, GitLab or Azure DevOps.
-2. Back on the home page, choose **Add New Microfrontend**, pick a template, and give it a
-   name and a slug.
+These two steps are for whoever administers the project. After them, every member can build.
 
-The console creates the repository from the template, with the build pipeline already in it.
+1. **Connect your Git provider.** In **Settings → Resources → Code Repositories**, connect GitHub,
+   GitLab or Azure DevOps. The AI writes into repositories it creates there.
+2. **Add an AI.** In **Organization settings → AI**, choose **Add AI** and enter your own
+   credentials: Claude through Anthropic, Azure AI Foundry or AWS Bedrock, GPT through Azure
+   OpenAI, or Gemini. Only organization owners and admins can do this.
 
 Details: [Connect GitHub](./repositories/connect/github.md) ·
-[Create a microfrontend](./microfrontends/create-a-microfrontend.md)
+[AI models](./build-with-ai/ai-models.md)
 
-## 3. Publish a version
+## 3. Describe it
 
-On the microfrontend's card, choose **Build**, pick the branch and type a version — say
-`1.0.0`. The console creates a Git tag with that name; your pipeline triggers on the tag,
-builds, and uploads the artifact. When it finishes, `1.0.0` appears in the version list.
+1. Open **Domains** in the sidebar and create a **New domain**, for example *Expenses*.
+2. On the domain's **Edit with AI** tab, write what the team needs, the way you would explain it
+   to a colleague. For example: *"An agent that checks each expense claim against the travel
+   policy and flags the ones over the limit before approval."*
+3. Press **Generate proposal**.
 
-Details: [Versions and builds](./microfrontends/versions-and-builds.md)
+Because the domain is empty, the AI first proposes the components the request needs, at most
+three microfrontends and three services. Edit the names, slugs, repositories and templates, untick
+what you do not want, and confirm. Flightroom creates each repository from its template, CI
+pipeline included, and the AI writes a first version on a branch of its own.
 
-## 4. Deploy
+Details: [Generate a domain with AI](./build-with-ai/generate-a-domain.md)
 
-Select version `1.0.0` on the microfrontend, then press **Deploy** on your environment.
-This captures an immutable snapshot — versions, variables, storage configuration — and
-activates it. Remember the platform's one rule: **editing is not deploying**. Nothing your
-users see changes until you press Deploy.
+## 4. Review it
 
-Details: [Deployments overview](./deployments/overview.md)
+The proposal lands on an `ai/…` branch. Your base branch is untouched. From here you can:
 
-## 5. Integrate your host
+- **keep talking to the agent** until the change is right: each answer replaces the proposal on
+  the same branch;
+- **Open a pull request** (a merge request on GitLab) so engineers review it where they always do;
+- **Apply to** the base branch directly, where branch protection allows it;
+- **Discard** it.
 
-The console generates the Module Federation configuration (Vite or Webpack) your host
-application needs. It carries no URLs at all: each remote is declared as a slug handed to
-the [client SDK](./integration/client-sdk.md), which resolves it at import time — the
-generated file even says so, *"Never write a url here: the backend resolves the version"*.
-The two values it does embed are your **project id** and the **backend URL**, so the SDK
-knows which console to ask. Copy it once; from then on, releases never touch the host again.
+Protect the base branch and every AI change goes through review. The agent never runs code: your
+CI checks each branch it pushes, as it checks a colleague's.
 
-Details: [Integration overview](./integration/overview.md)
+Details: [AI changes](./build-with-ai/ai-changes.md) · [Guardrails](./build-with-ai/guardrails.md)
 
-## 6. Roll back
+## 5. Deploy it
 
-Publish and deploy a `1.0.1`, then pretend it broke:
+Once the change is merged, open **Deployments**, pick the environment and press **Deploy**.
+Flightroom commits the manifests and Helm values to Git, your Argo CD syncs the cluster, and the
+app answers on its own URL in that environment, with TLS.
 
-1. Open **Deployments → History** for the environment.
-2. Expand the previous snapshot and check its versions.
-3. Press **Redeploy**.
+This needs a one-time setup by a project admin under **Settings → Delivery**: a GitOps
+repository, your Argo CD, and the domain the environments are exposed on.
 
-The old snapshot is active again — no rebuild, no revert commit, no pipeline wait. This is
-the moment the platform earns its keep, and it took one click.
-
-Details: [Rollback and redeploy](./deployments/rollback-and-redeploy.md)
+Details: [Deploy to Kubernetes](./kubernetes/overview.md)
 
 ---
 
 ## Where to go next
 
-- **[Core concepts](./core-concepts.md)** — projects, environments, deployments and how they
-  relate. Ten minutes that save you an hour later.
-- **[Environments and domains](./environments/domains.md)** — one build serving DEV, UAT and
-  PROD, resolved per request.
-- **[Runtime configuration](./integration/runtime-configuration.md)** — per-environment
-  variables without a rebuild.
-- **[Self-hosting](./self-hosting/docker-compose.md)** — Docker Compose, Docker or Terraform,
-  with your own MongoDB and object storage.
+- **[Core concepts](./core-concepts.md)**: organizations, projects, domains, environments and
+  deployments, and how they relate.
+- **[Console assistant](./build-with-ai/console-assistant.md)**: press ⌘J and ask the console
+  to create environments, check versions or start a deploy.
+- **[Microfrontend quick start](./microfrontends/quick-start.mdx)**: the path for a web
+  interface served by Flightroom and composed with Module Federation.
+- **[Self-hosting](./self-hosting/helm.md)**: run Flightroom on your own Kubernetes, with your
+  single sign-on and your models.
 
 If Flightroom is useful to you, a
 [star on GitHub](https://github.com/flightroom/flightroom) helps the project get found.

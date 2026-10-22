@@ -97,7 +97,7 @@ makes rollback instant: nothing is overwritten or deleted on a new release.
 
 ![The New Storage form, showing the Amazon S3 credential fields](../assets/storage-dialog.png)
 
-:::caution The provider cannot be changed later
+:::caution[The provider cannot be changed later]
 A storage's provider type is fixed at creation. To move from S3 to GCS, create a new storage and
 re-point your microfrontends at it.
 :::

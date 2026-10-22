@@ -81,7 +81,7 @@ The host sends **every identity it holds** and is never told which one was used,
 percentage, nor whether a canary exists at all. Switching a microfrontend from one type to another
 is therefore a console change only — nothing to redeploy on the host side.
 
-:::info No cookie is involved, and none can be
+:::info[No cookie is involved, and none can be]
 An earlier version of this feature had a *Cookie Based* type, and the name was misleading:
 **no cookie is involved anywhere here, and none can be.** Microfrontends are loaded with a
 cross-site `import()`, and module scripts are fetched with a fixed `same-origin` credentials mode,

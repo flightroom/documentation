@@ -25,7 +25,7 @@ In the Cloud console, open **Cloud Storage → Buckets → Create**:
 - **Access control** — **Uniform** (simpler and recommended; IAM only, no per-object ACLs)
 - **Public access prevention** — leave **enabled**
 
-:::tip Keep the bucket private
+:::tip[Keep the bucket private]
 Flightroom reads objects server-side with your credentials and streams them to browsers
 itself. The bucket never needs to be public, and no CORS configuration is required.
 :::
@@ -44,7 +44,7 @@ itself. The bucket never needs to be public, and no CORS configuration is requir
 2. **Grant access**, with the service account's email as the principal.
 3. Assign the role **Storage Object Admin** (`roles/storage.objectAdmin`).
 
-:::info Why Storage Object Admin
+:::info[Why Storage Object Admin]
 The platform reads and writes objects. `objectViewer` is insufficient (uploads fail) and
 `storage.admin` grants bucket administration the platform does not need. `objectAdmin`, granted on
 the single bucket, is the right scope.

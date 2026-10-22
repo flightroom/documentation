@@ -18,7 +18,7 @@ instead, and it is the first thing you will see after any of
 One form, three fields, and it creates everything an installation needs to be usable: the first
 account, the organization it owns, and one project inside it.
 
-:::danger Fill it in before anybody else can
+:::danger[Fill it in before anybody else can]
 The endpoint behind this form is public, and it has to be — there is no account yet to authenticate
 with. It is also **not gated on anything**: not on `REGISTRATION_ALLOWED`, and not on the
 installation still being empty.
@@ -65,7 +65,7 @@ In this order, and all of it from that one project name:
 The organization is created first because a project cannot exist outside one, and the user is made
 its **owner** — no other row would grant the right to administer it.
 
-:::caution The project name becomes a permanent slug, and it mishandles spaces
+:::caution[The project name becomes a permanent slug, and it mishandles spaces]
 The project's slug is derived from the name you type here, and the derivation replaces only the
 **first** space. A name of two words is fine; a longer one is not:
 
@@ -119,7 +119,7 @@ Neither is wrong; the SSO path simply has two more steps in front of it.
 it checks neither `REGISTRATION_ALLOWED` nor whether a user already exists, and calling it on a fully
 populated installation creates another user with another organization and another project.
 
-:::danger `REGISTRATION_ALLOWED=false` does not close either registration route
+:::danger[`REGISTRATION_ALLOWED=false` does not close either registration route]
 The variable is read in exactly one place in the backend: to compute the `canRegister` flag the
 frontend uses to decide whether to show the *Register* link. No route enforces it.
 

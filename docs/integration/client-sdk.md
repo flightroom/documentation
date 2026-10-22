@@ -30,7 +30,7 @@ All four are published at `0.2.1` with npm provenance. The core ships ESM and CJ
 types; the three adapters depend on it and add ergonomics rather than behaviour — with one deliberate
 exception, described under [framework adapters](#the-react-adapter-syncs-the-user-for-you).
 
-:::caution `setUserId()` needs the core at 0.2.0 or later
+:::caution[`setUserId()` needs the core at 0.2.0 or later]
 [`setUserId()`](#changing-the-user-without-a-reload) landed in `@mfe-orchestrator-hub/client` 0.2.0.
 Pin an earlier core and the function is not exported at all. The three adapters reach it through a
 guarded property access, so they do not crash — they `console.warn` and return, and the user silently
@@ -182,7 +182,7 @@ function identities(): { sessionId: string; deviceId: string }
 that is not in the manifest rejects with a message listing the ones that are, which is usually
 enough to spot the typo or the missing deployment.
 
-:::caution Use the URL verbatim
+:::caution[Use the URL verbatim]
 `remoteUrl()` returns a URL that may already carry a `_v/<version>/` path segment, pinning the
 version this browser is meant to receive. Never rebuild that URL by hand and never strip the
 segment: the entry point resolves its chunks relative to the URL it was loaded from, and a
@@ -196,7 +196,7 @@ versionless URL can end up mixing two builds in one page. See
 with a warning, because the manifest may already be in flight. The user is the one thing that
 legitimately changes while the page is alive, so it has its own call.
 
-:::note A React host needs none of this
+:::note[A React host needs none of this]
 `<OrchestratorProvider>` calls `setUserId()` itself whenever the `userId` in its config changes, so
 in React the wiring below is already done for you — see
 [the React adapter syncs the user for you](#the-react-adapter-syncs-the-user-for-you). Vue and
@@ -217,7 +217,7 @@ costing a request; a getter is always taken as a change, since what it returns i
 SDK cannot know. A request already in flight is not cancelled — whoever is awaiting it still receives
 the manifest of the previous identity — and calling it before `configure()` throws.
 
-:::caution It does not reload the remotes already imported
+:::caution[It does not reload the remotes already imported]
 The federation runtime keeps the container it loaded, so a microfrontend already on the page stays on
 the version drawn for the previous user. Only the remotes resolved *after* the call see the new one.
 Either mount your remotes behind your own auth guard and set the user before the guard opens — nothing
@@ -345,7 +345,7 @@ bootstrapApplication(AppComponent, {
 All three also re-export the core's types (`OrchestratorConfig`, `Manifest`, `Microfrontend`,
 `GlobalVariable`, `Identities`), and React and Vue export `AsyncState` as well.
 
-:::caution `useRemoteUrl()` does not return a string
+:::caution[`useRemoteUrl()` does not return a string]
 It returns `AsyncState<string>` — `{ data, error, loading }` — and in Vue each of the three is a
 `Ref`. Read `data` once `loading` is false; until then it is `undefined`. Passing the hook's return
 value straight into an `import()` gets you an object, not a URL.

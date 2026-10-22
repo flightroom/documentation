@@ -37,7 +37,7 @@ const prismDark: PrismTheme = {
 
 const config: Config = {
   title: 'Flightroom',
-  tagline: 'The control plane for your microfrontends',
+  tagline: 'Apps and AI agents, built by anyone, shipped in one click',
   favicon: 'img/favicon.ico',
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
@@ -202,26 +202,30 @@ const config: Config = {
           title: 'Platform',
           items: [
             {
-              label: 'Microfrontends',
-              to: '/docs/microfrontends/overview',
+              label: 'Build with AI',
+              to: '/docs/build-with-ai/overview',
+            },
+            {
+              label: 'Deploy to Kubernetes',
+              to: '/docs/kubernetes/overview',
             },
             {
               label: 'Environments',
               to: '/docs/environments/overview',
             },
             {
-              label: 'Deployments',
-              to: '/docs/deployments/overview',
-            },
-            {
-              label: 'Integration',
-              to: '/docs/integration/overview',
+              label: 'Microfrontends',
+              to: '/docs/microfrontends/overview',
             },
           ],
         },
         {
           title: 'Run it yourself',
           items: [
+            {
+              label: 'Helm (Kubernetes)',
+              to: '/docs/self-hosting/helm',
+            },
             {
               label: 'Docker',
               to: '/docs/self-hosting/docker',

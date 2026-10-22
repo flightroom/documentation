@@ -15,7 +15,7 @@ This guide will walk you through connecting your GitHub repositories to Flightro
 - Access to at least one organization or personal repository
 - Permission to authorize OAuth applications — on an organization, an owner may have to approve it
 
-:::info GitHub uses OAuth, not a token
+:::info[GitHub uses OAuth, not a token]
 Unlike [GitLab](./gitlab.md) and [Azure DevOps](./azure.dev-ops.md), GitHub does not ask you for a
 Personal Access Token. You authorize Flightroom on GitHub instead, and it holds the
 resulting credential for you.
@@ -39,7 +39,7 @@ read your repositories, create one from a template, and store the deploy secret 
 If the repositories you want belong to an organization, grant access to that organization on the
 same page. Without it, only your personal repositories appear later.
 
-:::caution Organization approval
+:::caution[Organization approval]
 Some organizations require an owner to approve third-party OAuth applications. If your organization
 does, the authorization stays *pending* until an owner approves it, and the organization's
 repositories will not be listed in the meantime.

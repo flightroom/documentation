@@ -70,7 +70,7 @@ it: bucket, container, region, account name, tenant and client id. The
 [storages list](../buckets/overview.md) needs them to tell one storage from another, and none of them
 is usable on its own.
 
-:::caution Global variables are not encrypted, and are not secrets
+:::caution[Global variables are not encrypted, and are not secrets]
 [Environment variables](../environments/environment-variables.md) marked as global are served to
 **every browser that loads your application**, as `window.globalConfig`. That is the whole point of
 them: they are how a microfrontend learns which API base URL to call.
@@ -95,7 +95,7 @@ connection sends the id of the repository instead of a token, and the backend us
 There is no rotation procedure yet. What the format allows is introducing a `v2` alongside `v1`, so
 values keep being readable while new writes use the new scheme.
 
-:::danger Losing the key means losing the credentials
+:::danger[Losing the key means losing the credentials]
 A value encrypted with a key you no longer have cannot be read back. The application says so
 explicitly at the first read, rather than behaving as though the storage were misconfigured, and
 recovering means retyping the credentials in the console.

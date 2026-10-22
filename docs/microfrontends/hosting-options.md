@@ -35,7 +35,7 @@ Orchestrator extracts and serves it.
 - **Upload with**: the [upload endpoint](../ci-cd/manual-upload.md), used by the generated
   pipelines.
 
-:::caution Self-hosting and persistence
+:::caution[Self-hosting and persistence]
 When self-hosting, mount `MICROFRONTEND_HOST_FOLDER` on a persistent volume. In the reference
 `docker-compose.yaml` this is the `upload_microfrontends` volume. Without it, every container
 restart loses your uploaded builds.

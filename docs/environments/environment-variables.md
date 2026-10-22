@@ -11,7 +11,7 @@ keywords: [environment variables, runtime configuration, per environment config]
 Environment variables in Flightroom are **runtime** configuration: `key`/`value` pairs
 scoped to an environment, read by the browser after the bundle has loaded.
 
-:::info Not to be confused with…
+:::info[Not to be confused with…]
 These are the variables of *your application*. The variables that configure the Flightroom
 container itself are documented under
 [Self Hosting → Environment Variables](../self-hosting/environment-variables.md).
@@ -50,7 +50,7 @@ creating it without that environment. The dialog validates nothing and starts wi
 each environment, so pressing **Create** with one left blank returns a validation error and stores
 nothing.
 
-:::note Leaving a variable out of one environment
+:::note[Leaving a variable out of one environment]
 There is no way to do this from the console. The creation endpoint, though, writes only the
 environments you send it: `POST /api/global-variables`, with the project in the `project-id` header
 and a `values` array carrying no entry for one environment, creates the variable in every other
@@ -65,7 +65,7 @@ it.
 
 ![The Add Variable dialog, with a value per environment](../assets/environment-variable-dialog.png)
 
-:::caution Not a secret store
+:::caution[Not a secret store]
 Environment variables are served to the browser by a **public, unauthenticated** endpoint. Anyone
 who knows your project and environment id can read them. Never put API secrets, private keys,
 database credentials or tokens here. Use them for public configuration only: API base URLs,

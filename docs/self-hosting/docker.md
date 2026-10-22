@@ -42,7 +42,7 @@ Open `http://localhost:8080` and wait for the server to come up — this can tak
 the first start. An installation with no users answers with the **Initial Setup** screen: enter your
 `email`, `password` and first project name, and you are in.
 
-:::caution Do the first startup before the address is reachable by anybody else
+:::caution[Do the first startup before the address is reachable by anybody else]
 That screen is public and ungated, so whoever fills it in first owns the installation. Read
 [The first startup](./first-startup.md) before you type a project name into it — the name becomes a
 permanent slug, and it mishandles anything longer than two words.
@@ -71,7 +71,7 @@ What you should know about this image:
   all, the container exits instead of pretending to be healthy.
   `docker exec flightroom supervisorctl status` shows their state.
 
-:::caution One container is one failure domain
+:::caution[One container is one failure domain]
 The all-in-one image trades isolation for simplicity, and no service in it can be scaled or
 upgraded on its own. For production, or whenever you already run a managed MongoDB or Redis, use
 [Docker Compose](./docker-compose.md) or the [Helm chart](./helm.md).

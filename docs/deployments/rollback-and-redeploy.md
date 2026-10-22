@@ -40,7 +40,7 @@ request rather than after a cache expiry.
 
 ## The file routes do not all follow a rollback
 
-:::caution A rollback is not honoured by two of the three file routes
+:::caution[A rollback is not honoured by two of the three file routes]
 The manifest, the per-microfrontend configuration and the global-variables endpoints filter
 deployments on the `active` flag, so **Redeploy** moves them at once. The three routes that stream
 the bytes of a microfrontend do not filter on it: each takes the newest deployment of the
@@ -105,7 +105,7 @@ Point one is a common surprise: after a rollback, the console still shows the ve
 trying to ship, because that is still what you have selected. Reconcile the draft afterwards, or
 your next deployment will re-ship the bad version.
 
-:::tip After rolling back
+:::tip[After rolling back]
 Set the microfrontend's selected version back to the good one straight away. It costs ten seconds
 and prevents the next deployment from re-introducing the incident.
 :::

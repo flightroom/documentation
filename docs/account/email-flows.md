@@ -22,7 +22,7 @@ link somebody received by email:
 The token is the whole of the authentication: whoever holds the link is whoever the email was sent
 to, so it is worth treating one like a password until it is used.
 
-:::danger Without SMTP an installation cannot do any of this
+:::danger[Without SMTP an installation cannot do any of this]
 Every one of those tokens is delivered by email and by no other means. There is no screen that
 prints a link, no CLI that generates one, and no way to read one back out of the console. An
 installation with no `EMAIL_SMTP_HOST` therefore **cannot activate an account, cannot reset a
@@ -52,7 +52,7 @@ There is nothing to fill in and nothing to confirm. On success a toast says the 
 and the console redirects to the login form; on a token that is unknown or more than 24 hours old the
 card shows the error instead, and the account stays unactivated.
 
-:::caution The activation link confirms the address — it does not gate access
+:::caution[The activation link confirms the address — it does not gate access]
 Nothing in the platform refuses a session to an account whose activation link was never followed. A
 new account is stored as `ACTIVE` from the moment it is created, and signing in never reads that
 field: registering and going straight to the login form works, activation email untouched.
@@ -79,7 +79,7 @@ Submitting it always ends the same way, whatever the address was: a message read
 exists with this email, you will receive a password reset link"*, and back to the login form. The
 screen is deliberately non-committal about whether the account exists.
 
-:::note The screen does not reveal whether the account exists. The API does.
+:::note[The screen does not reveal whether the account exists. The API does.]
 `POST /api/users/forgot-password` answers with an error for an address it has never seen, and the
 console shows its success message regardless of what came back. So the reassurance is real for
 somebody reading the page and not for somebody watching the response — worth knowing if you put the
@@ -95,7 +95,7 @@ The new password must be at least 8 characters and the second field must match t
 are checked in the browser; the confirmation field exists only there, and the API is sent the
 password alone.
 
-:::danger On an installation without SMTP the reset says it worked and nothing was sent
+:::danger[On an installation without SMTP the reset says it worked and nothing was sent]
 This is the one flow that does not check whether email can be delivered before it starts. The token
 is generated and stored on the account, the send is attempted against a transport with no host
 configured, and the request fails — but the console has already shown its "check your email"
@@ -134,7 +134,7 @@ a screen that says so and offers the way back:
 
 ![The invitation screen for a link that matches no invitation](../assets/invitation-not-found.png)
 
-:::caution An expired invitation does not say "expired"
+:::caution[An expired invitation does not say "expired"]
 The screen above is shown when the API answers *not found*. An invitation that exists but is past
 its five days answers with a different status, and the console has no case for it: it falls back to
 **"Something went wrong — We couldn't load the invitation. Please try again in a moment."**

@@ -85,7 +85,7 @@ The first entries should be your files, not a directory prefix.
 - **Custom URL** microfrontends cannot be uploaded to; the request fails. Publishing is entirely
   yours in that case.
 
-:::caution Overwriting a deployed version
+:::caution[Overwriting a deployed version]
 Re-uploading a version that some environment is currently serving changes what those users get,
 without any deployment. Publish a new version instead — versions are cheap, and it keeps rollback
 meaningful.
@@ -96,7 +96,7 @@ meaningful.
 After a successful upload the version exists and is selectable, but nothing changes for your users.
 Select the version on the microfrontend and [deploy](../deployments/overview.md) the environment.
 
-:::caution An API key cannot deploy
+:::caution[An API key cannot deploy]
 `POST /api/deployment` — the endpoint behind the **Deploy** button, which takes
 `{ "environmentIds": ["…"] }` — is authenticated with the token of a signed-in user. An API key
 authenticates the upload endpoint and nothing else, so a pipeline holding one can publish a version

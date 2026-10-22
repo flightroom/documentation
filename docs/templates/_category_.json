@@ -1,9 +1,9 @@
 {
   "label": "Templates",
-  "position": 10,
+  "position": 8,
   "link": {
     "type": "generated-index",
-    "title": "Microfrontend templates",
-    "description": "Scaffold new microfrontends from ready-made templates."
+    "title": "Templates",
+    "description": "The starting points every new service, agent and web interface is created from, by you or by the AI."
   }
 }

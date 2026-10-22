@@ -2,8 +2,8 @@
 sidebar_position: 3
 title: Core concepts and object model
 sidebar_label: Core concepts
-description: "Organizations, projects, environments, microfrontends, versions, deployments and storages: the objects Flightroom is built around, and how they relate."
-keywords: [object model, organizations, projects, environments, deployments, microfrontends]
+description: "Organizations, projects, functional domains, microfrontends, services, environments and deployments: the objects Flightroom is built around, and how they relate."
+keywords: [object model, organizations, projects, functional domains, services, environments, deployments, microfrontends]
 ---
 
 # Core concepts and object model
@@ -12,7 +12,15 @@ Before diving into the individual features, it helps to understand the handful o
 Flightroom is built around. Everything you do in the console — and every call you make
 to the API — maps onto one of them.
 
-:::tip Prefer a picture?
+:::info[Apps and agents, in the console's words]
+The site talks about *apps* and *AI agents*. The console names what they are made of: a web
+interface is a **microfrontend**, a backend is a **service**, and an agent is a service that calls
+the AI model your organization chose. A **functional domain** groups the microfrontends and
+services of one business capability. There is no separate agent runtime: an agent is built,
+reviewed and deployed like any other service.
+:::
+
+:::tip[Prefer a picture?]
 [Architecture](./architecture.md) draws the same objects as running components: the orchestrator,
 its database, the storage options and how a deployment reaches each environment.
 :::
@@ -22,15 +30,20 @@ its database, the storage options and how a deployment reaches each environment.
 ```
 Organization
 ├── Members (Owner, Admin, Member)
+├── AI (the models the organization may use)
 └── Project
-    ├── Environment (dev, uat, prod, …)
-    │   ├── Environment Variables (key/value, per environment)
+    ├── Functional domain (groups microfrontends and services)
+    ├── Microfrontend (web interface: served by Flightroom, or as a Docker container)
+    │   └── Built version (one record per bundle or image)
+    ├── Service (backend or agent, runs as a Docker container)
+    │   └── Config maps and Secrets (one value per environment)
+    ├── Environment (dev, uat, prod, …; a Kubernetes namespace each)
+    │   ├── Environment Variables (key/value, read by the browser)
     │   └── Deployment #1, #2, #3 …  (immutable snapshots)
-    ├── Microfrontend (host or remote)
-    │   └── Built version (one record per bundle uploaded)
-    ├── Storage / Bucket (S3, Azure Blob, GCS)
     ├── Code Repository (GitHub, GitLab, Azure DevOps)
-    ├── API Key (for CI/CD and automation)
+    ├── Database (registered connections, tested from the console)
+    ├── Storage / Bucket (S3, Azure Blob, GCS)
+    ├── API Key (for CI/CD, automation and MCP clients)
     └── Members (Admin, Editor, Viewer)
 ```
 
@@ -52,6 +65,15 @@ they were explicitly invited to.
 The organization is selected in the console header, and it scopes everything below it — the project
 switcher only offers projects of the organization you are in. See
 [Organizations](./organizations/overview.md).
+
+### AI
+
+An **AI** is a model the organization allows Flightroom to use, with the organization's own
+credentials: Claude through Anthropic, Azure AI Foundry or AWS Bedrock, GPT through Azure OpenAI,
+or Gemini. Organization owners and admins add them under **Organization settings → AI**, and can
+restrict a project to some of them or turn AI off for it. A self-hosted installation can also
+provide a read-only **System AI** from its configuration. See
+[AI models](./build-with-ai/ai-models.md).
 
 ### Project
 
@@ -83,18 +105,39 @@ but you can define as many as you like. Each environment has:
 | `domains` | The domains your application is served from — used to resolve which environment a browser request belongs to |
 | `order` | Sort order in the environment selector |
 
-The `slug` is unique within a project.
+The `slug` is unique within a project. When you deploy to Kubernetes, each environment also
+maps to a **Kubernetes namespace** (by default its slug) and can carry a **subdomain** its apps
+answer on — see [Deploy to Kubernetes](./kubernetes/overview.md).
 
-:::info Why domains matter
+:::info[Why domains matter]
 Some public endpoints resolve the environment automatically from the browser's `Referer`
 header, by matching it against the environment's **Allowed Domains**. This is what lets a
 single microfrontend URL serve the right version to `app.example.com` and to
 `staging.example.com`. See [Environments → Allowed domains](./environments/domains.md).
 :::
 
+### Functional domain
+
+A **functional domain** groups the microfrontends and services that work on the same business
+capability, such as *Payments* or *Onboarding*. It is the natural unit for building with AI: on an
+empty domain, one request makes the AI propose the components it needs and create their
+repositories, and a single AI job can change every repository of the domain at once. A domain can
+also be deployed on its own. See [Generate a domain with AI](./build-with-ai/generate-a-domain.md).
+
+### Service
+
+A **service** is a backend that runs as a Docker container: an API, a worker, or an agent that
+reasons with your AI model and calls your systems. New services start from a template — Node.js &
+Fastify, Python & FastAPI, Spring Boot or Quarkus — with health checks and an OpenAPI description
+already in place. Its configuration comes from **config maps** and **secrets**, one value per
+environment, delivered as environment variables. See
+[Deploy to Kubernetes](./kubernetes/overview.md).
+
 ### Microfrontend
 
-A **microfrontend** is a versioned frontend bundle registered in a project. It is either:
+A **microfrontend** is a web interface registered in a project. Its **kind** says how it is
+served: as a static bundle served by Flightroom, or as its own Docker container deployed to
+Kubernetes like a service. A microfrontend served by Flightroom is either:
 
 - a **host** — the shell application that loads other microfrontends, or
 - a **remote** — a microfrontend consumed by a host.
@@ -127,7 +170,8 @@ instead of to the hub, which keeps your artifacts inside your own cloud account.
 
 A **code repository** is a connection to GitHub, GitLab or Azure DevOps. With one connected,
 Flightroom can scaffold a new repository from a template, inject a build pipeline, and
-create the deploy secret the pipeline needs. See [Code Repositories](./repositories/connect/github.md).
+create the deploy secret the pipeline needs. It is also where the AI writes: every AI change is
+pushed to a branch of one of these repositories. See [Code Repositories](./repositories/connect/github.md).
 
 ### Deployment
 
@@ -137,7 +181,7 @@ environment's variables, and the storage configuration.
 
 This is the single most important idea in Flightroom:
 
-:::tip Editing is not deploying
+:::tip[Editing is not deploying]
 Changing a microfrontend's version, adding a variable, or connecting a bucket does **not**
 affect what your users see. Those changes sit in the project configuration until you press
 **Deploy**, which freezes them into a new snapshot and activates it.
@@ -153,10 +197,10 @@ re-activating an older one. See [Deployments](./deployments/overview.md).
 
 An **API key** authenticates machines rather than people — CI pipelines, scripts, deploy jobs.
 Keys are project-scoped, and they are shown once at creation and stored hashed. They also carry a
-role and an expiry date, neither of which is currently enforced: the create form asks for a name and
-an expiry only, the role defaults to `MANAGER` and is never read when a request is authorized, and
-the check that resolves a key to its project looks at neither the expiry nor the status. Treat a key
-as full access to its project for as long as it exists, and see
+role and an expiry date. The console creates `MANAGER` keys; the role is read by the
+[MCP server](./build-with-ai/mcp-server.md) and when CI registers the version of a service or a
+Docker frontend. An expired or revoked key is refused. Treat a key as access to its project until it
+expires, and see
 [API Keys](./ci-cd/api-keys.md).
 
 ### Members and roles
@@ -175,16 +219,39 @@ At **project** level, the role decides what they can do inside one:
 
 | Role | In the API | Can do |
 | --- | --- | --- |
-| Admin | `OWNER` | Everything, including managing members and deleting the project |
-| Editor | `MEMBER` | Manage microfrontends, variables, storages and deployments |
-| Viewer | `VIEWER` | Read-only access |
+| Admin | `OWNER` | Everything, including managing members and the GitOps and Argo CD settings |
+| Editor | `MEMBER` | Build with AI, manage microfrontends, services, variables and storages, and deploy |
+| Viewer | `VIEWER` | Cannot use the AI, create repositories, change storages or databases, or deploy with GitOps on. Other project settings are not role-checked |
 
 See [Roles and project visibility](./organizations/roles-and-visibility.md) and
 [Members and roles](./project-settings/users-and-roles.md).
 
 ## The lifecycle of a change
 
-Putting it together, this is the path a code change takes from commit to browser:
+Putting it together, this is the path a change takes from a request to a running app on
+Kubernetes:
+
+```
+1. Describe              A project member asks for an app, an agent or a
+      │                  change, on a domain, microfrontend or service
+      │
+2. Propose               The AI writes it on an ai/… branch of your
+      │                  repositories; your CI checks the branch
+      │
+3. Review                Open a pull request, or apply it where branch
+      │                  protection allows; or discard it
+      │
+4. Deploy                One click commits manifests and Helm values to
+      │                  your GitOps repositories
+      │
+5. Sync                  Argo CD applies the commit; the app answers on its
+                         URL in that environment, with TLS
+```
+
+Steps 1 to 3 are described in [Build with AI](./build-with-ai/overview.md), steps 4 and 5 in
+[Deploy to Kubernetes](./kubernetes/overview.md).
+
+For a microfrontend served by Flightroom, the path from commit to browser is different:
 
 ```
 1. Commit                Your microfrontend repository

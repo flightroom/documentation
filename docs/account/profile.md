@@ -40,7 +40,7 @@ and once on the server, which is the check that actually decides. The server mea
 received**, not the length the upload claimed in its headers, so a client that lies about the size
 gains nothing.
 
-:::note Why a list of four formats and not "any image"
+:::note[Why a list of four formats and not "any image"]
 The picture is served back into the origin of the console, and `image/svg+xml` is a document that can
 carry script. Accepting anything beginning with `image/` would make a profile picture a way to run
 code in the console of everybody who looks at it. The four formats above are the ones that are only
@@ -49,7 +49,7 @@ ever pixels.
 
 Removing a picture asks for a confirmation and is immediate — there is no version of it kept.
 
-:::info The picture in the sidebar is not always this one
+:::info[The picture in the sidebar is not always this one]
 This card is the only place your **uploaded** picture comes from, and the only picture it will ever
 show. The small avatar in the sidebar falls back through several sources when you have not uploaded
 one: the picture from your Auth0 or Google login if you signed in that way, and failing that
@@ -92,7 +92,7 @@ the one given that day.
 Only the consent currently in force is kept. The page shows no history of the times it was granted and
 withdrawn, and none is stored.
 
-:::info The platform records the consent and never sends a marketing email
+:::info[The platform records the consent and never sends a marketing email]
 This is worth stating plainly, because a consent checkbox usually implies a mailing list behind it.
 Flightroom sends exactly four emails — account activation, password reset, project invitation,
 organization invitation — and all four are transactional. There is no newsletter, no product-update

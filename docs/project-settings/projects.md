@@ -56,7 +56,7 @@ Additional projects are created through the **project wizard**, which has five s
 
 The last three steps are skippable, and every one of them can be done later from **Settings**.
 
-:::caution Leaving the wizard halfway creates a half-configured project
+:::caution[Leaving the wizard halfway creates a half-configured project]
 The project row is created the moment you complete step 1, before any environment exists. Nothing
 remembers where you were: the step you are on is component state, with no draft saved anywhere, so
 closing the wizard or reloading the page starts a fresh one — and completing that fresh one creates a
@@ -69,7 +69,7 @@ If it happens, delete the abandoned project from its own
 The project is created inside the organization you are currently working in, and it stays there:
 a project cannot be moved to another organization afterwards.
 
-:::caution Only organization owners and admins can create a project
+:::caution[Only organization owners and admins can create a project]
 A plain member of an organization reaches the projects they were invited to and nothing else, so the
 wizard is not offered to them at all. See
 [Roles and project visibility](../organizations/roles-and-visibility.md).
@@ -127,7 +127,7 @@ leave those files where nothing looks for them. A renamed project keeps the slug
 with, which is worth knowing when you audit a bucket and find a path naming a project that no longer
 goes by that name.
 
-:::caution The slug is part of your storage paths
+:::caution[The slug is part of your storage paths]
 Artifacts are stored under `<projectSlug>-<projectId>/…`. The id keeps paths unique regardless, but
 be aware the slug appears in bucket paths when auditing storage.
 :::
@@ -149,7 +149,7 @@ What is *not* deleted:
 - Secrets written into your Git provider — remove `MICROFRONTEND_ORCHESTRATOR_API_KEY` yourself if
   you want it gone
 
-:::caution Deleting a project breaks live applications
+:::caution[Deleting a project breaks live applications]
 Every public serve endpoint for that project stops answering immediately. Any application currently
 loading microfrontends through it will fail to load them. Make sure nothing is serving from the
 project before you delete it.

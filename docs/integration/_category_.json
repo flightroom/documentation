@@ -1,9 +1,9 @@
 {
   "label": "Integration",
-  "position": 7,
+  "position": 11,
   "link": {
     "type": "generated-index",
-    "title": "Integrate microfrontends into your app",
+    "title": "Integrate microfrontends with Module Federation",
     "description": "Consume a deployment from your application: Module Federation configuration, runtime variables and the public serve API."
   }
 }

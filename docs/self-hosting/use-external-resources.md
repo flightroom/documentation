@@ -37,7 +37,7 @@ NOSQL_DATABASE_NAME=microfrontend-orchestrator
 The driver is configured with `retryWrites: true` and `w: "majority"`, so the cluster has to be
 reachable for a write to be acknowledged — a failover is retried, a partition is not hidden.
 
-:::caution Transactions need a replica set
+:::caution[Transactions need a replica set]
 On connecting, the backend asks the server whether it is part of a replica set and logs which it
 found. Against a standalone `mongod` it runs the multi-document operations — creating a deployment
 among them — without a transaction, so a failure halfway through leaves a partial write. Every
@@ -45,7 +45,7 @@ managed MongoDB (Atlas, DocumentDB, a self-hosted replica set) satisfies this; a
 started by hand does not.
 :::
 
-:::note Encrypt what you store in a database you do not own
+:::note[Encrypt what you store in a database you do not own]
 This is the case the key exists for. Without `SECRETS_ENCRYPTION_KEY` the credentials a project
 stores — bucket keys, storage connection strings, service account files, repository tokens — are
 written to MongoDB in plain text, and a managed cluster means backups, snapshots and support access
@@ -71,7 +71,7 @@ REDIS_PASSWORD=…
 plaintext, `rediss://` for TLS. A bare hostname is not a usable value — the client rejects it and the
 connection never comes up.
 
-:::caution The Redis user is always `default`
+:::caution[The Redis user is always `default`]
 The client is built with `username: "default"` in the source, and only the password is configurable.
 A Redis whose ACL puts your credentials on another user cannot be reached: create the credentials on
 `default`, or embed `user:password@` in `REDIS_URL` and leave `REDIS_PASSWORD` unset.

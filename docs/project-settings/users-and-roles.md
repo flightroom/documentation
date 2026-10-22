@@ -2,47 +2,35 @@
 sidebar_position: 2
 title: Project members and roles
 sidebar_label: Members and roles
-description: "What the project role is and is not: why membership is the boundary inside a project, how to invite and remove members, and how it meets the organization role."
+description: "What the project role decides and what it does not, how to invite and remove members, and how it meets the organization role."
 keywords: [members, roles, permissions, invitations, access control]
 ---
 
 # Project members and roles
 
-A user can be a member of several projects, and a role is recorded for them in each one. That role
-is a **label**: it is stored, shown as a badge and named in the invitation email, but nothing in the
-platform reads it to decide whether an action is allowed. Inside a project, **membership itself is
-the boundary** — read the warning under [Roles](#roles) before you invite anybody.
+A user can be a member of several projects, and a role is recorded for them in each one. The role
+decides some things and not others: it guards the members list, the delivery settings, the AI and
+everything that writes to your Git provider or your cloud, but most of the day-to-day configuration
+is open to every member. Read [Roles](#roles) before you invite anybody.
 
 Which projects a person can reach at all is decided one level up, by the organization that owns
 them:
 
 > The [organization role](../organizations/roles-and-visibility.md) answers *which projects*.
-> Project membership answers *whether this is one of them* — and everybody who is in can do
-> everything in it.
+> The project role answers *what they may change in one*.
 
 Two consequences are worth keeping in mind while reading the rest of this page:
 
-- **Whoever administers the organization reaches every project in it**, invited or not. Somebody who
-  must be read-only cannot be an organization owner or admin — and, per the warning below, cannot be
-  a member of the project either.
+- **Whoever administers the organization reaches every project in it**, invited or not, and acts
+  there as an Admin. Somebody who must be read-only cannot be an organization owner or admin.
 - **Inviting somebody to a project also puts them into the owning organization**, as a plain member.
   See [Inviting a member](#inviting-a-member) below.
 
-Members live under **Settings → Team Members**.
+Members live under **Settings → Access → Team Members**.
 
 ## Roles
 
-:::danger Any role on a project grants full control of that project
-Every write inside a project goes through a single authorization check, and that check asks whether
-you are a **member** of the project — never which role you hold. A **Viewer can invite members,
-rename the project and delete it**, exactly as an Admin can. The console gates nothing either: the
-invite button and the Danger Zone render for every member.
-
-So invite somebody to a project only if you would let them delete it. Somebody who must not be able
-to change a project cannot be given a role in it — put their work in a separate project instead.
-:::
-
-The role exists as a label, and there are three of them:
+There are three roles:
 
 | Role in the console | Stored and returned by the API as | Notes |
 | --- | --- | --- |
@@ -54,29 +42,44 @@ The console is not consistent about which of the two names it shows. The **invit
 *Admin*, *Editor* and *Viewer*; the badge on the members list prints the stored value — `OWNER`,
 `MEMBER` or `VIEWER` — and so does the API. Invitation emails name the role as well.
 
-### The one thing the role decides
+### What the role decides
 
-The last Admin is protected from removal: the API refuses to remove the final `OWNER` of a project,
-and the console disables the button. That is the only outcome a project role changes. Renaming,
-deleting, inviting, deploying, editing microfrontends, environments or variables: none of them
-consult it.
+| Action | Who may do it |
+| --- | --- |
+| Invite and remove members, change their role | Project **Admin**, or an organization Owner or Admin |
+| Change the GitOps, Argo CD and pipeline-template settings | Project **Admin**, or an organization Owner or Admin |
+| Ask for an AI change, apply it, open its pull request, discard it | Anyone but a **Viewer** |
+| Create a code repository, for a microfrontend or a service | Anyone but a **Viewer** |
+| Create, edit, test or delete storages and databases | Anyone but a **Viewer** |
+| Deploy, when the project has GitOps on | Anyone but a **Viewer** |
+| Change anything through the [console assistant](../build-with-ai/console-assistant.md) or an [MCP client](../build-with-ai/mcp-server.md) | Anyone but a **Viewer**, within what their role allows |
 
-Choose the role, then, as documentation of intent rather than as a control — it tells the next person
-who opens the members list what you meant this member to be. Keep at least two Admins, so the
-protection above cannot strand a project whose only Admin has left.
+Organization owners and admins are never refused any of these: they act in every project of their
+organization as an Admin would.
+
+:::warning[What the role does not decide]
+Everything else is open to every member who reaches the whole project, Viewers included: renaming
+and deleting the project, editing microfrontends, services, environments and variables, and
+deploying a project that does not have GitOps on. The console may still show a button to a Viewer
+that the backend then refuses. Invite somebody to a project only if you are comfortable with them
+changing its configuration.
+:::
+
+Keep at least two Admins, so the protection of the last one cannot strand a project whose only
+Admin has left.
 
 ### Restricting who can deploy to production
 
-There is no way to do this inside one project. There is no per-environment permission split, and per
-the warning above no per-role enforcement either, so an Editor and a Viewer can both deploy `prod`
-as soon as they are members. The only mechanism that works today is a **separate project** for
-production, whose membership is the smaller group. The ability to ship and the ability to
-[roll back](../deployments/rollback-and-redeploy.md) travel together in any case: both are a
-deployment.
+There is no per-environment permission split. With [GitOps](../kubernetes/gitops.md) on, Viewers
+cannot deploy at all, but every Editor can deploy every environment, `prod` included. Without
+GitOps, every member can. To keep production to a smaller group, give it a **separate project**
+whose membership is that group. **Redeploy** is not restricted by role at all: it re-activates a
+previous snapshot in Flightroom, and does not touch the cluster — see
+[Rolling back on Kubernetes](../kubernetes/rollback.md).
 
 ## Inviting a member
 
-1. Go to **Settings → Team Members** and click **Invite user**.
+1. Go to **Settings → Access → Team Members** and click **Invite user**.
 
    ![The Project Members page](../assets/team-members.png)
 
@@ -91,7 +94,7 @@ the project with the role you chose — see
 [Accepting an invitation](../account/email-flows.md#accepting-an-invitation) for the screen they land
 on and how long the link lives.
 
-:::info The invitation reaches the organization too
+:::info[The invitation reaches the organization too]
 A project sits inside an organization, so inviting somebody to a project also adds them to that
 organization — as a plain **member**, created already accepted. That membership grants nothing on
 its own: a plain member reaches only the projects they were invited to, which is exactly the project
@@ -101,15 +104,14 @@ again, unless they have other projects there. See
 [Roles and project visibility](../organizations/roles-and-visibility.md#inviting-to-a-project-creates-a-membership-in-the-organization).
 :::
 
-:::caution Without SMTP an invitation becomes an unverified membership
+:::caution[Without SMTP an invitation becomes an unverified membership]
 Invitations are delivered by email, so the installation needs SMTP configured. On a self-hosted
 instance without `EMAIL_SMTP_HOST` set the invitation does not fail — it degrades. No email is sent,
 no link is generated, and the address you typed is added to the project as an **already active
 member**, with nothing having proved that the person owns that address. Resending an invitation is
 the only action that errors in that state.
 
-Combined with the warning above, that means a typo hands full control of the project to whoever owns
-the address you mistyped. Configure SMTP before you invite anybody — see
+That means a typo hands the role you picked to whoever owns the address you mistyped. Configure SMTP before you invite anybody — see
 [Environment Variables](../self-hosting/environment-variables.md).
 :::
 
@@ -134,15 +136,12 @@ For a pending invitation you can:
 
 ## Changing a role
 
-Not from the console: the role is a read-only badge, and nothing in the interface writes it. The
-management API does expose `PUT /projects/:projectId/users/:userId`, but no page calls it.
+Choose **Edit access** on the member's row. The dialog changes the role and the **Access**: the
+**Whole project**, or **Specific domains** only. An Admin always has the whole project. The last
+Admin cannot be given another role.
 
-The one way through the interface is to **invite the same address again while its invitation is still
-pending**: that refreshes the pending row with the role you pick the second time, and sends a new
-link. Once an invitation has been accepted, re-inviting the address is refused as already a member.
-
-Given that the role decides nothing, this is a cosmetic limitation rather than an operational one —
-but it does mean a badge can keep saying *VIEWER* about somebody you meant to promote.
+Only a project Admin, or an organization Owner or Admin, can change a role. For an invitation that
+is still pending, inviting the same address again also refreshes the role and sends a new link.
 
 ## Removing a member
 
@@ -155,7 +154,7 @@ members at all.
 They lose access to this project immediately; their account and their membership of other projects
 are unaffected.
 
-:::caution Removing them from the project does not remove them from the organization
+:::caution[Removing them from the project does not remove them from the organization]
 Somebody who accepted the invitation stays in the organization as a plain member with no project —
 harmless, since that grants nothing, but they remain on the organization's members list. Take them
 out from [the organization page](../organizations/managing-an-organization.md#members) if you want
@@ -163,7 +162,7 @@ them gone entirely; doing so also removes them from every other project of that 
 invitation that was never accepted is cleaned up on its own when you revoke it.
 :::
 
-:::tip Removing a person is not enough
+:::tip[Removing a person is not enough]
 People leaving is also the moment to audit [API keys](../ci-cd/api-keys.md). A key that person
 created keeps working after they are removed — keys belong to the project, not to the user who
 created one. **Delete** any key they were the only consumer of: deletion is the only thing that
@@ -196,11 +195,9 @@ belongs to the project, so it survives any change to your own account.
 The create dialog asks for two things, a **name** and an **expiration date**; the role is not among
 them, and every key the console creates is stored as `MANAGER`.
 
-:::caution Only deleting a key stops it
-Authenticating a request looks the key up and checks nothing else — neither the stored status nor the
-expiry date is read. A key past its expiration date still works, and the *Expired* badge in the list
-is computed in your browser from that date alone. **Delete** is the only action that actually
-revokes a key. See [API keys](../ci-cd/api-keys.md).
+:::info[Expired and revoked keys are refused]
+A key past its expiration date, or revoked, is refused on the next request. Delete a key you no
+longer need. See [API keys](../ci-cd/api-keys.md).
 :::
 
 Creating a "service user" with a shared password is the anti-pattern here: it cannot be rotated

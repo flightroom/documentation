@@ -162,7 +162,7 @@ configure({
 })
 ```
 
-:::caution `environment` is spread in, never passed as a plain field
+:::caution[`environment` is spread in, never passed as a plain field]
 Writing `environment: import.meta.env.VITE_MFE_ENVIRONMENT` is the mistake every template goes out of
 its way to avoid. Vite hands an unset variable to the bundle as `undefined` and one declared with no
 value as `""`; neither is a usable slug, and `""` reaching the SDK makes the core log a warning and
@@ -242,7 +242,7 @@ overwritten.
 | GitLab, with a group | A group secret | Creating or editing the connection |
 | Azure DevOps | A variable in the `MFE_ORCHESTRATOR_SECRETS` variable group | Creating or editing the connection |
 
-:::caution Two kinds of connection get no secret at all
+:::caution[Two kinds of connection get no secret at all]
 Each injector returns early when the identifier it needs is missing. A **GitLab** connection with no
 group id, and an **Azure DevOps** connection missing its organization or project id, have nowhere to
 put the secret: nothing is created, no error is raised, and the injected pipeline cannot

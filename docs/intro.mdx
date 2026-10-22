@@ -2,19 +2,24 @@
 sidebar_position: 2
 title: Get started with Flightroom
 sidebar_label: Let's start
-description: Create an account, connect a repository and create your first microfrontend with Flightroom — hosted console or self-hosted, one step at a time.
-keywords: [getting started, tutorial, quickstart, microfrontends]
+description: Create an account, connect a repository, add an AI and build your first app or agent with Flightroom — hosted console or self-hosted, one step at a time.
+keywords: [getting started, tutorial, quickstart, build with ai, ai agents]
 ---
 
 import Link from '@docusaurus/Link';
 
 # Get started with Flightroom
 
-Welcome to Flightroom! This tutorial will guide you through your first steps with the platform.
+Flightroom is an open-source enterprise platform where anyone can build applications and AI
+agents by describing them in plain language. The AI writes the code in your own Git repositories,
+your engineers review it, and one click deploys it to your Kubernetes through GitOps and Argo CD,
+with your single sign-on, your roles and your AI models.
 
-:::tip In a hurry?
-The **[quick start](./quick-start.mdx)** is the condensed version of this page: from zero to a
-deployed microfrontend — and a one-click rollback — in about ten minutes.
+This tutorial guides you through your first steps with the platform.
+
+:::tip[In a hurry?]
+The **[quick start](./quick-start.mdx)** is the condensed version of this page: describe an app,
+review it, deploy it.
 :::
 
 **Flightroom can be used in two ways:**
@@ -99,7 +104,7 @@ To get started, you need to create an account. You have two options:
 5. Create your organization. The [five-step project wizard](./project-settings/projects.md#creating-a-project)
    then opens inside it: name, environments, storage, repositories, collaborators
 
-:::tip Recommended
+:::tip[Recommended]
 Using Google SSO is faster and you don't need to remember another password!
 :::
 
@@ -107,9 +112,9 @@ If you already have an account, simply sign in with your email or Google account
 
 ## Step 2: Connect Your Code Repository
 
-To deploy microfrontends, you need to connect Flightroom to your source code repository.
+The AI writes your apps into repositories Flightroom creates in your Git provider, so the first thing to connect is that provider.
 
-1. Navigate to **[Code Repositories](https://console.flightroom.dev/code-repositories)** or click on **Settings** → **Code Repositories** in the main navigation menu
+1. Navigate to **[Code Repositories](https://console.flightroom.dev/code-repositories)** or open **Settings → Resources → Code Repositories**
 
    ![The Code Repositories page before any provider is connected](./assets/code-repositories.png)
 
@@ -126,13 +131,47 @@ Flightroom supports multiple repository providers:
 - **[Azure DevOps](https://dev.azure.com)** - Microsoft Azure Repos
   - [See detailed setup guide →](/docs/repositories/connect/azure.dev-ops)
 
-:::tip Quick Start
+:::tip[Quick Start]
 For most users, we recommend starting with GitHub as it has the simplest setup process.
 :::
 
-## Step 3: Create Your First Microfrontend
+## Step 3: Add an AI to Your Organization
 
-Now you're ready to start working with microfrontends!
+Flightroom uses the AI model your organization chooses, with your own credentials.
+
+1. Open the organization menu in the header and choose **Organization settings**
+2. Open the **AI** tab and choose **Add AI**
+3. Pick a provider — Claude through Anthropic, Azure AI Foundry or AWS Bedrock, GPT through Azure
+   OpenAI, or Gemini — and enter its credentials
+
+Only organization owners and admins can add an AI. Once one exists, every project of the
+organization can use it, unless an admin restricts a project to some models or turns AI off for
+it. See [AI models](./build-with-ai/ai-models.md).
+
+## Step 4: Build Your First App with AI
+
+1. Open **Domains** in the sidebar and create a **New domain**. A domain groups the web interfaces
+   and services of one business capability, for example *Expenses* or *Onboarding*
+2. On the domain's **Edit with AI** tab, describe what the team needs and press
+   **Generate proposal**
+3. The AI proposes the components the request needs: up to three **microfrontends** (web
+   interfaces) and three **services** (backends and agents). Adjust names, repositories and
+   templates, then confirm
+4. Flightroom creates each repository from its template, CI pipeline included, and the AI writes
+   a first version on an `ai/…` branch
+5. Keep refining through chat, then **Open a pull request**, apply the change, or discard it
+
+Your base branch is untouched until someone acts on the proposal. See
+[Generate a domain with AI](./build-with-ai/generate-a-domain.md) and
+[AI changes](./build-with-ai/ai-changes.md).
+
+**Congratulations!** 🎉 You have your first app in your own repositories. To put it in front of
+users, [deploy it to Kubernetes](./kubernetes/overview.md).
+
+## Alternative: Create a Microfrontend by Hand
+
+If you would rather start from a template without the AI — for example a web interface served by
+Flightroom and composed into a host with Module Federation — create a microfrontend directly.
 
 1. Return to the **[Home page](https://console.flightroom.dev)** by clicking on the home icon or logo in the navigation menu
 2. Click the **Add New Microfrontend** box at the center of the screen
@@ -160,7 +199,7 @@ tab is missing entirely, the project has no repository connection yet — go bac
 
 5. Click **Save** to finalize the setup
 
-:::info Automatic Setup
+:::info[Automatic Setup]
 Flightroom will automatically:
 - ✅ **Create the repository** in your selected source code provider with the chosen template
 - ✅ **Initialize the microfrontend** with all necessary configurations
@@ -169,37 +208,28 @@ Flightroom will automatically:
 This process usually takes a few seconds. You'll see a success message once everything is ready!
 :::
 
-**Congratulations!** 🎉 You've successfully created your first microfrontend. You can now start developing, deploying, and managing your application through Flightroom.
+Your microfrontend now exists. The [microfrontend quick start](./microfrontends/quick-start.mdx) takes it from here to a deployed version and a rollback.
 
 ## Next steps
 
-Your microfrontend exists, but there are a few more pieces before it is serving traffic. The
-shortest path from here:
-
-1. **[Understand the model](./core-concepts.md)** — projects, environments, deployments and how they
-   relate. Ten minutes that will save you an hour later.
-2. **[Publish a version](./microfrontends/versions-and-builds.md)** — push a tag and let the
-   generated pipeline build and upload your first artifact.
-3. **[Set up your environments](./environments/overview.md)** — the stages your microfrontend moves
-   through, plus the [allowed domains](./environments/domains.md) that let one build serve them all.
-4. **[Deploy](./deployments/overview.md)** — snapshot the configuration and make it live. Remember:
-   editing is not deploying.
-5. **[Integrate](./integration/overview.md)** — copy the generated Module Federation configuration
-   into your host application.
+1. **[Understand the model](./core-concepts.md)** — organizations, projects, domains,
+   environments and deployments, and how they relate.
+2. **[Set up your environments](./environments/overview.md)** — dev, UAT, production or your own
+   stages, each its own Kubernetes namespace.
+3. **[Deploy to Kubernetes](./kubernetes/overview.md)** — connect a GitOps repository and your
+   Argo CD once, then ship with one click.
+4. **[Keep improving with AI](./build-with-ai/ai-changes.md)** — ask for the next change on any
+   microfrontend, service or domain.
 
 ### Going further
 
-- **[Hosting options](./microfrontends/hosting-options.md)** — keep artifacts on the hub, in
-  [your own bucket](./buckets/overview.md), or on your existing CDN
-- **[Build status](./deployments/build-status.md)** — every microfrontend, its latest CI run and the
-  version each environment serves, on one page
-- **[Runtime configuration](./integration/runtime-configuration.md)** — configure the same build
-  differently per environment, without a rebuild
-- **[CI/CD](./ci-cd/api-keys.md)** — API keys and pipelines for
-  [GitHub](./ci-cd/github-actions.md), [GitLab](./ci-cd/gitlab-ci.md) and
-  [Azure DevOps](./ci-cd/azure-pipelines.md)
+- **[Guardrails](./build-with-ai/guardrails.md)** — what the AI can and cannot touch, and how
+  review and roles keep it in check
+- **[Console assistant](./build-with-ai/console-assistant.md)** — ask the console to act for you,
+  with a confirmation before anything destructive
+- **[Microfrontends](./microfrontends/overview.md)** — versions, hosting options, canary releases
+  and generated [Module Federation configuration](./integration/overview.md)
 - **[Organizations](./organizations/overview.md)** — the tenant that owns your projects, and who
   reaches which one
 - **[Members and roles](./project-settings/users-and-roles.md)** — invite your team
-- **[Self hosting](./self-hosting/docker.md)** — run the platform on your own infrastructure
-
+- **[Self hosting](./self-hosting/helm.md)** — run the platform on your own infrastructure

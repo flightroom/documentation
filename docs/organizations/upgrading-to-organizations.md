@@ -51,7 +51,7 @@ already had. A membership still waiting for an answer converts to `MEMBER` whate
 
 Whoever already holds a role in the target organization keeps it. The migration never demotes.
 
-:::caution Editors and Viewers become plain members
+:::caution[Editors and Viewers become plain members]
 An Editor or a Viewer of one project becomes a plain `MEMBER` of the organization, which reaches
 only the projects they were invited to. That is the same set of projects they could see before the
 upgrade, so nothing is lost — but it also means they cannot create projects any more. Promote them

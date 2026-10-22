@@ -23,7 +23,7 @@ In the AWS console, open **S3 → Create bucket**:
 - **Region** — pick one close to your users; note it, you will need it
 - **Block Public Access** — leave **enabled**
 
-:::tip Keep the bucket private
+:::tip[Keep the bucket private]
 Flightroom reads objects server-side with your credentials and streams them to browsers
 itself. The bucket never needs to be public, and no CORS configuration is required.
 :::

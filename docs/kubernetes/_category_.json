@@ -1,0 +1,9 @@
+{
+  "label": "Deploy to Kubernetes",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "title": "Deploy apps and agents to Kubernetes",
+    "description": "Press Deploy: Flightroom commits to Git, Argo CD syncs your cluster, and each service gets its namespace, configuration, secrets and URL per environment."
+  }
+}
