@@ -16,7 +16,7 @@ with it. The other tabs are:
 | --- | --- |
 | A frontend | **Edit with AI**, **Details & settings** |
 | A service | **Edit with AI**, **Overview**, **Details & settings** |
-| A [functional domain](../domains/overview.md) | **Edit with AI**, **Structure** |
+| A [functional domain](../domains/overview.md) | **Edit with AI** |
 
 It is available when the project can use an [AI](./ai-models.md) and what you are changing has a
 code repository linked. Otherwise, on a frontend or a service the **Edit with AI** tab is

@@ -32,12 +32,6 @@ On the **Frontends** dashboard, **Import from repository** sits next to
 **Add New Frontend** in the page header, and again in the empty state of a project that has no
 frontend yet.
 
-On the **Structure** of a [functional domain](../domains/overview.md), the **Add frontend** and
-**Add service** menus also offer **Import from repository**. From there every imported repository
-lands in that domain, and from **Add service** it becomes a **service** instead of a frontend
-(see [Importing as services](#importing-as-services)). It is the only place in the console to import
-services.
-
 ![The Import from repository action in the frontends dashboard header](../assets/repository-import-action.png)
 
 ## Choosing what to import
@@ -87,9 +81,9 @@ failure.
 
 ## Importing as services
 
-Imported as services, each repository creates a service with the same name, slug, description and
-code repository link, and no version: the first one is registered by its CI, as for a service made
-from a template. Services have a slug space of their own, separate from the frontends'.
+Imported as services (`target: service` in [the API](#api), as the console imports frontends
+only), each repository creates a service with the same name, slug, description and code repository
+link, and no version: the first one is registered by its CI, as for a service made from a template. Services have a slug space of their own, separate from the frontends'.
 
 A service slug takes **2 to 50** lowercase letters, digits or dashes, because it names the CI
 registration URL of the service. A repository whose slug would be longer lands in **failed**: create
