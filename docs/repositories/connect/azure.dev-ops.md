@@ -48,7 +48,7 @@ Fill in the token configuration:
 
 ### 2.3 Required Token Scopes
 
-:::warning Critical: Select the Correct Scopes
+:::warning[Critical: Select the Correct Scopes]
 Make sure to select these **exact scopes** for Flightroom to function properly:
 :::
 
@@ -81,7 +81,7 @@ In the **Scopes** section of the token creation dialog, configure the following 
 
    > *This lets Flightroom create the `MFE_ORCHESTRATOR_SECRETS` variable group where the API key its pipeline uses is stored*
 
-:::tip Quick Check
+:::tip[Quick Check]
 After selecting all scopes, verify that you have:
 
 - Code: Read, write & manage
@@ -123,7 +123,7 @@ In the **Add Repository** dialog, enter the following information:
 
 Before saving, verify that everything is configured correctly clicking on **Test Connection** button
 
-:::tip Connection Test Success
+:::tip[Connection Test Success]
 If the test is successful, you'll see a **green checkmark** and a success message. If it fails, double-check your organization name and PAT.
 :::
 
@@ -176,7 +176,7 @@ If your project doesn't appear in the dropdown:
 
 ## Security Best Practices
 
-:::warning Token Security
+:::warning[Token Security]
 Follow these best practices to keep your account secure:
 :::
 

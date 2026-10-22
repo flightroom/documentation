@@ -43,7 +43,7 @@ Webpack writes `remoteEntry.js` to the root of your output directory, so the mic
 **Entry Point** in Flightroom should read `remoteEntry.js` — unless you have customised
 `output.publicPath` or the filename.
 
-:::caution `remoteEntry.js` is not a default you can rely on
+:::caution[`remoteEntry.js` is not a default you can rely on]
 Nothing in the platform defaults that field to `remoteEntry.js`. The microfrontend model stores no
 default, and when the field is empty the serving path falls back to **`index.js`**. Where
 `remoteEntry.js` appears without you typing it, it came from the marketplace entry of the Webpack
@@ -191,7 +191,7 @@ every stage. In exchange, each stage's domain has to be registered on the right 
 manifest request fails rather than falling back to anything. See
 [leaving the environment out](./client-sdk.md#leaving-the-environment-out).
 
-:::caution Do not turn the spread into a plain field
+:::caution[Do not turn the spread into a plain field]
 `environment: process.env.MFE_ENVIRONMENT` reads more simply, and it is the shape that makes people
 believe the value is required. It is also fragile: swap the generated `DefinePlugin` entry for
 `webpack.EnvironmentPlugin` and an `MFE_ENVIRONMENT=` line, and the field becomes `''`, which the
@@ -199,7 +199,7 @@ core accepts, warns about, and then ignores in favour of the `auto` routes anywa
 in only when it holds something is correct under either plugin.
 :::
 
-:::note If you pin a remote by hand
+:::note[If you pin a remote by hand]
 Webpack's static remote syntax is `name@url`, not a bare URL as Vite uses. You will not see it in
 the generated configuration any more, but it is what you need if you ever hard-code a remote —
 along with the understanding that you have just frozen one version into your host.

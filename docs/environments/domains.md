@@ -74,7 +74,7 @@ quickest way to spot a stage that is still missing one:
 
 ## Overlapping domains
 
-:::caution No domain may be a substring of a domain on another environment
+:::caution[No domain may be a substring of a domain on another environment]
 Matching is not an equality test. The domain the request comes from is compiled into a
 case-insensitive regular expression, and each **registered** domain is tested against it with no
 anchors — so an environment matches when one of its registered domains *contains* the calling one.

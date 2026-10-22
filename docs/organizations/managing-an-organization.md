@@ -45,14 +45,14 @@ decided in one order, always the same:
 3. otherwise, if the organization holds exactly **one** project, that one, automatically;
 4. otherwise nothing is selected, and the project picker asks.
 
-:::info Accepting an invitation can move you
+:::info[Accepting an invitation can move you]
 The project switcher also lists project invitations you have not answered yet, naming the
 organization a project belongs to when it is not the one you are in. Accepting such an invitation
 switches you to that organization — the console works inside one at a time, so staying put would
 hand you a project list that does not contain the project you just accepted.
 :::
 
-:::tip A project shown under the wrong organization is a bug, not a mode
+:::tip[A project shown under the wrong organization is a bug, not a mode]
 The header always names the organization the current project belongs to. If you ever see a project
 listed under an organization that does not own it, you are on a build older than 4.0.0 — the race
 that caused it was fixed there.
@@ -80,7 +80,7 @@ no project is selected yet and the project wizard opens.
 carries three things: the **Organization details** card, the membership tables, and the one
 irreversible action on the organization.
 
-:::info The old address still works
+:::info[The old address still works]
 Until 4.0.0 this page lived in the sidebar at `/organization-users`. That path now redirects to
 `/organization`, so existing links and bookmarks keep working.
 :::
@@ -138,7 +138,7 @@ Invitations wait for an answer in their own table:
 
 The **Expires on** column is the deadline: invitations are valid for five days.
 
-:::info Email delivery is required
+:::info[Email delivery is required]
 Organization invitations are delivered by email, exactly like project invitations, so the
 installation needs SMTP configured. On an installation with no email channel the invited user is
 added to the organization straight away instead — a confirmation link that cannot be delivered would
@@ -159,7 +159,7 @@ Delete the projects first, one at a time, where
 is being lost. Once the organization is empty, deleting it asks you to type its name to confirm and
 removes the organization and its memberships.
 
-:::caution What deletion does not touch
+:::caution[What deletion does not touch]
 Deleting an organization removes the organization and its membership rows. The user accounts
 themselves, and their membership of other organizations, are unaffected.
 :::

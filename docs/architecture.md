@@ -2,15 +2,17 @@
 sidebar_position: 3.5
 title: Architecture
 sidebar_label: Architecture
-description: "How Flightroom is put together: the orchestrator, the database and cache behind it, the storage options, and how a deployment reaches each environment."
-keywords: [architecture, diagram, deployment, mongodb, redis, object storage, self-hosting]
+description: "How Flightroom is put together: the orchestrator, the database and cache behind it, how AI changes reach your repositories, how a deploy reaches Kubernetes through Argo CD, and how microfrontend bundles are served."
+keywords: [architecture, diagram, deployment, gitops, argo cd, kubernetes, ai, mongodb, redis, object storage, self-hosting]
 ---
 
 # Architecture
 
-Flightroom is a **control plane**: it stores what your microfrontends are, which versions
-belong to which environment, and where their files live — then answers, at runtime, the single
-question your host application asks: *what should I load?*
+Flightroom is a **control plane**. It never runs your apps itself: the AI writes their code into
+your Git repositories, a deploy is a commit to your GitOps repositories, and your Argo CD runs them
+on your Kubernetes. For microfrontends served by Flightroom, it also stores which versions belong
+to which environment and where their files live — then answers, at runtime, the single question
+the host application asks: *what should I load?*
 
 This page draws that out. If you have not read [Core concepts](./core-concepts.md) yet, start
 there: the boxes below are the objects described on that page.
@@ -110,6 +112,62 @@ A few things worth reading off the diagram:
   readable: with a [repository](./repositories/connect/github.md) connected, the platform scaffolds
   a repo from a template, injects a build pipeline and creates the deploy secret that pipeline
   needs.
+
+## From a request to a running app
+
+Building with AI and deploying to Kubernetes add three outside systems to the picture: the AI model
+your organization chose, your Git provider, and your Argo CD. The orchestrator talks to each of them
+over HTTPS, with credentials stored in MongoDB — encrypted when `SECRETS_ENCRYPTION_KEY` is set.
+
+```mermaid
+flowchart LR
+    member["Project member<br/>console, assistant or MCP client"]
+
+    subgraph orch["Flightroom"]
+        direction TB
+        agent["AI change agent<br/>works on a clone<br/>REPOSITORIES_FOLDER"]
+        deploy["Deploy"]
+    end
+
+    model["Your AI model<br/>Claude · GPT · Gemini"]
+
+    subgraph git["Your Git provider"]
+        direction TB
+        code["App repositories<br/>ai/… branches, pull requests"]
+        gitops["GitOps repositories<br/>configuration + applications"]
+    end
+
+    ci["Your CI<br/>tests each branch; on a tag,<br/>pushes the image"]
+    argo["Your Argo CD"]
+
+    subgraph k8s["Your Kubernetes"]
+        direction TB
+        ns["One namespace per environment"]
+        route["Gateway API · HTTPRoute<br/>TLS from cert-manager"]
+    end
+
+    member --> agent
+    agent <-->|"prompts and file edits"| model
+    agent -->|"push to an ai/… branch"| code
+    code --> ci
+    ci -->|"register the version"| deploy
+    member --> deploy
+    deploy -->|"commit manifests and Helm values"| gitops
+    deploy -.->|"Argo CD API: set up AppProject,<br/>ApplicationSets"| argo
+    argo -->|"pull, read-only token"| gitops
+    argo -->|"sync, prune, self-heal"| ns
+    ns --- route
+```
+
+- **The agent never runs code.** It reads and writes files on a clone and pushes a branch. Your CI
+  tests that branch like any other; on a tag, the template pipeline builds and pushes the image and
+  registers the version with Flightroom, ready to deploy. See [Guardrails](./build-with-ai/guardrails.md).
+- **The console holds no cluster credentials.** It calls the Argo CD API to set up the project, and
+  commits to Git to deploy. Argo CD pulls the commit and applies it to its own cluster. See
+  [Argo CD](./kubernetes/argo-cd.md).
+- **No commit, no deploy.** Flightroom commits before it records a deployment; if the commit fails,
+  nothing is deployed. The history of an environment is the history of its repositories. See
+  [GitOps](./kubernetes/gitops.md).
 
 ## Deployments across environments
 
@@ -250,7 +308,7 @@ flowchart LR
     app -.->|"optional"| smtp["SMTP"]
 ```
 
-:::caution Mount the artifact folder
+:::caution[Mount the artifact folder]
 `MICROFRONTEND_HOST_FOLDER` must sit on a persistent volume. Without it, every container restart
 loses the builds uploaded to the internal storage — in the reference `docker-compose.yaml` that is
 the `upload_microfrontends` volume.

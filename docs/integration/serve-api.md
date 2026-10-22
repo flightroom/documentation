@@ -19,7 +19,7 @@ All examples use `<API_BASE>`:
 | Hosted console | `https://console.flightroom.dev/api` |
 | Self-hosted | `<FRONTEND_URL>/api`, or `BACKEND_URL` if set |
 
-:::info No authentication
+:::info[No authentication]
 These endpoints are public by design — they are called from browsers, where a credential could not
 be kept secret anyway. Do not put anything confidential in environment variables. The
 [management API](../ci-cd/api-keys.md) is a separate, authenticated surface.
@@ -65,7 +65,7 @@ back; it does not touch `createdAt`. So after a rollback the `deployedAt` form s
 you rolled back *to*, while the two `createdAt` forms keep serving the newest-*created* one — the
 very deployment you rolled away from.
 
-:::note An SDK-wired host is on the safe route
+:::note[An SDK-wired host is on the safe route]
 Every `url` in the manifest carries the environment slug, so a host that loads its remotes through
 [`remoteUrl()`](./client-sdk.md) only ever requests the `{projectId}/{environmentSlug}` form, which
 sorts on `deployedAt` and therefore honours a rollback. The exposure is a consumer that hand-writes
@@ -131,7 +131,7 @@ every `-` removed. Use it as the key when registering remotes dynamically:
 version: a microfrontend on a **Based on version**
 [canary](../microfrontends/canary-releases.md) reports the version *this caller* gets.
 
-:::caution A **Based on URL** canary reports the stable version
+:::caution[A **Based on URL** canary reports the stable version]
 That branch has no version of the platform's own to pin — the canary *is* a URL somewhere else — so
 the entry carries the canary `url` next to the **deployed** `version`. A caller drawn into a URL
 canary is therefore told it is running the stable version. `url` is the field to trust there.
@@ -241,7 +241,7 @@ redirects. It is not sufficient for a **classic script**: `document.currentScrip
 versionless URL and could mix two versions in one page. Take the manifest URL as it is and the
 question does not arise.
 
-:::caution The `Location` is root-relative and carries no `/api` prefix
+:::caution[The `Location` is root-relative and carries no `/api` prefix]
 The redirect points at `/serve/mfe/files/…`, not at `<API_BASE>/serve/mfe/files/…`. Behind the
 shipped nginx, which proxies the backend under `location /api/` and serves the console SPA from `/`,
 the browser is therefore sent to the SPA instead of to the file. The fallback only works when the
@@ -289,7 +289,7 @@ GET <API_BASE>/serve/code?microfrontendId={id}&deploymentId={id}
 falls back to the stack stored on the microfrontend, which is the normal case. They exist so the
 console can ask for another stack — or for one at all, when detection found none.
 
-:::caution They are two different parameters
+:::caution[They are two different parameters]
 `vite` and `webpack` are `compiler` values, not `framework` values. `framework=vite` parses to
 `undefined`, the request then has no framework to generate for, and the response comes back with an
 empty `code` and no config — a silent empty answer rather than an error.

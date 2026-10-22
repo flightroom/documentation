@@ -61,7 +61,7 @@ object and no free text:
 
 The request also carries a `User-Agent` of `mfe-orchestrator/<version>`, like any HTTP client.
 
-:::note `version` reads the backend package version, which lags the image tag
+:::note[`version` reads the backend package version, which lags the image tag]
 In the 4.0.0 image that field still reports `1.0.0`, as the payload above shows: it is read from the
 backend's own `package.json`, which is not bumped with the release tag. It is the one field in the
 payload that currently says less than it looks like it says.
@@ -144,7 +144,7 @@ The first rule that matches wins:
 | 4 | `NODE_ENV` is set to anything other than `prod` | off | Developer machines, CI and test runs are not installations |
 | 5 | none of the above | **on** | Opt-out default |
 
-:::caution Rule 4 does not save the shipped container
+:::caution[Rule 4 does not save the shipped container]
 The published image sets no `NODE_ENV` at all, and an unset `NODE_ENV` counts as `prod`. So a plain
 `docker compose up` of the [published compose file](./docker-compose.md) lands on rule 5 and telemetry
 is on. Rule 4 protects a local `pnpm dev` and a CI job, not a deployment.

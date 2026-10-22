@@ -64,7 +64,7 @@ the [organization page](./managing-an-organization.md#the-organization-page). Th
 right is the single door to the organization level: settings, switching and creation all start
 there. Everything in the sidebar below it is about the project.
 
-:::info The selection is remembered per browser
+:::info[The selection is remembered per browser]
 The organization and the project you are working in are stored in the browser, not on the server.
 Signing in from another browser asks again. An account that belongs to exactly one organization is
 never asked at all — it is selected automatically.
@@ -82,7 +82,7 @@ before it reaches anything else. Registration therefore has one more step than i
 If somebody invited you instead, the pending invitation is offered on that same screen, above the
 creation form: accepting it puts you into their organization rather than opening one of your own.
 
-:::caution A plain member cannot create the first project
+:::caution[A plain member cannot create the first project]
 Only an owner or an admin of an organization can create a project in it. Somebody invited to an
 organization as a plain member, with nothing shared with them yet, sees an empty project picker and
 the organization switcher — not the project wizard, which would fail on submit. See

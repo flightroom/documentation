@@ -54,7 +54,7 @@ export default defineConfig({
 })
 ```
 
-:::caution Build settings are not optional
+:::caution[Build settings are not optional]
 `target: 'esnext'` is required — Module Federation relies on top-level await. `minify: false` and
 `cssCodeSplit: false` avoid known issues with the plugin's chunk rewriting. The templates ship
 with these already set; if you configure a remote by hand, keep them.
@@ -176,7 +176,7 @@ must be registered on the matching environment, or the manifest request fails ou
 falling back. Set it if you would rather have the environment fixed at build time; the
 [client SDK page](./client-sdk.md#leaving-the-environment-out) walks through the trade-off.
 
-:::caution Do not turn the spread into a plain field
+:::caution[Do not turn the spread into a plain field]
 `environment: import.meta.env.VITE_MFE_ENVIRONMENT` reads more simply and behaves worse. Vite has two
 ways of saying *not set*: a variable missing from `.env` arrives as `undefined`, one declared with no
 value arrives as `''`. The second is the trap — `environment: ''` is a value the core accepts, logs a

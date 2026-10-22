@@ -1,6 +1,6 @@
 {
   "label": "Buckets",
-  "position": 8,
+  "position": 12,
   "link": {
     "type": "generated-index",
     "title": "Storage for microfrontend builds",

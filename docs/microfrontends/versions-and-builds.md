@@ -85,7 +85,7 @@ repository.
 See [CI/CD](../ci-cd/github-actions.md) for the full pipeline examples, and
 [Manual upload](../ci-cd/manual-upload.md) for the raw HTTP call.
 
-:::caution Custom URL microfrontends cannot be uploaded to
+:::caution[Custom URL microfrontends cannot be uploaded to]
 Upload only works for microfrontends hosted on the **Flightroom Hub** or on a
 **Custom Source** bucket. For **Custom URL**, publishing is handled entirely by your own
 infrastructure — Flightroom only records which version to point at.
@@ -112,7 +112,7 @@ The **Continuous Deployment** switch marks a microfrontend as continuously deplo
 stored on the microfrontend and published to consumers as `continuousDeployment` on the
 [serve API](../integration/serve-api.md) payload.
 
-:::info It is a marker, not an automation
+:::info[It is a marker, not an automation]
 The platform does not currently change version resolution based on this flag — it does not skip the
 deployment step or auto-select new versions. It is metadata your own tooling can act on: a host that
 reads `/serve/all/...` can, for example, choose to poll for updates on continuously deployed remotes

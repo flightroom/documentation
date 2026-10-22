@@ -26,7 +26,7 @@ For security-sensitive values like passwords and secrets, consider using Docker 
 
 ## Available Variables
 
-:::note "Default Value" means what the schema declares
+:::note["Default Value" means what the schema declares]
 The container validates its environment against a fixed schema, and most variables have no default
 in it. Where the column below reads *(no default)* the variable is genuinely unset unless you set
 it — the platform logs a warning and does not connect, it does not fall back to `localhost`. The
@@ -77,7 +77,7 @@ it — the platform logs a warning and does not connect, it does not fall back t
 | `EMAIL_SMTP_PASSWORD` | *(empty)* | Password for SMTP authentication. |
 | `EMAIL_SMTP_FROM` | *(no default)* | Sender email address, for example `no-reply@example.com`. |
 
-:::danger Five console screens exist only because these are set
+:::danger[Five console screens exist only because these are set]
 Account activation, password recovery, password reset and both invitation acceptance screens are all
 reached through a token delivered by email, and by no other means. With `EMAIL_SMTP_HOST` unset an
 installation cannot activate an account, cannot reset a password and cannot confirm an invitation —
@@ -94,7 +94,7 @@ in that state.
 |-----------|---------------|-------------|
 | `JWT_SECRET` | `your-secret-key` | Secret key for JWT generation and validation. |
 
-:::caution The JWT default is a published constant
+:::caution[The JWT default is a published constant]
 `your-secret-key` is in the source, so an installation that leaves `JWT_SECRET` unset signs its
 tokens with a key anybody can read. Set one — `openssl rand -hex 32` — everywhere except the
 all-in-one image, which generates one into its volume on the first start.
@@ -170,7 +170,7 @@ would send are on [Telemetry](./telemetry.md).
 | `TELEMETRY_INTERVAL_HOURS` | `24` | Hours between two pings. |
 | `SENTRY_DSN` | *(empty)* | Sentry DSN of the backend. Leave empty to disable error reporting. |
 
-:::note Variables outside this list are ignored
+:::note[Variables outside this list are ignored]
 The container validates its configuration against a fixed schema and drops anything it does not
 know, so a misspelled name fails silently rather than being picked up. `LOG_LEVEL` and
 `AZURE_ENTRAID_CLIENT_SECRET`, which earlier versions of this page listed, are read by nothing.

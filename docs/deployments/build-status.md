@@ -17,7 +17,7 @@ recent history behind it, and the version each environment is currently serving.
 
 ![The Builds page with a status badge per microfrontend and one row expanded on its last runs](../assets/builds-page.png)
 
-:::info Nothing is stored
+:::info[Nothing is stored]
 The runs are read from the providers when you open the page, and re-read while you keep it open.
 Flightroom keeps no build history of its own, so the page shows what the providers show and
 nothing more.
@@ -138,7 +138,7 @@ and for each microfrontend its `selectedVersion`, `latestBuiltVersion`, a
 `versionByEnvironmentId` map and up to five `builds`; a microfrontend that could not be read
 carries `unavailableReason` and an empty `builds`.
 
-:::note `EventSource` cannot be used
+:::note[`EventSource` cannot be used]
 The API requires an `Authorization` and a `Project-Id` header on every call — the console sends an
 `issuer` header alongside them, naming the identity provider the token came from — and `EventSource`
 cannot send any of them. Consume the stream with `fetch`, as the console does.

@@ -51,7 +51,7 @@ Add the following environment variables to your Docker container configuration:
 | `GOOGLE_CLIENT_SECRET` | Client secret from the same OAuth client. **Required** | `GOCSPX-…` |
 | `GOOGLE_REDIRECT_URI` | Redirect URI for authentication | `http://localhost:3000/api/auth/callback/google` |
 
-:::caution `GOOGLE_CLIENT_SECRET` is not optional
+:::caution[`GOOGLE_CLIENT_SECRET` is not optional]
 The console signs in with the authorization-code flow: the browser gets a code, the backend exchanges
 it for tokens at `https://oauth2.googleapis.com/token`, and that exchange sends the client secret.
 With the secret missing, the Google consent screen appears and succeeds, and the login then fails at

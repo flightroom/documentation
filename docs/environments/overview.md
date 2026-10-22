@@ -37,7 +37,7 @@ domains and colour. Drag a row to change the order they appear in throughout the
 When you set up a project through the wizard you are offered a set of **default environments**
 to start from, and you can add your own alongside them.
 
-:::caution Slugs are public
+:::caution[Slugs are public]
 The environment slug appears in serve URLs such as
 `<API_BASE>/serve/all/<projectId>/<environmentSlug>`. The console will not let you rename it — the
 field is disabled when you edit an existing environment — precisely because renaming it breaks any

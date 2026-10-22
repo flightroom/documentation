@@ -26,42 +26,38 @@ single project. Keys live under **Settings → API Keys**.
 
 The key is displayed once, in a dialog with a **Copy & Close** button.
 
-:::caution Shown exactly once
+:::caution[Shown exactly once]
 The key is stored hashed and can never be retrieved again — the list view has no key column at all.
 If you lose it, delete the key and create a new one.
 :::
 
-## Expiry is recorded, not enforced
+## Expiry
 
 Every key carries an expiry date and the list marks it **Active**, **Expiring soon** or **Expired**
-from that date.
-
-:::caution An expired key still works
-Read this before you rely on the expiry date for anything. The authentication check loads the keys,
-compares the presented value against their hashes and returns the project the match belongs to. It
-reads neither the `status` field nor `expiresAt`. So a key the console shows as **Expired**
-authenticates exactly like a live one, indefinitely, and the badge is a reminder to a human rather
-than a control.
-
-**Deleting the key is the only action that stops it.**
-:::
-
-There is still no way to create a non-expiring key, and the date is still worth setting honestly: it
-is what tells you, and the next person, when a key was meant to be retired.
+from that date. The date is enforced: from the moment it passes, a request with the key is refused
+with *API key expired on …*. There is no way to create a non-expiring key.
 
 :::tip
-Put the expiry date in whatever calendar your team actually reads, and treat it as the date you
-*delete* the key. Rotate by creating the new key first, updating the consumer, then deleting the old
-one.
+Put the expiry date in whatever calendar your team actually reads. Rotate before it: create the new
+key first, update the consumer, then delete the old one.
 :::
 
 ## What a key can call
 
-One endpoint: the [upload](#using-a-key) of a microfrontend version.
+The endpoints a pipeline needs:
 
-```
-POST <API_BASE>/microfrontends/by-slug/:slug/upload/:version
-```
+- the [upload](#using-a-key) of a microfrontend version:
+
+  ```
+  POST <API_BASE>/microfrontends/by-slug/:slug/upload/:version
+  ```
+
+- registering the version of a Docker frontend or a [service](../templates/service-templates.md)
+  once its image is pushed, and reporting where it was deployed. These require a `MANAGER` key; the
+  template pipelines call them for you.
+
+Plus the [MCP server](../build-with-ai/mcp-server.md), where a key stands in for clients that cannot
+sign in with OAuth.
 
 Everything else on the API — creating a deployment, editing a microfrontend, reading the build
 status — is authenticated with the token of a signed-in user and answers an API key with an
@@ -76,10 +72,13 @@ gives you anything to do with it.
 - **You cannot choose it.** The create dialog asks for a name and an expiry date, nothing else, and
   every key it produces is a `MANAGER`. Keys created automatically for a scaffolded repository are
   `MANAGER` too.
-- **It is never checked.** No authorization path reads the role, so a `VIEWER` key — if you could
-  create one — would upload exactly like a `MANAGER` one.
+- **It is checked where it matters for CI and AI clients.** Registering the version of a service or
+  a Docker frontend, and reporting where it was deployed, require a `MANAGER` key. The
+  [MCP server](../build-with-ai/mcp-server.md) gives a `VIEWER` key read-only tools. Uploading a
+  microfrontend bundle does not read the role. A `VIEWER` key can be created through the
+  [console assistant](../build-with-ai/console-assistant.md), not from the create dialog.
 
-Treat the role as an unused field, and the *key itself* as the credential to protect. Anywhere the
+Treat the *key itself* as the credential to protect. Anywhere the
 CI pages ask for a key, any key the console gives you is the right one.
 
 ## Keys created for you
@@ -95,7 +94,7 @@ microfrontend, and is skipped when a secret of that name already exists.
 | GitLab | Group CI/CD variable | The group you selected on the connection |
 | Azure DevOps | Variable group `MFE_ORCHESTRATOR_SECRETS` | The Azure DevOps project |
 
-:::caution A personal GitHub account gets no organization secret
+:::caution[A personal GitHub account gets no organization secret]
 Each injector needs an organization or group id and returns without doing anything when there is
 none. A GitHub connection to a personal account has no organization, so no secret is written and a
 pipeline in an existing repository cannot authenticate — the publish step fails with an
@@ -111,11 +110,10 @@ You will find these keys in the API Keys list named
 `MFE_ORCHESTRATOR_DEPLOY_SECRET - <provider> - <repository>`. Do not delete them unless you intend
 to break the corresponding pipeline.
 
-:::note They are dated 15 days out
-The expiry on an automatically created key is computed as `3600 * 1000 * 365` milliseconds — 365
-*hours*, not a year — so it is about 15.2 days. The console badges it **Expired** two weeks after
-the connection was made, while the key keeps working, because expiry is not enforced. Nothing breaks;
-the badge is simply wrong about it.
+:::caution[Older keys expire after 15 days]
+An automatically created key now expires after a year. Older versions of the platform computed 365
+*hours* instead, about 15 days, and expiry is enforced: a pipeline whose key was created that way
+fails with *API key expired*. Create a new key and update the pipeline secret.
 :::
 
 ## Using a key
@@ -135,7 +133,7 @@ A query parameter is also accepted, for clients that cannot set headers:
 <API_BASE>/microfrontends/by-slug/catalog/upload/1.4.0?apiKey=…
 ```
 
-:::caution Prefer the header
+:::caution[Prefer the header]
 Query strings end up in access logs, browser history and proxy logs. Use `?apiKey=` only when
 setting a header is genuinely impossible.
 :::
@@ -145,17 +143,12 @@ header.
 
 ## Stopping a key
 
-There is one action: **Delete**, the trash button on the key's row in the list.
+In the console there is one action: **Delete**, the trash button on the key's row in the list.
 
-:::caution Revoking does not exist, and would not work
-The API has a `PUT /api-keys/:id/revoke` endpoint that sets a key's `status` to inactive, and nothing
-calls it — the console offers no Revoke control. It would not help if it did: the authentication
-check never reads `status`, so a revoked key authenticates like a live one.
-
-Deleting the key is what stops it. There is no way to keep the record for the audit trail and stop
-the credential at the same time; if you need the history, note the key's name and expiry before you
-delete it.
-:::
+A key can also be **revoked**: it stays in the list, and every request with it is refused with
+*API key revoked*. The console has no Revoke button; the API (`PUT /api-keys/:id/revoke`) and the
+[console assistant](../build-with-ai/console-assistant.md) can do it. Revoke when you want to keep the
+record for the audit trail, delete when you do not.
 
 ## Good practice
 

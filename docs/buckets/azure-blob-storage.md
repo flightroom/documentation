@@ -30,7 +30,7 @@ follow the matching section.
 2. Inside it, open **Data storage → Containers** and create a container, e.g. `microfrontends`.
 3. Set the container's **Public access level** to **Private**.
 
-:::tip Keep the container private
+:::tip[Keep the container private]
 Flightroom reads blobs server-side with your credentials and streams them to browsers itself.
 The container never needs public access, and no CORS rules are required.
 :::
@@ -69,7 +69,7 @@ Scoped to the container you name in Flightroom, but still derived from an accoun
 
 Scoping the role assignment at the container rather than the account is the least-privilege choice.
 
-:::info Why Storage Blob Data Contributor
+:::info[Why Storage Blob Data Contributor]
 The platform needs to read and write blobs. *Reader* is insufficient (uploads fail) and *Owner*
 grants more than is needed. Contributor at container scope is the right level.
 :::

@@ -79,7 +79,7 @@ plus a **Redeploy** action.
 Inspecting an old deployment answers "what exactly was live last Tuesday?" without archaeology
 through Git.
 
-:::tip Which version is where
+:::tip[Which version is where]
 The deployments page answers the question one environment at a time. For the whole project at a
 glance — every microfrontend, the version each environment serves, and whether its last CI run
 passed — use [Build status](./build-status.md).

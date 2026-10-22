@@ -94,7 +94,7 @@ docker compose up -d
 4. Once the page loads, an installation with no users shows the **Initial Setup** screen: enter your
     `email`, `password` and first project name to start using the Hub.
 
-:::caution Do the first startup before the address is reachable by anybody else
+:::caution[Do the first startup before the address is reachable by anybody else]
 That screen is public and ungated, so whoever fills it in first owns the installation. Read
 [The first startup](./first-startup.md) before you type a project name into it — the name becomes a
 permanent slug, and it mishandles anything longer than two words.

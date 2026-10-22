@@ -13,7 +13,7 @@ The chart lives in the repository, under
 It installs the standard image `lory1990/mfe-orchestrator`, which serves the frontend and the API
 behind nginx on port `80`.
 
-:::info MongoDB and Redis are not part of the chart
+:::info[MongoDB and Redis are not part of the chart]
 The chart deploys the application only. Point it at instances you already run, or install them with
 their own charts — there is an example [below](#mongodb-and-redis).
 :::
@@ -45,7 +45,7 @@ an installation with no users has no login form:
 kubectl port-forward -n mfe-orchestrator svc/mfe-orchestrator 8080:80
 ```
 
-:::caution Do the first startup before the ingress is open
+:::caution[Do the first startup before the ingress is open]
 That screen is public and ungated, so whoever fills it in first owns the installation. Read
 [The first startup](./first-startup.md) before you type a project name into it — the name becomes a
 permanent slug, and it mishandles anything longer than two words. Configure the
@@ -107,7 +107,7 @@ Both maps accept native YAML scalars — values are quoted when rendered, so
 Precedence, from lowest to highest: `env` → `envSecrets` → `existingConfigMap` → `existingSecret`
 → `extraEnv`.
 
-:::caution An empty value is skipped, not set
+:::caution[An empty value is skipped, not set]
 Leaving a value empty or null means the variable is not injected at all and the application keeps
 its own default. That is what you want for most of `values.yaml` — with one exception:
 `RATE_LIMIT_MAX` is validated as a number, so an empty value fails validation and keeps the

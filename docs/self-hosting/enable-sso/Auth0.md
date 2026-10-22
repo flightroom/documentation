@@ -49,7 +49,7 @@ Add the following environment variables to your Docker container configuration a
 | `AUTH0_CLIENT_ID` | Client ID of the Auth0 application | `AbCdEf0123456789…` |
 | `AUTH0_AUDIENCE` | API Audience configured in Auth0 | `https://api.yourdomain.com` |
 
-:::caution `AUTH0_DOMAIN` is the switch
+:::caution[`AUTH0_DOMAIN` is the switch]
 The backend adds Auth0 to the configuration it serves the console only when `AUTH0_DOMAIN` is set.
 Without it the client ID and the audience are ignored and no Auth0 button appears, whatever else you
 configured.

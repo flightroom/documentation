@@ -66,7 +66,7 @@ Mismatches are computed both for `peerDependencies` and for `dependencies`. The 
 The alignment commits the updated `package.json` on a dedicated branch of every repository —
 `chore/align-peer-dependencies` by default — created from the branch that was compared.
 
-:::warning The base branch is never modified
+:::warning[The base branch is never modified]
 If the target branch resolves to the branch being compared, that repository is skipped with an
 error. Existing branches are reused, and the manifest is re-read from the target branch before
 the change is applied, so re-running the alignment is idempotent.
