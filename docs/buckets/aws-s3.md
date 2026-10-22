@@ -8,7 +8,7 @@ keywords: [amazon s3, aws, object storage, iam policy, microfrontend builds]
 
 # Store builds on Amazon S3
 
-This page walks through connecting an S3 bucket to MFE Orchestrator.
+This page walks through connecting an S3 bucket to Flightroom.
 
 ## Prerequisites
 
@@ -24,11 +24,11 @@ In the AWS console, open **S3 → Create bucket**:
 - **Block Public Access** — leave **enabled**
 
 :::tip Keep the bucket private
-MFE Orchestrator reads objects server-side with your credentials and streams them to browsers
+Flightroom reads objects server-side with your credentials and streams them to browsers
 itself. The bucket never needs to be public, and no CORS configuration is required.
 :::
 
-Versioning is optional. MFE Orchestrator already stores each release under its own version prefix,
+Versioning is optional. Flightroom already stores each release under its own version prefix,
 so S3 versioning adds protection against accidental overwrites rather than release history.
 
 ## Step 2: Create an IAM policy
@@ -65,7 +65,7 @@ bucket):
 }
 ```
 
-Note there is no `s3:DeleteObject`: MFE Orchestrator never deletes artifacts. Leaving it out means a
+Note there is no `s3:DeleteObject`: Flightroom never deletes artifacts. Leaving it out means a
 compromised key cannot destroy your release history. Add it only if you plan to use the same
 credentials for housekeeping — better still, use a
 [lifecycle rule](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html),
@@ -73,14 +73,14 @@ which needs no credentials at all.
 
 ## Step 3: Create an IAM user and access key
 
-1. **IAM → Users → Create user**, e.g. `mfe-orchestrator`.
+1. **IAM → Users → Create user**, e.g. `flightroom`.
 2. Do **not** grant console access — this identity is only used programmatically.
 3. Attach the policy from step 2.
 4. Open the user, go to **Security credentials → Create access key**, and choose
    *Application running outside AWS*.
 5. Copy the **Access key ID** and **Secret access key**. The secret is shown once.
 
-## Step 4: Add the storage in MFE Orchestrator
+## Step 4: Add the storage in Flightroom
 
 Go to **Settings → Storages → New Storage** and select **Amazon S3**:
 
@@ -134,7 +134,7 @@ S3 console.
 
 ## Cost notes
 
-The traffic pattern is `GET` requests from MFE Orchestrator to S3, one per file served, plus egress
+The traffic pattern is `GET` requests from Flightroom to S3, one per file served, plus egress
 from S3 to the platform. Both are small for typical bundles, but if your microfrontends are heavily
-trafficked and large, consider a bucket in the same region as your MFE Orchestrator installation to
+trafficked and large, consider a bucket in the same region as your Flightroom installation to
 reduce inter-region egress.

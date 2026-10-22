@@ -2,14 +2,14 @@
 sidebar_position: 5
 title: Hosts and remotes in Module Federation
 sidebar_label: Hosts and remotes
-description: How MFE Orchestrator models the parent and child relationships between hosts and remotes, and how it turns that graph into Module Federation configuration.
+description: How Flightroom models the parent and child relationships between hosts and remotes, and how it turns that graph into Module Federation configuration.
 keywords: [host, remotes, module federation, relation graph, diagram view]
 ---
 
 # Hosts and remotes in Module Federation
 
 A microfrontend architecture is only an architecture once the pieces know about each other.
-This page covers how MFE Orchestrator models those relationships, and what it does with them.
+This page covers how Flightroom models those relationships, and what it does with them.
 
 ## The relation graph
 
@@ -38,7 +38,7 @@ normal shape.
 
 ## Why the graph matters
 
-The graph is what lets MFE Orchestrator generate your Module Federation configuration. When a
+The graph is what lets Flightroom generate your Module Federation configuration. When a
 host asks the platform for its remotes, the answer is computed as:
 
 > all microfrontends in the **active deployment** whose parents include this host
@@ -53,7 +53,7 @@ from `1.3.0` to `1.4.0` in production is a deployment, not a host rebuild.
 
 ## Remote naming
 
-Module Federation remote names cannot contain `/` or `-`, so MFE Orchestrator derives the name
+Module Federation remote names cannot contain `/` or `-`, so Flightroom derives the name
 from the slug by stripping them:
 
 | Slug | Remote name |

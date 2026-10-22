@@ -50,7 +50,7 @@ export default function LayoutWrapper(props: Props): ReactNode {
     },
     publisher: {
       '@type': 'Organization',
-      name: 'MFE Orchestrator',
+      name: 'Flightroom',
       url: siteUrl,
     },
   };

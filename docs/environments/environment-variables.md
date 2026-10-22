@@ -8,11 +8,11 @@ keywords: [environment variables, runtime configuration, per environment config]
 
 # Runtime environment variables
 
-Environment variables in MFE Orchestrator are **runtime** configuration: `key`/`value` pairs
+Environment variables in Flightroom are **runtime** configuration: `key`/`value` pairs
 scoped to an environment, read by the browser after the bundle has loaded.
 
 :::info Not to be confused with…
-These are the variables of *your application*. The variables that configure the MFE Orchestrator
+These are the variables of *your application*. The variables that configure the Flightroom
 container itself are documented under
 [Self Hosting → Environment Variables](../self-hosting/environment-variables.md).
 :::

@@ -9,7 +9,7 @@ keywords: [canary release, progressive rollout, traffic split, versions, sticky 
 # Canary releases for microfrontends
 
 A canary release serves a new version of a microfrontend to a fraction of your traffic while
-everyone else keeps the stable one. MFE Orchestrator takes that decision per microfrontend and
+everyone else keeps the stable one. Flightroom takes that decision per microfrontend and
 entirely server-side: the host page never learns which side of the split it got, and does not need
 to.
 
@@ -85,7 +85,7 @@ is therefore a console change only — nothing to redeploy on the host side.
 An earlier version of this feature had a *Cookie Based* type, and the name was misleading:
 **no cookie is involved anywhere here, and none can be.** Microfrontends are loaded with a
 cross-site `import()`, and module scripts are fetched with a fixed `same-origin` credentials mode,
-so a cookie belonging to the MFE Orchestrator domain is never attached to those requests and a
+so a cookie belonging to the Flightroom domain is never attached to those requests and a
 `Set-Cookie` on their responses is never stored. This is how module scripts are specified in every
 browser, not a Safari or ITP quirk — verified in Chromium with third-party cookies enabled and a
 `SameSite=None; Secure` cookie already in the jar. The host page is the only place that can hold
@@ -152,7 +152,7 @@ manifest returns the usual serve URL with the resolved version already pinned in
 segment**:
 
 ```
-https://console.mfe-orchestrator.dev/api/serve/mfe/files/auto/68f1a2b3c4d5e6f7a8b9c0d1/checkout-new/_v/1.5.0-rc1/assets/remoteEntry.js
+https://console.flightroom.dev/api/serve/mfe/files/auto/68f1a2b3c4d5e6f7a8b9c0d1/checkout-new/_v/1.5.0-rc1/assets/remoteEntry.js
 ```
 
 Use that URL verbatim. Never rebuild it, and never strip the `_v/<version>/` segment.

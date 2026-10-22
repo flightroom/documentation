@@ -2,15 +2,15 @@
 sidebar_position: 1
 title: Self-host with Docker
 sidebar_label: Docker
-description: "Run MFE Orchestrator Hub from the official Docker image: the all-in-one image for a single container, or the standard image against your own MongoDB and Redis."
+description: "Run Flightroom from the official Docker image: the all-in-one image for a single container, or the standard image against your own MongoDB and Redis."
 keywords: [docker, self-hosting, installation, container, all-in-one]
 ---
 
 # Self-host with Docker
 
-This page provides instructions to install MFE Orchestrator Hub using Docker.
+This page provides instructions to install Flightroom using Docker.
 
-You can find the official docker repo on [dockerhub](https://hub.docker.com/r/lory1990/mfe-orchestrator)
+You can find the official docker repo on [dockerhub](https://hub.docker.com/r/lory1990/flightroom)
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ Two images are published, and the difference is what runs inside the container:
 
 | Image | Contains | Use it for |
 | --- | --- | --- |
-| `lory1990/mfe-orchestrator:all-in-one` | Orchestrator, MongoDB, Redis and Nginx | A working installation from a single `docker run` |
+| `lory1990/flightroom:all-in-one` | Orchestrator, MongoDB, Redis and Nginx | A working installation from a single `docker run` |
 | `lory1990/mfe-orchestrator:4.0.0` | Orchestrator and Nginx only | Installations that point at a MongoDB and a Redis you already run |
 
 The standard image does **not** bring a database with it: started on its own it has nothing to
@@ -34,8 +34,8 @@ connect to. Give it `NOSQL_DATABASE_URL` and `REDIS_URL`, or use
 ## Start the all-in-one container
 
 ```bash
-docker run -d --name mfe-orchestrator --restart unless-stopped \
-  -p 8080:80 -v mfe-data:/data lory1990/mfe-orchestrator:all-in-one
+docker run -d --name flightroom --restart unless-stopped \
+  -p 8080:80 -v mfe-data:/data lory1990/flightroom:all-in-one
 ```
 
 Open `http://localhost:8080` and wait for the server to come up — this can take up to 2 minutes on
@@ -69,7 +69,7 @@ What you should know about this image:
   `-e REGISTRATION_ALLOWED=true -e FRONTEND_URL=https://mfe.example.com`.
 - The four processes are supervised: they are restarted when they crash and, if one cannot start at
   all, the container exits instead of pretending to be healthy.
-  `docker exec mfe-orchestrator supervisorctl status` shows their state.
+  `docker exec flightroom supervisorctl status` shows their state.
 
 :::caution One container is one failure domain
 The all-in-one image trades isolation for simplicity, and no service in it can be scaled or
@@ -80,7 +80,7 @@ upgraded on its own. For production, or whenever you already run a managed Mongo
 ## Start the standard container
 
 ```bash
-docker run -d --name mfe-orchestrator --restart unless-stopped \
+docker run -d --name flightroom --restart unless-stopped \
   -p 8080:80 \
   -e NOSQL_DATABASE_URL="mongodb://root:example@mongodb:27017" \
   -e REDIS_URL="redis://redis:6379" \

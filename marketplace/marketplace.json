@@ -15,7 +15,7 @@
         "entryPoint": "assets/remoteEntry.js",
         "compiler": "vite",
         "framework": "React",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/vite-logo.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/vite-logo.png"
     },
     {
         "name": "Vite & React - host Template",
@@ -31,7 +31,7 @@
         "entryPoint": "assets/remoteEntry.js",
         "compiler": "vite",
         "framework": "React",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/vite-logo.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/vite-logo.png"
     },
     {
         "name": "Vite & Angular - host Template",
@@ -46,7 +46,7 @@
         "entryPoint": "assets/remoteEntry.js",
         "compiler": "vite",
         "framework": "Angular",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/vite-logo.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/vite-logo.png"
     },
     {
         "name": "Vite & Angular - remote Template",
@@ -64,7 +64,7 @@
         "entryPoint": "assets/remoteEntry.js",
         "compiler": "vite",
         "framework": "Angular",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/vite-logo.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/vite-logo.png"
     },
     {
         "name": "Vite & Vue - host Template",
@@ -79,7 +79,7 @@
         "entryPoint": "assets/remoteEntry.js",
         "compiler": "vite",
         "framework": "Vue",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/vite-logo.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/vite-logo.png"
     },
     {
         "name": "Vite & Vue - remote Template",
@@ -96,7 +96,7 @@
         "entryPoint": "assets/remoteEntry.js",
         "compiler": "vite",
         "framework": "Vue",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/vite-logo.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/vite-logo.png"
     },
     {
         "name": "Webpack & React - remote Template",
@@ -112,7 +112,7 @@
         "type": "remote",
         "compiler": "webpack",
         "framework": "React",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/webpack-logo.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/webpack-logo.png"
     },
     {
         "name": "Webpack & React - host Template",
@@ -127,7 +127,7 @@
         "type": "host",
         "compiler": "webpack",
         "framework": "React",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/webpack-logo.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/webpack-logo.png"
     },
     {
         "name": "Webpack & Angular - remote Template",
@@ -142,7 +142,7 @@
         "type": "remote",
         "compiler": "webpack",
         "framework": "Angular",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/webpack-logo.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/webpack-logo.png"
     },
     {
         "name": "Webpack & Angular - host Template",
@@ -157,7 +157,7 @@
         "type": "host",
         "compiler": "webpack",
         "framework": "Angular",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/webpack-logo.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/webpack-logo.png"
     },
     {
         "name": "Webpack & Vue - remote Template",
@@ -172,7 +172,7 @@
         "type": "remote",
         "compiler": "webpack",
         "framework": "Vue",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/webpack-logo.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/webpack-logo.png"
     },
     {
         "name": "Webpack & Vue - host Template",
@@ -187,7 +187,7 @@
         "type": "host",
         "compiler": "webpack",
         "framework": "Vue",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/webpack-logo.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/webpack-logo.png"
     },
     {
         "name": "Web Component & React - remote Template",
@@ -201,7 +201,7 @@
         "type": "remote",
         "compiler": "webcomponent",
         "framework": "React",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/webcomponents.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/webcomponents.png"
     },
     {
         "name": "Web Component & React - host Template",
@@ -215,7 +215,7 @@
         "type": "host",
         "compiler": "webcomponent",
         "framework": "React",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/webcomponents.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/webcomponents.png"
     },
     {
         "name": "single-spa & React - host Template",
@@ -231,7 +231,7 @@
         "type": "host",
         "compiler": "single-spa",
         "framework": "React",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/single-spa.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/single-spa.png"
     },
     {
         "name": "single-spa & React - remote Template",
@@ -248,7 +248,7 @@
         "entryPoint": "index.js",
         "compiler": "single-spa",
         "framework": "React",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/single-spa.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/single-spa.png"
     },
     {
         "name": "micro-lc & React - host Template",
@@ -264,7 +264,7 @@
         "type": "host",
         "compiler": "micro-lc",
         "framework": "React",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/micro-lc.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/micro-lc.png"
     },
     {
         "name": "micro-lc & React - remote Template",
@@ -281,6 +281,6 @@
         "entryPoint": "parcel.js",
         "compiler": "micro-lc",
         "framework": "React",
-        "icon": "https://raw.githubusercontent.com/mfe-orchestrator/documentation/refs/heads/main/marketplace/micro-lc.png"
+        "icon": "https://raw.githubusercontent.com/flightroom/documentation/refs/heads/main/marketplace/micro-lc.png"
     }
 ]

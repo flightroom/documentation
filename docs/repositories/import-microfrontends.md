@@ -66,7 +66,7 @@ One microfrontend per selected repository, with:
 | Slug            | The name slugified (lowercase, non-alphanumeric runs collapsed to `-`), with a numeric suffix on collision |
 | Description     | The repository description, when the provider exposes one                                                |
 | Version         | `1.0.0`, or the `version` sent to the API                                                                |
-| Host            | The [default storage](../buckets/overview.md) of the project when there is one, the MFE Orchestrator hub otherwise, with entry point `assets/remoteEntry.js` |
+| Host            | The [default storage](../buckets/overview.md) of the project when there is one, the Flightroom Hub otherwise, with entry point `assets/remoteEntry.js` |
 | Code repository | Linked and enabled, with the provider id, the HTTPS and SSH clone urls and — on GitLab — the group and path |
 
 Those are the same defaults the

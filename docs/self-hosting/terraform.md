@@ -2,13 +2,13 @@
 sidebar_position: 3
 title: Self-host with Terraform
 sidebar_label: Terraform
-description: Install MFE Orchestrator Hub with Terraform against Docker infrastructure as code, including the prerequisites and the variables the configuration expects.
+description: Install Flightroom with Terraform against Docker infrastructure as code, including the prerequisites and the variables the configuration expects.
 keywords: [terraform, infrastructure as code, self-hosting, docker, installation]
 ---
 
 # Self-host with Terraform
 
-This page provides instructions to install MFE Orchestrator Hub using Terraform with Docker infrastructure as code.
+This page provides instructions to install Flightroom using Terraform with Docker infrastructure as code.
 
 ## Prerequisites
 
@@ -22,11 +22,11 @@ Before you begin, ensure you have the following installed:
 
 ### 1. Clone the Repository
 
-First, clone the MFE Orchestrator repository and navigate to the Terraform directory:
+First, clone the Flightroom repository and navigate to the Terraform directory:
 
 ```bash
-git clone https://github.com/mfe-orchestrator/mfe-orchestrator.git
-cd mfe-orchestrator/terraform
+git clone https://github.com/flightroom/flightroom.git
+cd flightroom/terraform
 ```
 
 ### 2. Initialize Terraform
@@ -66,7 +66,7 @@ terraform apply
 Type `yes` when prompted to confirm the deployment.
 
 :::tip
-The apply process will create all necessary Docker resources to run MFE Orchestrator locally.
+The apply process will create all necessary Docker resources to run Flightroom locally.
 :::
 
 ### 4. Verify the Deployment
@@ -77,7 +77,7 @@ After successful deployment, verify that containers are running:
 docker ps
 ```
 
-You should see the MFE Orchestrator containers up and running.
+You should see the Flightroom containers up and running.
 
 ## Accessing the Application
 
@@ -96,7 +96,7 @@ and one run in three months bring up the same stack:
 
 | Container | Image |
 | --- | --- |
-| MFE Orchestrator | `lory1990/mfe-orchestrator:4.0.0` |
+| Flightroom | `lory1990/mfe-orchestrator:4.0.0` |
 | MongoDB | `mongo:8-noble` |
 | Redis | `redis:8.0.2-alpine` |
 

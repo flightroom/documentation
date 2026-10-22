@@ -2,13 +2,13 @@
 sidebar_position: 5
 title: Deploy with GitLab CI
 sidebar_label: GitLab CI
-description: The .gitlab-ci.yml MFE Orchestrator commits when it scaffolds a GitLab repository, the group-level CI/CD variable it creates, and how to add a pipeline by hand.
+description: The .gitlab-ci.yml Flightroom commits when it scaffolds a GitLab repository, the group-level CI/CD variable it creates, and how to add a pipeline by hand.
 keywords: [gitlab ci, pipeline, ci cd, ci variables, deploy]
 ---
 
 # Deploy with GitLab CI
 
-When MFE Orchestrator creates a repository from a template in GitLab, it commits a `.gitlab-ci.yml`
+When Flightroom creates a repository from a template in GitLab, it commits a `.gitlab-ci.yml`
 and creates a group-level CI/CD variable holding the deploy key.
 
 ## The generated pipeline
@@ -91,7 +91,7 @@ build:
 :::caution Host repositories stop at build
 Microfrontend repositories get the `deploy` stage below already committed. Host repositories do not
 — like their GitHub and Azure DevOps counterparts they build and containerise, but do not publish
-themselves to MFE Orchestrator. Add the job below if you want a host published as a remote too.
+themselves to Flightroom. Add the job below if you want a host published as a remote too.
 :::
 
 ## The publish job
@@ -113,7 +113,7 @@ deploy:
     - build
   variables:
     MICROFRONTEND_SLUG: "catalog"
-    MICROFRONTEND_ORCHESTRATOR_DOMAIN: "https://console.mfe-orchestrator.dev"
+    MICROFRONTEND_ORCHESTRATOR_DOMAIN: "https://console.flightroom.dev"
   before_script:
     - apk add --no-cache curl zip
   script:
@@ -135,7 +135,7 @@ placeholders, which the scaffolder replaces before the initial commit, as it doe
 | Placeholder | Replaced with |
 | --- | --- |
 | `%microfrontendSlug%` | The slug of the microfrontend, as it appears in the console |
-| `%domain%` | The base URL of the console, without `/api`: `BACKEND_URL` if the installation sets it, `https://console.mfe-orchestrator.dev` otherwise |
+| `%domain%` | The base URL of the console, without `/api`: `BACKEND_URL` if the installation sets it, `https://console.flightroom.dev` otherwise |
 
 If you add this job to a repository by hand, write those two values in yourself.
 

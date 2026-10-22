@@ -2,14 +2,14 @@
 sidebar_position: 2
 title: Allowed domains and environment resolution
 sidebar_label: Allowed domains
-description: Allowed Domains lets MFE Orchestrator work out which environment a browser request belongs to from its origin, so one artifact can serve every stage.
+description: Allowed Domains lets Flightroom work out which environment a browser request belongs to from its origin, so one artifact can serve every stage.
 keywords: [allowed domains, environment resolution, origin, multi environment]
 ---
 
 # Allowed domains and environment resolution
 
 **Allowed Domains** is the least obvious field on an environment, and the one that unlocks the
-cleanest integration. It lets MFE Orchestrator work out *which environment a browser request
+cleanest integration. It lets Flightroom work out *which environment a browser request
 belongs to* without the URL saying so.
 
 ## The problem it solves
@@ -46,7 +46,7 @@ Then use the environment-less form of the URL:
 <API_BASE>/serve/mfe/files/auto/<projectId>/<microfrontendSlug>/<entryPoint>
 ```
 
-When that request arrives, MFE Orchestrator reads the browser's `Referer` header and matches it
+When that request arrives, Flightroom reads the browser's `Referer` header and matches it
 against the registered domains to find the environment, then answers from that environment's
 active deployment.
 

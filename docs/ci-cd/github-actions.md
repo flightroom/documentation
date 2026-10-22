@@ -2,13 +2,13 @@
 sidebar_position: 3
 title: Deploy with GitHub Actions
 sidebar_label: GitHub Actions
-description: The build-and-deploy workflow MFE Orchestrator commits when it scaffolds a GitHub repository, the secret it creates, and how to add one by hand.
+description: The build-and-deploy workflow Flightroom commits when it scaffolds a GitHub repository, the secret it creates, and how to add one by hand.
 keywords: [github actions, workflow, ci cd, secrets, deploy]
 ---
 
 # Deploy with GitHub Actions
 
-When MFE Orchestrator creates a repository from a template on GitHub, it commits a
+When Flightroom creates a repository from a template on GitHub, it commits a
 `.github/workflows/build-and-deploy.yml` workflow and creates the secret the workflow needs. This
 page explains that workflow, and how to add one to a repository the platform did not create.
 
@@ -52,12 +52,12 @@ jobs:
     - name: 🏗️ Build
       run: pnpm build
 
-    - name: 🚀 Publish to MFE Orchestrator
+    - name: 🚀 Publish to Flightroom
       uses: mfe-orchestrator-hub/github-action@0.0.29
       with:
         apikey: ${{ secrets.MICROFRONTEND_ORCHESTRATOR_API_KEY }}
         microfrontend-slug: catalog
-        domain: ${{ vars.MICROFRONTEND_ORCHESTRATOR_DOMAIN || 'https://console.mfe-orchestrator.dev' }}
+        domain: ${{ vars.MICROFRONTEND_ORCHESTRATOR_DOMAIN || 'https://console.flightroom.dev' }}
         file-path: './dist'
         version: ${{ inputs.version || github.ref_name }}
 ```
@@ -88,9 +88,9 @@ if you add others.
 
 | Input | Meaning |
 | --- | --- |
-| `apikey` | An MFE Orchestrator [API key](./api-keys.md) |
+| `apikey` | A Flightroom [API key](./api-keys.md) |
 | `microfrontend-slug` | The slug of the microfrontend to publish to |
-| `domain` | Base URL of your MFE Orchestrator installation |
+| `domain` | Base URL of your Flightroom installation |
 | `file-path` | The build output directory, e.g. `./dist` |
 | `version` | The version to publish |
 
@@ -125,7 +125,7 @@ do not read that badge as the cause of a failing publish.
 
 ## Adding this to an existing repository
 
-For a repository MFE Orchestrator did not create:
+For a repository Flightroom did not create:
 
 1. Create an [API key](./api-keys.md).
 2. Add it as a repository secret named `MICROFRONTEND_ORCHESTRATOR_API_KEY`

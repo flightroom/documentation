@@ -2,13 +2,13 @@
 sidebar_position: 3
 title: Store builds on Azure Blob Storage
 sidebar_label: Azure Blob Storage
-description: Authenticate MFE Orchestrator against Azure Blob Storage with a connection string, a shared key or a service principal, and store microfrontend builds there.
+description: Authenticate Flightroom against Azure Blob Storage with a connection string, a shared key or a service principal, and store microfrontend builds there.
 keywords: [azure blob storage, connection string, shared key, service principal]
 ---
 
 # Store builds on Azure Blob Storage
 
-MFE Orchestrator supports three ways of authenticating against Azure Blob Storage. Pick one and
+Flightroom supports three ways of authenticating against Azure Blob Storage. Pick one and
 follow the matching section.
 
 | Method | When to use it |
@@ -31,7 +31,7 @@ follow the matching section.
 3. Set the container's **Public access level** to **Private**.
 
 :::tip Keep the container private
-MFE Orchestrator reads blobs server-side with your credentials and streams them to browsers itself.
+Flightroom reads blobs server-side with your credentials and streams them to browsers itself.
 The container never needs public access, and no CORS rules are required.
 :::
 
@@ -52,12 +52,12 @@ From the same **Access keys** page, copy:
 - The **Storage account name**
 - The **Key** value
 
-Scoped to the container you name in MFE Orchestrator, but still derived from an account-level key.
+Scoped to the container you name in Flightroom, but still derived from an account-level key.
 
 ### Option C — Azure AD (recommended)
 
 1. **Microsoft Entra ID → App registrations → New registration**. Name it e.g.
-   `mfe-orchestrator-storage`. No redirect URI is needed.
+   `flightroom-storage`. No redirect URI is needed.
 2. Note the **Application (client) ID** and **Directory (tenant) ID** from the overview page.
 3. **Certificates & secrets → New client secret**. Copy the secret **Value** immediately — it is
    shown once. Note the expiry date and set a reminder to rotate.
@@ -74,7 +74,7 @@ The platform needs to read and write blobs. *Reader* is insufficient (uploads fa
 grants more than is needed. Contributor at container scope is the right level.
 :::
 
-## Step 3: Add the storage in MFE Orchestrator
+## Step 3: Add the storage in Flightroom
 
 Go to **Settings → Storages → New Storage** and select **Azure Blob Storage**. The fields depend on
 the **Authentication Type** you pick:
@@ -158,7 +158,7 @@ Explorer.
 Client secrets and account keys both expire or get rotated. When you rotate:
 
 1. Create the new secret/key alongside the old one.
-2. Update the storage in MFE Orchestrator.
+2. Update the storage in Flightroom.
 3. Verify a file still serves.
 4. Remove the old credential.
 

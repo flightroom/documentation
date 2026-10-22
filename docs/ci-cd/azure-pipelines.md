@@ -2,13 +2,13 @@
 sidebar_position: 4
 title: Deploy with Azure Pipelines
 sidebar_label: Azure Pipelines
-description: The azure-pipelines.yml MFE Orchestrator commits when it scaffolds an Azure DevOps repository, the variable group it creates, and how to add a pipeline by hand.
+description: The azure-pipelines.yml Flightroom commits when it scaffolds an Azure DevOps repository, the variable group it creates, and how to add a pipeline by hand.
 keywords: [azure pipelines, azure devops, ci cd, variable group, deploy key]
 ---
 
 # Deploy with Azure Pipelines
 
-When MFE Orchestrator creates a repository from a template in Azure DevOps, it commits an
+When Flightroom creates a repository from a template in Azure DevOps, it commits an
 `azure-pipelines.yml`, creates the pipeline definition, and stores the deploy key in a variable
 group.
 
@@ -62,7 +62,7 @@ stages:
       - name: VERSION
         value: $[replace(variables['Build.SourceBranch'], 'refs/tags/', '')]
       - name: MICROFRONTEND_ORCHESTRATOR_DOMAIN_RESOLVED
-        value: $[coalesce(variables['MICROFRONTEND_ORCHESTRATOR_DOMAIN'], 'https://console.mfe-orchestrator.dev')]
+        value: $[coalesce(variables['MICROFRONTEND_ORCHESTRATOR_DOMAIN'], 'https://console.flightroom.dev')]
     jobs:
       - job: Deploy
         steps:
@@ -87,7 +87,7 @@ The template in
 `%microfrontendSlug%` and `%domain%` where this example has `catalog` and the console URL. The
 scaffolder replaces both before the initial commit, as it does on GitHub: the slug of the
 microfrontend, and the base URL of the console without `/api` — `BACKEND_URL` if the installation
-sets it, `https://console.mfe-orchestrator.dev` otherwise. A pipeline variable named
+sets it, `https://console.flightroom.dev` otherwise. A pipeline variable named
 `MICROFRONTEND_ORCHESTRATOR_DOMAIN` wins over that default, so you can publish to another
 installation without editing the file.
 
@@ -105,7 +105,7 @@ is derived from the tag name by stripping `refs/tags/`.
 ## The variable group
 
 The publish task reads `$(MICROFRONTEND_ORCHESTRATOR_API_KEY)` from a variable group named
-**`MFE_ORCHESTRATOR_SECRETS`**. MFE Orchestrator creates the group and the key when you connect the
+**`MFE_ORCHESTRATOR_SECRETS`**. Flightroom creates the group and the key when you connect the
 Azure DevOps repository to a project — or edit that connection — not when a microfrontend is
 scaffolded, and it skips the work when the variable already exists.
 
@@ -133,7 +133,7 @@ before a pipeline can use it.
 
 | Input | Meaning |
 | --- | --- |
-| `apiKey` | An MFE Orchestrator [API key](./api-keys.md) |
+| `apiKey` | A Flightroom [API key](./api-keys.md) |
 | `microfrontendSlug` | The slug of the microfrontend to publish to |
 | `filePath` | The directory containing the build output |
 | `version` | The version to publish |
@@ -159,7 +159,7 @@ the step below:
       -H "api-key: $(MICROFRONTEND_ORCHESTRATOR_API_KEY)" \
       -F "file=@$(Build.ArtifactStagingDirectory)/dist.zip" \
       "$(MICROFRONTEND_ORCHESTRATOR_DOMAIN)/api/microfrontends/by-slug/catalog/upload/$(VERSION)"
-  displayName: '🚀 Upload to MFE Orchestrator'
+  displayName: '🚀 Upload to Flightroom'
 ```
 
 `--fail` is not optional: without it `curl` exits 0 on a rejected upload and the stage passes.

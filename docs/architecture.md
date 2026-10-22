@@ -2,13 +2,13 @@
 sidebar_position: 3.5
 title: Architecture
 sidebar_label: Architecture
-description: "How MFE Orchestrator is put together: the orchestrator, the database and cache behind it, the storage options, and how a deployment reaches each environment."
+description: "How Flightroom is put together: the orchestrator, the database and cache behind it, the storage options, and how a deployment reaches each environment."
 keywords: [architecture, diagram, deployment, mongodb, redis, object storage, self-hosting]
 ---
 
 # Architecture
 
-MFE Orchestrator is a **control plane**: it stores what your microfrontends are, which versions
+Flightroom is a **control plane**: it stores what your microfrontends are, which versions
 belong to which environment, and where their files live — then answers, at runtime, the single
 question your host application asks: *what should I load?*
 
@@ -33,7 +33,7 @@ flowchart TB
         browser["Host application in the browser<br/>Module Federation shell + remotes"]
     end
 
-    subgraph orch["MFE Orchestrator — one container"]
+    subgraph orch["Flightroom — one container"]
         direction LR
         console["Console<br/>React SPA"]
         mgmt["Management API<br/>authenticated"]
@@ -187,7 +187,7 @@ sequenceDiagram
     B->>S: GET /serve/mfe/files/.../assets/remoteEntry.js
     S->>DB: resolve version + hosting type from the snapshot
 
-    alt Hosting type: MFE Orchestrator Hub
+    alt Hosting type: Flightroom Hub
         S->>F: read {folder}/{projectSlug}-{projectId}/{mfeSlug}/{version}/...
         F-->>S: bytes
     else Hosting type: Custom Source (your bucket)
@@ -235,7 +235,7 @@ MongoDB, a persistent volume and an optional Redis:
 flowchart LR
     subgraph host["Your infrastructure — the reference Docker Compose topology"]
         direction TB
-        app["mfe-orchestrator<br/>container port 80"]
+        app["flightroom<br/>container port 80"]
         mongo[("mongodb<br/>NOSQL_DATABASE_URL<br/>volume: mongodb_data")]
         redis[("redis · optional<br/>REDIS_URL<br/>volume: redis_data")]
         vol["Persistent volume<br/>MICROFRONTEND_HOST_FOLDER<br/>volume: upload_microfrontends"]

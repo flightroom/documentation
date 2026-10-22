@@ -14,7 +14,7 @@ code already exists somewhere else.
 
 ## From a template (recommended)
 
-This is the fastest path from nothing to a deployable microfrontend. MFE Orchestrator creates
+This is the fastest path from nothing to a deployable microfrontend. Flightroom creates
 the repository in your Git provider, fills it with a working Module Federation project, adds a
 build-and-deploy pipeline, and injects the API key the pipeline needs to upload artifacts back
 to the platform.
@@ -69,7 +69,7 @@ A connected code repository. If you have not connected one yet, follow
 
 ### What happens behind the scenes
 
-Creating from a template is not just a `git init`. MFE Orchestrator:
+Creating from a template is not just a `git init`. Flightroom:
 
 1. **Creates the repository** in the selected provider, under the user account, organization or
    group you chose.
@@ -95,7 +95,7 @@ Pick **Create From Scratch** in the templates library when the code already exis
 want to bring your own project layout. You will be asked for the same general information, plus
 the hosting configuration:
 
-- **MFE Orchestrator Hub** — you will upload builds to the platform
+- **Flightroom Hub** — you will upload builds to the platform
 - **Custom Source** — you will upload builds to your own bucket
 - **Custom URL** — the files are already served from a URL you control
 
@@ -103,7 +103,7 @@ See [Hosting options](./hosting-options.md) for the details of each, and
 [Versions and builds](./versions-and-builds.md) for how to get artifacts in.
 
 You can optionally link an existing repository under **Code repository** — this enables the
-**Build** action on the microfrontend card, but MFE Orchestrator will not add a pipeline to a
+**Build** action on the microfrontend card, but Flightroom will not add a pipeline to a
 repository it did not create. To use the same automation, copy the relevant pipeline from the
 [template-pipelines repository](https://github.com/mfe-orchestrator/template-pipelines) and
 create an [API key](../ci-cd/api-keys.md) yourself.

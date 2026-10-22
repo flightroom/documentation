@@ -182,7 +182,7 @@ The Webpack hosts read `process.env.MFE_*` instead of `import.meta.env.VITE_MFE_
 `DefinePlugin` in `webpack.config.ts`; the Webpack + Angular host goes one step further and assembles
 the whole configuration object there, passing it as `configure(MFE_ENV)`.
 
-So a host scaffolded from a template already resolves its remotes through MFE Orchestrator and already
+So a host scaffolded from a template already resolves its remotes through Flightroom and already
 honours [canary releases](../microfrontends/canary-releases.md). Starting a host from scratch means
 doing both by hand — see [Client SDK](../integration/client-sdk.md).
 
@@ -200,7 +200,7 @@ project rather than following whichever template you happened to pick.
 
 ## What gets added on top
 
-When you create a microfrontend from a template, MFE Orchestrator does more than copy files. It also:
+When you create a microfrontend from a template, Flightroom does more than copy files. It also:
 
 1. Creates the repository in your connected provider
 2. Injects a **build-and-deploy pipeline** for that provider and compiler, looked up as
@@ -221,7 +221,7 @@ worth knowing before you rely on them.
 The pipelines carry `%microfrontendSlug%` and `%domain%` placeholders. Both are replaced before the
 initial commit, on every provider, with the same values: your microfrontend's slug, and the base URL
 of the console the pipeline publishes to — `BACKEND_URL` when the installation sets it,
-`https://console.mfe-orchestrator.dev` otherwise. The pipelines add `/api` to it themselves.
+`https://console.flightroom.dev` otherwise. The pipelines add `/api` to it themselves.
 
 What is copied differs by provider. On GitHub the whole `<type>/<compiler>/github` directory goes
 into `.github/`; on **GitLab** and **Azure DevOps** a single file is copied to the repository root
@@ -268,7 +268,7 @@ repository after creation rather than assuming either way.
 code you already have. You then choose the hosting type yourself and arrange builds and uploads —
 see [Versions and builds](../microfrontends/versions-and-builds.md).
 
-Note that no pipeline is injected into a repository MFE Orchestrator did not create. To get the same
+Note that no pipeline is injected into a repository Flightroom did not create. To get the same
 automation, copy the appropriate file from
 [`template-pipelines`](https://github.com/mfe-orchestrator/template-pipelines) and create an
 [API key](../ci-cd/api-keys.md) yourself.
@@ -276,7 +276,7 @@ automation, copy the appropriate file from
 ## Where templates come from
 
 The catalogue is assembled from a manifest published in the documentation repository:
-[`marketplace/marketplace.json`](https://github.com/mfe-orchestrator/documentation/blob/main/marketplace/marketplace.json).
+[`marketplace/marketplace.json`](https://github.com/flightroom/documentation/blob/main/marketplace/marketplace.json).
 Each entry declares the template's name, framework, compiler, host type, entry point, repository
 and download URL.
 
@@ -317,7 +317,7 @@ Templates are ordinary Git repositories. To propose one:
 1. Publish a repository containing a working microfrontend project, with the entry point and
    build settings correct for its compiler.
 2. Open a pull request against
-   [`mfe-orchestrator/documentation`](https://github.com/mfe-orchestrator/documentation) adding an
+   [`flightroom/documentation`](https://github.com/flightroom/documentation) adding an
    entry to `marketplace/marketplace.json`.
 3. If your `type`/`compiler` combination is new, also contribute the matching pipelines to
    [`template-pipelines`](https://github.com/mfe-orchestrator/template-pipelines).

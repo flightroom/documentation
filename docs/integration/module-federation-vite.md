@@ -2,13 +2,13 @@
 sidebar_position: 3
 title: Module Federation with Vite
 sidebar_label: Vite
-description: Wire an MFE Orchestrator deployment into a Vite host with @originjs/vite-plugin-federation, using the configuration the console generates.
+description: Wire a Flightroom deployment into a Vite host with @originjs/vite-plugin-federation, using the configuration the console generates.
 keywords: [vite, module federation, vite-plugin-federation, remotes, host]
 ---
 
 # Module Federation with Vite
 
-MFE Orchestrator generates configuration for
+Flightroom generates configuration for
 [`@originjs/vite-plugin-federation`](https://github.com/originjs/vite-plugin-federation), the
 Module Federation implementation for Vite. This is the setup used by the Vite templates in the
 [templates library](../templates/templates-library.md).
@@ -23,7 +23,7 @@ npm install @originjs/vite-plugin-federation --save-dev
 
 ## Configure a remote
 
-A remote declares what it exposes. This does not involve MFE Orchestrator at all — it is ordinary
+A remote declares what it exposes. This does not involve Flightroom at all — it is ordinary
 Module Federation:
 
 ```js
@@ -61,11 +61,11 @@ with these already set; if you configure a remote by hand, keep them.
 :::
 
 The built `remoteEntry.js` lands in `dist/assets/`, so set the microfrontend's **Entry Point** in
-MFE Orchestrator to `assets/remoteEntry.js`.
+Flightroom to `assets/remoteEntry.js`.
 
 ## Configure the host
 
-This is the part MFE Orchestrator generates. Open **Integration → Frontend Integration**, select
+This is the part Flightroom generates. Open **Integration → Frontend Integration**, select
 your host, set **Bundler** to Vite (or leave it on Automatic if that is the microfrontend's stored
 stack) and copy the **Module Federation** tab:
 
@@ -95,7 +95,7 @@ export default defineConfig({
     })
   ],
   define: {
-    'import.meta.env.VITE_MFE_BACKEND_URL': JSON.stringify("https://console.mfe-orchestrator.dev/api"),
+    'import.meta.env.VITE_MFE_BACKEND_URL': JSON.stringify("https://console.flightroom.dev/api"),
     'import.meta.env.VITE_MFE_PROJECT_ID': JSON.stringify("68f1a2...")
   },
   build: {
@@ -238,7 +238,7 @@ everywhere.
 `remoteEntry.js` on `vite build`. To develop a host against a remote, either
 
 - run `vite build && vite preview` in the remote, or
-- point the host at the deployed remote in your development environment and let MFE Orchestrator
+- point the host at the deployed remote in your development environment and let Flightroom
   serve it.
 
 The second option is usually more pleasant — you develop the host against exactly what is
