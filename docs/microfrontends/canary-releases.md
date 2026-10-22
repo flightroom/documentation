@@ -15,11 +15,12 @@ to.
 
 ## Enabling a canary
 
-Open the microfrontend. **Release** is the first card of the form and it sits *above* the tabs, so
-it is on screen whichever of **General**, **Hosting**, **Repository** or **Danger Zone** is
-selected: the version and the canary decide which bytes a browser gets, and they are not something
-you should have to go looking for. Under the version, past a divider, is **Canary Settings** and
-its switch.
+Open the microfrontend's form — **Configuration** on its card, or **Details & settings** when the
+card opens the AI workspace. **Release** is the first card of the form and it sits *above* the tabs,
+so it is on screen whichever tab is selected: the version and the canary decide which bytes a
+browser gets, and they are not something you should have to go looking for. Under the version, past
+a divider, is **Canary Settings** and its switch. A microfrontend of the **Frontend** kind has no
+canary: its container serves every request.
 
 ![The Canary Settings section of the microfrontend form with the switch on, the percentage slider and its presets, the canary type and deployment type selects and the canary version field](../assets/microfrontend-canary.png)
 
@@ -43,7 +44,7 @@ deployment under **Deployments** shows a card per microfrontend with its stable 
 types, and the canary share — or *Enrolled users*, for a *User* canary, which has no share. It is
 the quickest way to confirm what a deployment will actually do.
 
-![The microfrontend cards of an expanded deployment, each with its stable version, canary share, canary type and deployment type badges and canary version](../assets/deployment-canary-cards.png)
+![The microfrontend cards of an expanded deployment, each with its stable version; Catalog and Checkout add their canary share or enrolled users, canary type and deployment type badges and canary version](../assets/deployment-canary-cards.png)
 
 The microfrontends list carries the same information in shorter form. A grid card shows the share
 as a bar with the canary version underneath; the table view gives it a column of its own, next to
@@ -209,7 +210,7 @@ The list lives on the deployment and covers every microfrontend of it configured
 deployment under **Deployments** — the active one or any in the history — and press
 **View canary users**.
 
-![The canary users table with every row selected and the bulk enable, disable and remove actions](../assets/canary-users.png)
+![The Canary Users page: the Add users field and four enrolled users, each with its canary switch and delete button](../assets/canary-users.png)
 
 - **Add** one or more user ids. Paste a list separated by commas, spaces or new lines — semicolons
   work too — to enrol a whole group in one go; the input de-duplicates, so a list copied out of a

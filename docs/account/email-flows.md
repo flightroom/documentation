@@ -28,13 +28,13 @@ prints a link, no CLI that generates one, and no way to read one back out of the
 installation with no `EMAIL_SMTP_HOST` therefore **cannot activate an account, cannot reset a
 password and cannot confirm an invitation** — and it does not tell you so during installation.
 
-What it does instead differs per flow, and only one of the three fails visibly:
+What it does instead differs per flow:
 
 | Flow | On an installation with no SMTP |
 | --- | --- |
-| Registration | Silently skipped. No token is created, no email is attempted, and the new account is usable straight away. |
+| Registration | Silently skipped. No activation token is created, no email is attempted, and the new account is usable straight away — nothing gates it. |
 | Invitations | Silently degraded. No token, no email: the address is added as an **already active member**, with nothing having proved the person owns it. |
-| **Password reset** | **Broken.** The token is written, the send is attempted against a host that is not configured, and the screen reports success anyway. |
+| Password reset | **Refused.** The recovery form answers that the installation has no email server and that resetting the password is not available; nothing is written to the account. |
 
 Configure SMTP before you let anybody else near the console. See
 [`EMAIL_SMTP_HOST` and its siblings](../self-hosting/environment-variables.md).
@@ -46,20 +46,31 @@ Registering at `/register` creates the account and sends an activation email car
 `/account-activation/:token`. The screen does its work as it mounts and leaves for the login as soon
 as the API answers, so what a person actually reads is the moment in between:
 
-![The account activation screen, working on the token from the emailed link](../assets/account-activation.png)
+![The Account Activation screen, with the activation in progress on the token from the emailed link](../assets/account-activation.png)
 
-There is nothing to fill in and nothing to confirm. On success a toast says the account is activated
-and the console redirects to the login form; on a token that is unknown or more than 24 hours old the
-card shows the error instead, and the account stays unactivated.
+There is nothing to fill in and nothing to confirm. On success a toast says *"Account activated,
+redirecting you to login"* and the console goes back to the login form; on a token that is unknown
+or more than 24 hours old the card shows the error instead, and the account stays unactivated.
 
-:::caution[The activation link confirms the address — it does not gate access]
-Nothing in the platform refuses a session to an account whose activation link was never followed. A
-new account is stored as `ACTIVE` from the moment it is created, and signing in never reads that
-field: registering and going straight to the login form works, activation email untouched.
+:::caution[Until the link is followed, the account cannot be used]
+When the installation has SMTP, a newly registered account carries an activation token, and the API
+refuses **every authenticated request** from an account that still has one. The login form itself
+accepts the password — signing in succeeds — but every call the console makes after it is answered
+with *401 "User not verified, please verify your email"*, so the person lands straight back on the
+login form. Once the 24 hours have passed the message becomes *"User not verified and the invitation
+is expired, please reset your password"*. The [MCP server](../build-with-ai/mcp-server.md) refuses
+such an account in the same way.
 
-So treat the email as a confirmation that the address exists and reaches its owner, not as a barrier.
-And note that `REGISTRATION_ALLOWED=false` is not one either: it hides the *Register* link without
-closing the route behind it, as [The first startup](../self-hosting/first-startup.md#the-endpoint-stays-open)
+What gates access is the activation token, not the account status: an account is stored as `ACTIVE`
+from the moment it is created either way. Two kinds of account never carry a token, and are
+therefore never gated:
+
+- accounts registered on an installation **without SMTP** — there is nothing to deliver the link with;
+- accounts **provisioned automatically** the first time somebody signs in through a federated
+  provider such as Auth0 or Google.
+
+Note too that `REGISTRATION_ALLOWED=false` is not a barrier either: it hides the *Register* link
+without closing the route behind it, as [The first startup](../self-hosting/first-startup.md#the-endpoint-stays-open)
 sets out. A self-hosted installation that must not accept accounts has to be closed off in front of
 the console — a private network, an ingress rule, an authenticating proxy.
 :::
@@ -68,6 +79,21 @@ Where SMTP is not configured the flow is shortened rather than broken: no activa
 generated at all, no email is attempted, and the registration screen sends the person to the login
 form with "log in to access your account" instead of "we have sent you an email".
 
+### Locked out of an unactivated account
+
+An activation link that expired unused is a dead end, and none of the obvious ways out works:
+
+- following the link answers *"Activation token expired"*, and there is **no way to request a new
+  activation email** — the console has no screen for it and the API no endpoint;
+- [resetting the password](#recovering-a-password) changes the password but leaves the activation
+  token in place, so the account is refused exactly as before — despite what the error message
+  suggests;
+- registering again with the same address fails, because the account already exists.
+
+The only recovery is on the database: an operator removes `activateEmailToken` and
+`activateEmailExpires` from the user's document, after which the account signs in normally. Tell
+people who register to follow the link within the day.
+
 ## Recovering a password
 
 **Forgot your password?** under the login form leads to `/reset-password-request`, which asks for one
@@ -75,15 +101,22 @@ thing:
 
 ![The Recover Password form, asking for an email address](../assets/reset-password-request.png)
 
-Submitting it always ends the same way, whatever the address was: a message reading *"If an account
-exists with this email, you will receive a password reset link"*, and back to the login form. The
-screen is deliberately non-committal about whether the account exists.
+Submitting it ends in one of three ways:
 
-:::note[The screen does not reveal whether the account exists. The API does.]
-`POST /api/users/forgot-password` answers with an error for an address it has never seen, and the
-console shows its success message regardless of what came back. So the reassurance is real for
-somebody reading the page and not for somebody watching the response — worth knowing if you put the
-console behind a WAF or read its access logs.
+| What happened | What the screen shows |
+| --- | --- |
+| The address belongs to an account, and the email was sent | *"If an account exists with this email, you will receive a password reset link"*, and back to the login form |
+| The address belongs to no account | An error toast — *"The password reset link could not be sent. Please try again."* — and the form stays where it is |
+| The installation has no SMTP | *"This installation has no email server configured: resetting the password is not available. Contact an administrator."* Nothing is written to the account. |
+
+The confirmation is shown only once the API has answered with success.
+
+:::note[The screen reveals whether an account exists]
+Despite the wording of the confirmation, the form is not non-committal: an address the API has
+never seen is answered with an error, and the console shows that error rather than the
+confirmation. Anybody who can reach the form can therefore test whether an address has an account
+on the installation — worth knowing if you expose the console publicly, put it behind a WAF or read
+its access logs.
 :::
 
 The email carries a link to `/reset-password/:token`, good for **one hour** and for one use — the
@@ -94,17 +127,6 @@ token is cleared from the account the moment a password is set through it.
 The new password must be at least 8 characters and the second field must match the first. Both rules
 are checked in the browser; the confirmation field exists only there, and the API is sent the
 password alone.
-
-:::danger[On an installation without SMTP the reset says it worked and nothing was sent]
-This is the one flow that does not check whether email can be delivered before it starts. The token
-is generated and stored on the account, the send is attempted against a transport with no host
-configured, and the request fails — but the console has already shown its "check your email"
-message, because it displays that message without waiting for the answer.
-
-The person is left waiting for an email that was never sent, on an account whose reset token is now
-ticking. There is no way out of it from the console: an operator has to reset the password out of
-band, or configure SMTP and have them ask again.
-:::
 
 ## Accepting an invitation
 
@@ -162,7 +184,7 @@ Four emails exist in the product. There is no fifth, no digest, and nothing peri
 | Email | Sent when | Subject | Link expires |
 | --- | --- | --- | --- |
 | Account activation | An account registers, and SMTP is configured | 🎉 Activate Your Account | 24 hours |
-| Password reset | The recovery form is submitted | 🔑 Reset Your Password | 1 hour |
+| Password reset | The recovery form is submitted for an existing account, and SMTP is configured | 🔑 Reset Your Password | 1 hour |
 | Project invitation | Somebody is invited to a project, or the invitation is resent | 🎉 You're invited to join *project* | 5 days |
 | Organization invitation | Somebody is invited to an organization, or the invitation is resent | 🎉 You're invited to join *organization* | 5 days |
 

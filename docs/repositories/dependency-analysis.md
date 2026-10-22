@@ -13,6 +13,39 @@ from pinning a different version of React, of the design system, or of any other
 library. This feature walks those repositories, reports what each one declares, flags what is
 behind the npm registry, and can rewrite the misaligned `peerDependencies` for you.
 
+## In the console
+
+Open **Dependencies** in the sidebar (`/dependencies`). The page scans the project when it opens and
+shows, top to bottom:
+
+- **Branches to compare**: one row per microfrontend with a connected repository, on its default
+  branch. Pick another branch for any of them; a row on a non-default branch reads *Different from
+  the default branch*, and **Rescan** becomes **Apply the selected branches** until you press it.
+- Four counters: **Scanned microfrontends**, **Distinct packages**, **Outdated packages** and
+  **Misaligned peer dependencies**.
+- **Peer dependencies to align**, then **Shared dependencies with different versions** (reported
+  for visibility only), each with the **Suggested range**. Hovering a declaration tells whether it is
+  *Already aligned* or *Will be aligned to* the suggested range.
+- **Dependencies by microfrontend**: every declared package with its **Type**, **Declared range**,
+  **Latest version** and **Status**. **Show outdated only** hides what is up to date, and a package
+  marked deprecated on the registry carries a **Deprecated** badge.
+
+![The Dependencies page of a project with no microfrontend connected to a repository: zero counters, nothing to align and Align peer dependencies disabled](../assets/dependencies.png)
+
+The header has three actions:
+
+| Action | What it does |
+| --- | --- |
+| **Analyze the conflicts** | Asks [Maestro](../build-with-ai/console-assistant.md) to explain the conflicts between shared dependencies. Shown when the project can use an AI |
+| **Rescan** | Runs the scan again, on the branches selected above |
+| **Align peer dependencies** | Opens the alignment dialog. Disabled when nothing is misaligned, or while a branch change has not been applied with a rescan |
+
+The **Align peer dependencies** dialog lists, repository by repository, the compared branch and each
+package with its current and target range. Set the **Target branch**
+(`chore/align-peer-dependencies` by default, created from the compared branch of each repository if
+it does not exist yet) and press **Create the commits**. The dialog then shows the outcome per
+repository: the branch committed to, *Already aligned*, or *Failed* with the reason. See [Applying the alignment](#applying-the-alignment) for what happens underneath.
+
 ## What the scan does
 
 1. Lists the microfrontends of the current project that have a

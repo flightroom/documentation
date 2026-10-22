@@ -26,7 +26,7 @@ server and your host stays a single build.
 | `@mfe-orchestrator-hub/client-vue` | [`client-vue`](https://github.com/mfe-orchestrator/client-vue) | Vue plugin and composables |
 | `@mfe-orchestrator-hub/client-angular` | [`client-angular`](https://github.com/mfe-orchestrator/client-angular) | Angular provider and injectable service |
 
-All four are published at `0.2.1` with npm provenance. The core ships ESM and CJS builds and its own
+All four are published at `0.3.0` with npm provenance. The core ships ESM and CJS builds and its own
 types; the three adapters depend on it and add ergonomics rather than behaviour — with one deliberate
 exception, described under [framework adapters](#the-react-adapter-syncs-the-user-for-you).
 
@@ -34,7 +34,8 @@ exception, described under [framework adapters](#the-react-adapter-syncs-the-use
 [`setUserId()`](#changing-the-user-without-a-reload) landed in `@mfe-orchestrator-hub/client` 0.2.0.
 Pin an earlier core and the function is not exported at all. The three adapters reach it through a
 guarded property access, so they do not crash — they `console.warn` and return, and the user silently
-never changes. Ask for `^0.2.0` or later.
+never changes. Ask for `^0.2.0` or later — and for `^0.3.0` on a Webpack host, whose generated
+config needs [`loadWebpackRemote`](#bundler-configuration), added in 0.3.0.
 :::
 
 ```bash
@@ -68,8 +69,9 @@ configure({
 })
 ```
 
-For a Webpack host the same block reads `process.env.MFE_BACKEND_URL`, `process.env.MFE_PROJECT_ID`
-and `process.env.MFE_ENVIRONMENT`, and the entry point it names is `src/index.ts`.
+The entry point the comment names depends on the framework: `src/main.tsx` for React, `src/main.js`
+for Vue, `src/main.ts` for Angular. For a Webpack host the same block reads
+`process.env.MFE_BACKEND_URL`, `process.env.MFE_PROJECT_ID` and `process.env.MFE_ENVIRONMENT`.
 
 `environment` arrives through a **conditional spread**, not as a plain field. That is not style. There
 are two ways for the variable to be unset and they do not look the same in the bundle: missing from
@@ -176,7 +178,17 @@ function globalVariables(): Promise<Record<string, string>>
 
 /** The two generated ids, exposed for telemetry and debugging. */
 function identities(): { sessionId: string; deviceId: string }
+
+/** The container of a remote, for a webpack `promise` remote. Meant for the generated config. */
+function loadWebpackRemote(slug: string, scope?: string): Promise<WebpackContainer>
+
+/** How long a remote requested before configure() waits for it: 10000 ms. */
+const CONFIGURE_TIMEOUT_MS: number
 ```
+
+The package also exports `registerIntegration()`, which the framework adapters call as they load so
+that a configuration error prints the snippet of the package you are actually using. It is internal:
+an application never needs to call it.
 
 `remoteUrl()` takes the microfrontend **slug**, not the federation remote name. Asking for a slug
 that is not in the manifest rejects with a message listing the ones that are, which is usually
@@ -269,7 +281,7 @@ the SDK is referenced by **bare specifier** and your own bundler resolves it aga
 ```js
 // Vite — @originjs/vite-plugin-federation
 remotes: {
-  'catalog': {
+  catalog: {
     external: `import('@mfe-orchestrator-hub/client').then(m => m.remoteUrl('catalog'))`,
     externalType: 'promise'
   }
@@ -291,7 +303,9 @@ remotes: {
 `loadWebpackRemote(slug, scope)` resolves the URL with `remoteUrl(slug)`, injects that
 `remoteEntry.js` once, and returns the container the script defines on `globalThis[scope]` — the
 `name` the remote gives its own `ModuleFederationPlugin`, which the console generates from the slug
-without dashes, the same name as the key. A remote requested before `configure()` waits for it.
+without dashes, the same name as the key. Left out, the scope defaults to the microfrontend's
+`nameToIntegrate` in the manifest. A remote requested before `configure()` waits for it, for up to
+`CONFIGURE_TIMEOUT_MS` (ten seconds), and then fails with the "not configured" error.
 
 The core keeps its state on a global, so the copy your federation config reaches and the copy your
 application code reaches share one configuration and one manifest fetch.

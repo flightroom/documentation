@@ -44,12 +44,11 @@ Webpack writes `remoteEntry.js` to the root of your output directory, so the mic
 `output.publicPath` or the filename.
 
 :::caution[`remoteEntry.js` is not a default you can rely on]
-Nothing in the platform defaults that field to `remoteEntry.js`. The microfrontend model stores no
-default, and when the field is empty the serving path falls back to **`index.js`**. Where
+The form pre-fills the **Entry Point** with `assets/remoteEntry.js` — the *Vite* output layout, wrong
+for a Webpack build — and only falls back to **`index.js`** when the field is left empty. Where
 `remoteEntry.js` appears without you typing it, it came from the marketplace entry of the Webpack
 template the microfrontend was created from. Create the microfrontend with **Create From Scratch**
-and the form pre-fills `assets/remoteEntry.js` instead — the *Vite* output layout, wrong for a
-Webpack build. Check the field rather than assuming it.
+and you have to change the field yourself. Check it rather than assuming it.
 :::
 
 ## Configure the host
@@ -57,16 +56,35 @@ Webpack build. Check the field rather than assuming it.
 Open **Integration → Frontend Integration**, select your host, set **Bundler** to Webpack (or leave
 it on Automatic if that is the microfrontend's stored stack) and copy the **Module Federation** tab:
 
-![The Module Federation tab of the Integration page, with the remotes of the selected host filled in](../assets/integration-webpack.png)
+![The Module Federation tab with React and Webpack selected and the start of the generated webpack.config.js](../assets/integration-webpack.png)
 
 ```js
 // webpack.config.js
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { ModuleFederationPlugin } = webpack.container;
 
 module.exports = {
-  // ... other webpack config
+  entry: './src/index',
+  mode: 'development',
+  output: {
+    // Chunks are resolved from document.currentScript.src, which is the url before any
+    // redirect. Leave this on 'auto' so a version pinned entry keeps loading its own chunks
+    // and two builds never mix on one page.
+    publicPath: 'auto',
+    clean: true
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.jsx']
+  },
+  module: {
+    rules: [
+      { test: /\.(ts|tsx)$/, exclude: /node_modules/, use: { loader: 'ts-loader' } },
+      { test: /\.css$/, use: ['style-loader', 'css-loader'] }
+    ]
+  },
   plugins: [
+    new HtmlWebpackPlugin({ template: './public/index.html' }),
     new webpack.DefinePlugin({
       'process.env.MFE_BACKEND_URL': JSON.stringify("https://console.flightroom.dev/api"),
       'process.env.MFE_PROJECT_ID': JSON.stringify("68f1a2..."),
@@ -77,35 +95,31 @@ module.exports = {
       'process.env.MFE_ENVIRONMENT': 'undefined'
     }),
     new ModuleFederationPlugin({
+      // The global the remote entry defines its container under, which is what a host passes
+      // to loadWebpackRemote(): an identifier, so it never holds a dash or a slash.
       name: 'shell',
       filename: 'remoteEntry.js',
+      exposes: {
+        './App': './src/App'
+      },
       remotes: {
+        // One entry per microfrontend this host consumes. The key is the name you import
+        // from ("catalog/Button"), the string passed to loadWebpackRemote() is the slug in
+        // the orchestrator. Never write a url here: the backend resolves the version.
+        // The second one is the name the remote gives its own ModuleFederationPlugin.
         catalog: "promise globalThis.__MFE_ORCHESTRATOR__.loadWebpackRemote('catalog', 'catalog')",
         cart: "promise globalThis.__MFE_ORCHESTRATOR__.loadWebpackRemote('cart', 'cart')"
       },
       shared: {
-        react: {
-          singleton: true,
-          requiredVersion: '^18.2.0',
-          eager: true
-        },
-        'react-dom': {
-          singleton: true,
-          requiredVersion: '^18.2.0',
-          eager: true
-        },
-        'react-router-dom': {
-          singleton: true,
-          requiredVersion: '^6.15.0',
-          eager: true
-        }
-      },
-    }),
-  ],
+        'react': { singleton: true },
+        'react-dom': { singleton: true }
+      }
+    })
+  ]
 };
 
 // ---------------------------------------------------------------------------
-// Host bootstrap: paste this at the very top of your entry point (src/index.ts).
+// Host bootstrap: paste this at the very top of your entry point (src/main.tsx).
 // The remotes above ask the SDK for their url, so configure() has to run before
 // anything imports one of them.
 // The backend url and the project id are already in the config above, written into
@@ -132,6 +146,18 @@ configure({
 */
 ```
 
+This is a whole `webpack.config.js`, not a fragment to merge: loaders, `resolve.extensions` and
+`HtmlWebpackPlugin` are there for the detected framework (`vue-loader` and `VueLoaderPlugin` for Vue,
+`@ngtools/webpack` and `AngularWebpackPlugin` for Angular), and a microfrontend registered as a
+**host** also gets an `exposes` block with its root component. Two things in it you will want to
+review before relying on it:
+
+- **`mode: 'development'` is hard-coded.** Switch it to `'production'` — or drive it from your
+  build script — for the bundle you deploy.
+- **`entry` is `./src/index`, while the bootstrap comment names the framework's `src/main.*`** —
+  `src/main.tsx` for React, `src/main.js` for Vue, `src/main.ts` for Angular. What matters is the
+  file webpack actually starts from: put `configure()` at the top of whatever `entry` points to.
+
 `promise <expression>` is how `ModuleFederationPlugin` declares a remote whose URL is only known at
 runtime: the expression is pasted into your host bundle verbatim and awaited before the remote is
 used, and it has to resolve to the remote's container, not to its URL. Being pasted outside of any
@@ -144,7 +170,7 @@ the container defined under the second argument (`loadWebpackRemote` ships with
 `ModuleFederationPlugin`; the console generates it from the slug, without dashes, so it matches the
 key.
 
-Keep the usual webpack bootstrap: `configure()` at the top of `src/index.ts`, the rest of the app
+Keep the usual webpack bootstrap: `configure()` at the top of the entry file, the rest of the app
 behind `import('./bootstrap')`. A remote requested before `configure()` waits for it, but one imported
 by the very chunk that calls `configure()` is loaded before that chunk runs, and fails after ten
 seconds with the "not configured" error.
@@ -231,14 +257,16 @@ export default function App() {
 }
 ```
 
-## About `eager: true`
+## Shared dependencies and the async boundary
 
-The generated host configuration marks shared dependencies as `eager: true`, which bundles them
-into the host's initial chunk instead of loading them asynchronously. This trades a larger initial
-bundle for a simpler startup: no async boundary is required before your first import.
+The generated host configuration shares the framework core only — `react` and `react-dom` for React,
+`vue` for Vue, `@angular/core`, `@angular/common`, `@angular/platform-browser` and `rxjs` for Angular
+— each as `{ singleton: true }` and nothing more: no `requiredVersion`, so webpack reads the range
+from your own `package.json`, and no `eager`. If you share other libraries — a router, a state
+manager, a design system — add them to the `shared` block of every microfrontend in the graph.
 
-If you would rather keep the initial bundle small, drop `eager` and wrap your entry point in an
-async boundary:
+Because nothing is eager, shared modules are loaded asynchronously, and your entry point needs an
+async boundary before the first import that uses them:
 
 ```js
 // index.js
@@ -254,13 +282,14 @@ import App from './App'
 createRoot(document.getElementById('root')).render(<App />)
 ```
 
-This is the standard Module Federation pattern, and it is what you want in a production host with
-a meaningful bundle-size budget.
+This is the standard Module Federation pattern, and it keeps the initial bundle small. The
+alternative is to add `eager: true` to the shared entries, which bundles them into the host's initial
+chunk and removes the need for the boundary, at the cost of a larger first download.
 
 ## Version mismatches
 
-`requiredVersion` with `singleton: true` makes Webpack warn at runtime when a remote wants a
-different major version of a shared library than the host provides. Those warnings are worth
-taking seriously — a satisfied-but-mismatched React is the source of most confusing microfrontend
-bugs. Keep shared library versions aligned across the graph, and upgrade hosts and remotes
-together.
+The generated config pins no `requiredVersion`, so webpack takes the range from each microfrontend's
+own `package.json`; with `singleton: true` it warns at runtime when a remote wants a different major
+version of a shared library than the host provides. Those warnings are worth taking seriously — a
+satisfied-but-mismatched React is the source of most confusing microfrontend bugs. Keep shared
+library versions aligned across the graph, and upgrade hosts and remotes together.

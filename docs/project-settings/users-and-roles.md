@@ -85,9 +85,11 @@ previous snapshot in Flightroom, and does not touch the cluster — see
 
 2. Enter their **email address**.
 3. Choose a **role**.
-4. **Send invitation**.
+4. Choose the **Access**: the **Whole project**, or **Specific domains** and the domains to tick.
+   An Admin always has the whole project, so the choice is hidden for that role.
+5. **Send invitation**.
 
-   ![The invite dialog, asking for an email address and a role](../assets/invite-user-dialog.png)
+   ![The invite dialog, with email, role and access](../assets/invite-user-dialog.png)
 
 An email goes out with an invitation link. The invitee follows it, signs in or registers, and joins
 the project with the role you chose — see

@@ -58,8 +58,8 @@ brought your own pipeline, make sure it triggers on tags — otherwise the **Bui
 create tags that nothing acts on.
 
 :::info
-The **Build** action requires a linked code repository. It has no effect on microfrontends
-without one.
+The **Build** action requires a linked code repository: on a microfrontend without one the card
+does not show the button at all.
 :::
 
 You do not have to leave the console to know how that run went: the
@@ -79,8 +79,9 @@ generated pipelines wrap it in a provider-specific task:
 | GitLab CI | Direct call to the upload endpoint |
 
 All of them read the API key from the secret
-`MICROFRONTEND_ORCHESTRATOR_API_KEY`, which Flightroom creates for you when it scaffolds a
-repository.
+`MICROFRONTEND_ORCHESTRATOR_API_KEY`, which Flightroom creates for you when you connect the code
+repository provider — or, on a personal GitHub account, when it scaffolds a repository. See
+[keys created for you](../ci-cd/api-keys.md#keys-created-for-you).
 
 See [CI/CD](../ci-cd/github-actions.md) for the full pipeline examples, and
 [Manual upload](../ci-cd/manual-upload.md) for the raw HTTP call.
@@ -89,12 +90,17 @@ See [CI/CD](../ci-cd/github-actions.md) for the full pipeline examples, and
 Upload only works for microfrontends hosted on the **Flightroom Hub** or on a
 **Custom Source** bucket. For **Custom URL**, publishing is handled entirely by your own
 infrastructure — Flightroom only records which version to point at.
+
+A microfrontend of the **Frontend** kind takes no upload either — it is refused with
+`FRONTEND_UPLOAD_NOT_ALLOWED`. Its pipeline builds a Docker image and registers the version of each
+image instead, and that registration is what sets the version shown, read-only, in its form. See
+[Microfrontend or Frontend](./create-a-microfrontend.md#microfrontend-or-frontend).
 :::
 
 ## Selecting a version
 
-Once a version exists, open the microfrontend and pick it in the **Version** field, at the top of the
-form in **Release settings**. The field offers the versions known to the platform, plus a
+Once a version exists, open the microfrontend's form and pick it in the **Version** field, at the top
+of the form in **Release**. The field offers the versions known to the platform, plus a
 **Custom version** option, which reveals a second box for typing one in directly — useful for Custom
 URL microfrontends, where the platform has no upload history to list.
 
@@ -108,9 +114,13 @@ Then [deploy](../deployments/overview.md) the environments you want to move.
 
 ## Continuous deployment
 
-The **Continuous Deployment** switch marks a microfrontend as continuously deployed. The flag is
-stored on the microfrontend and published to consumers as `continuousDeployment` on the
+The `continuousDeployment` flag marks a microfrontend as continuously deployed. It is stored on the
+microfrontend and published to consumers as `continuousDeployment` on the
 [serve API](../integration/serve-api.md) payload.
+
+The microfrontend form no longer has a switch for it. Set it through the API, or ask an
+[MCP client](../build-with-ai/mcp-server.md) to update the microfrontend; saving the form keeps the
+value already stored, and a microfrontend created from the form starts with it off.
 
 :::info[It is a marker, not an automation]
 The platform does not currently change version resolution based on this flag — it does not skip the

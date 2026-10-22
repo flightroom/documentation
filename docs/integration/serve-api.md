@@ -82,6 +82,8 @@ GET <API_BASE>/serve/all/auto/{projectId}                # Referer or Host
 ```
 
 Returns the whole environment in one call: microfrontends with resolved URLs, and variables.
+Microfrontends of the **Frontend** kind, served by their own Docker container, are not in the list:
+no host loads them as remotes.
 
 The third form names no environment at all: the caller says only which project it belongs to, and
 the platform picks the environment whose allowed domains match the request. It is what the
@@ -306,7 +308,7 @@ The response is the whole set of instructions, not a single string:
 | `code` | `config` and `bootstrap` concatenated — the text the Integration page displays |
 | `dependencies` | Build-time packages the config needs beyond what the app already has |
 | `runtimeDependencies` | single-spa and micro-lc only: packages the app imports at runtime, ex. `single-spa` |
-| `installCommand` | `npm install …`, absent when `dependencies` is empty |
+| `installCommand` | `npm install …`. For Vite and Webpack it installs `dependencies` and is absent when that list is empty, which is always the case on Webpack. single-spa always gets one — `single-spa-react` for an application, `single-spa` plus the SDK for a root config — and so does a micro-lc shell, with `@micro-lc/orchestrator` plus the SDK; a micro-lc parcel gets none |
 | `runtimeIntegration` | `true` for a Web Component microfrontend: there is no federation config, the host resolves the URL at runtime |
 
 `stack` is always present. A Web Component stack answers with `runtimeIntegration: true`, an empty
@@ -321,7 +323,7 @@ remote, they describe its Vite library build. `compiler` is read case- and dash-
 The console's **CURL** tab shows the runtime-discovery call for the selected environment, with your
 ids already substituted:
 
-![The CURL tab of the Integration page](../assets/integration-curl.png)
+![The Direct API Access via CURL tab of the Integration page: the example request and the preview of its response](../assets/integration-curl.png)
 
 Unlike the rest of this page, this endpoint requires authentication. It is a convenience for
 tooling, not something your application calls at runtime.

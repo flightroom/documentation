@@ -73,11 +73,22 @@ never asked at all — it is selected automatically.
 ## Your first organization
 
 A project cannot exist outside an organization, so an account with none is asked to create one
-before it reaches anything else. Registration therefore has one more step than it used to:
+before it reaches anything else. The first run therefore goes:
 
-1. Register and confirm the account.
-2. **Create your organization** — a name, and optionally a description.
-3. The project wizard opens inside it.
+1. Register, and follow the activation link when the installation sends email — until then the
+   account cannot be used. See [Registration and activation](../account/email-flows.md#registration-and-activation).
+2. Sign in. An account that belongs to no organization lands on **Create your organization** —
+   *"An organization holds your projects and the people who reach them."* — with two fields:
+   **Name**, required and at least 2 characters, and an optional **Description**. There is no
+   cancel button on this screen: it is the only way forward. **Create organization** makes you its
+   owner.
+
+   ![The Create your organization screen, with the name and description of a new organization filled in](../assets/organization-first-create.png)
+
+3. The [project wizard](../project-settings/projects.md#creating-a-project) opens inside it. Its last
+   screen offers **Start deploying your microfrontends**, which opens the console on the
+   **AI agent** page, [Maestro](../build-with-ai/console-assistant.md) — or on **Microfrontends**
+   when the project can use no AI yet.
 
 If somebody invited you instead, the pending invitation is offered on that same screen, above the
 creation form: accepting it puts you into their organization rather than opening one of your own.

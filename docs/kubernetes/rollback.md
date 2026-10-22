@@ -1,5 +1,5 @@
 ---
-sidebar_position: 7
+sidebar_position: 8
 title: Rolling back a Kubernetes deploy
 sidebar_label: Rollback
 description: "Why Redeploy does not move what runs in Kubernetes, and how to bring a service back to a known-good state through a new commit that Argo CD applies."
@@ -31,17 +31,22 @@ deploying:
 
 1. In the repository of the service, put the last known-good code back on the branch the pipeline
    builds, for example by reverting the faulty change.
-2. On the service, use **Create version** to tag a new version. The pipeline builds its image and
-   registers it, and the service moves to it.
+2. On the **Overview** tab of the service, press **Create version** to tag a new version. The button
+   is there only when the service has a linked code repository. The dialog asks for the **Branch**,
+   offered as a choice only when the repository has more than one, and the **Version**: letters,
+   digits, `.`, `-` and `_`, at most 128 characters. The version becomes a Git tag, the tag starts the
+   pipeline, and the pipeline builds the image and registers it, so the service moves to it. See
+   [Services](./services.md#image-versions).
 3. Open **Deployments**, select the environment and press **Deploy**.
 
 The deploy commits the new version to the environment's values file, and Argo CD rolls the workload
 over to it.
 
 :::info[The version moves forward only]
-A service follows the newest version its pipeline registers: a version is taken only when it is a
-newer semantic version than the current one, and a tag that is not a semantic version, such as
-`latest` or a commit SHA, never moves the service. Registering an older version again therefore does
+A service follows the newest version its pipeline registers. A service with no version yet takes the
+first one registered, whatever its tag. After that, a version is taken only when it is a newer semantic
+version than the current one, and a tag that is not a semantic version, such as `latest` or a commit
+SHA, never moves the service. Registering an older version again therefore does
 not roll the service back. Ship the good code as a newer version instead.
 :::
 

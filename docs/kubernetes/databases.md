@@ -1,5 +1,5 @@
 ---
-sidebar_position: 6
+sidebar_position: 7
 title: Databases
 sidebar_label: Databases
 description: "Register the SQL databases of a project — PostgreSQL, MySQL, MariaDB, SQL Server or Oracle — and test the connection from the console, with credentials encrypted at rest."
@@ -13,7 +13,11 @@ has is known to the project. Flightroom stores the connection and tests it. It d
 databases, and it does not wire a registered database into a service for you: give a service its
 connection details through a [secret](./config-maps-and-secrets.md).
 
-Databases live under **Databases**, in the **Cloud** section of the sidebar.
+Databases live under **Databases**, in the **Cloud** section of the sidebar, and are also reachable
+from **Settings → Resources**. The list shows each database's **Name**, **Engine** and **Address**:
+`host:port/database` for one registered with host and credentials, *Connection string* for the others.
+
+![The Databases list with the orders-db PostgreSQL database and its host:port/database address](../assets/databases-list.png)
 
 ## Registering a database
 
@@ -22,19 +26,21 @@ Press **New database** and fill in:
 | Field | Notes |
 | --- | --- |
 | **Name** | How the project calls it, e.g. `orders-production` |
-| **Engine** | **PostgreSQL**, **MySQL**, **MariaDB**, **SQL Server** or **Oracle** |
-| **Connection mode** | **Host and credentials**, or **Connection string** |
+| **Engine** | **PostgreSQL**, **MySQL**, **MariaDB**, **SQL Server** or **Oracle**. **PostgreSQL** by default |
+| **Connection mode** | **Host and credentials**, the default, or **Connection string** |
 
 With **Host and credentials**:
 
 | Field | Notes |
 | --- | --- |
 | **Host** | Required |
-| **Port** | A number between 1 and 65535 |
+| **Port** | A number between 1 and 65535. It follows the default port of the engine you pick (`5432` PostgreSQL, `3306` MySQL and MariaDB, `1433` SQL Server, `1521` Oracle) until you change it by hand |
 | **Database name** | Required |
 | **Username** | Required |
 | **Password** | Required |
-| **Encrypted connection (SSL/TLS)** | Connects over TLS |
+| **Encrypted connection (SSL/TLS)** | Connects over TLS. On by default |
+
+![The New database form in Host and credentials mode, with the PostgreSQL default port, the SSL/TLS switch on and Test connection](../assets/database-new.png)
 
 With **Connection string**, paste the string in the format of the engine; the form shows an example
 for each one.
@@ -64,6 +70,9 @@ Removing a database from the project disconnects it only: the database and its d
 
 Viewers, and members scoped to a functional domain, can see the databases of the project but cannot
 create, edit, test or delete them: databases belong to the whole project, not to one of its domains.
+
+An administrator of the organization is the exception among viewers: even with the **Viewer** role in
+the project, they act there as an owner and can change its databases.
 
 ## Where to go next
 

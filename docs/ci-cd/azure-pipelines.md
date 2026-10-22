@@ -86,10 +86,20 @@ The template in
 [`template-pipelines`](https://github.com/mfe-orchestrator/template-pipelines) carries
 `%microfrontendSlug%` and `%domain%` where this example has `catalog` and the console URL. The
 scaffolder replaces both before the initial commit, as it does on GitHub: the slug of the
-microfrontend, and the base URL of the console without `/api` — `BACKEND_URL` if the installation
-sets it, `https://console.flightroom.dev` otherwise. A pipeline variable named
+microfrontend, and the installation's `BACKEND_URL` inserted verbatim — or
+`https://console.flightroom.dev` when `BACKEND_URL` is not set. A pipeline variable named
 `MICROFRONTEND_ORCHESTRATOR_DOMAIN` wins over that default, so you can publish to another
 installation without editing the file.
+
+:::caution[`%domain%` is the API URL, copied as is]
+`BACKEND_URL` is the public URL of the API, which normally already ends in `/api`, and nothing strips
+that suffix when it becomes `%domain%`. The templates add `/api` themselves where they need it — the
+host templates, for instance, build `%domain%/api` — so an installation whose `BACKEND_URL` ends in
+`/api` gets URLs with `/api/api` in them. Check the scaffolded file, and if that is the case set
+`MICROFRONTEND_ORCHESTRATOR_DOMAIN` to the console URL without `/api`. With `BACKEND_URL` unset the
+default points at `https://console.flightroom.dev`, not at your installation, so on a self-hosted
+installation set the variable.
+:::
 
 ## Two stages, deliberately
 
@@ -207,10 +217,10 @@ The extension is not installed in the organization. Install it, or use the `curl
 
 **Authentication failure on publish**
 
-The key is missing from the group, misnamed, or names a key that has been deleted. Check
-**Settings → API Keys** in the console — an **Expired** badge is not the cause, since expired keys
-still authenticate. If the connection has no Azure DevOps project selected, the group was never
-created at all.
+The key is missing from the group, misnamed, or names a key that has been deleted, revoked or has
+expired. Check **Settings → Access → API Keys** in the console: an expired or revoked key is refused,
+with *API key expired on …* or *API key revoked*. If the connection has no Azure DevOps project
+selected, the group was never created at all.
 
 **Wrong version published**
 

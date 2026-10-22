@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 title: Argo CD
 sidebar_label: Argo CD
 description: "Hand the GitOps repositories of a project to the Argo CD you already run: prepare its account and token, initialize, and re-align after environment changes."

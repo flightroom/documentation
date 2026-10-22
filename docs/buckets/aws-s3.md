@@ -65,8 +65,15 @@ bucket):
 }
 ```
 
+`s3:GetObject` and `s3:PutObject` are what the platform needs. The `s3:ListBucket` statement is
+optional: Flightroom never lists the bucket. Keep it if you want a missing file to come back from S3
+as *NoSuchKey* rather than *AccessDenied*, which makes a wrong entry point easier to tell from a
+permission problem.
+
 Note there is no `s3:DeleteObject`: Flightroom never deletes artifacts. Leaving it out means a
-compromised key cannot destroy your release history. Add it only if you plan to use the same
+compromised key cannot destroy your release history. The only thing the platform tries to delete is
+the probe file **Test connection** writes, `.flightroom-connection-test`; without the permission it
+is simply left in the bucket. Add it only if you plan to use the same
 credentials for housekeeping — better still, use a
 [lifecycle rule](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html),
 which needs no credentials at all.
@@ -82,7 +89,8 @@ which needs no credentials at all.
 
 ## Step 4: Add the storage in Flightroom
 
-Go to **Settings → Storages → New Storage** and select **Amazon S3**:
+Open **Storages** (under **Cloud** in the sidebar), click **New Storage** and select
+**Amazon S3**:
 
 | Field | Value |
 | --- | --- |
@@ -95,7 +103,8 @@ Go to **Settings → Storages → New Storage** and select **Amazon S3**:
 
 ![The New Storage form with the Amazon S3 credential fields](../assets/storage-form-aws-s3.png)
 
-Save.
+Click **Test connection** to check the credentials and the permissions before saving, then
+**Create**.
 
 ## Step 5: Point a microfrontend at it
 

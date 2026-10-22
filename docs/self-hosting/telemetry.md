@@ -62,8 +62,9 @@ object and no free text:
 The request also carries a `User-Agent` of `mfe-orchestrator/<version>`, like any HTTP client.
 
 :::note[`version` reads the backend package version, which lags the image tag]
-In the 4.0.0 image that field still reports `1.0.0`, as the payload above shows: it is read from the
-backend's own `package.json`, which is not bumped with the release tag. It is the one field in the
+In the current image (5.1.0) that field still reports `1.0.0`, as the payload above shows: it is read
+from the backend's own `package.json`, which is not bumped with the release tag. The `User-Agent`
+carries the same value. It is the one field in the
 payload that currently says less than it looks like it says.
 :::
 

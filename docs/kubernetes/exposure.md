@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 title: Exposure
 sidebar_label: Exposure
 description: "Give each environment a host and each service a path: every deploy commits a Gateway API Gateway per environment and an HTTPRoute per app, with TLS from cert-manager."
@@ -27,8 +27,9 @@ https://example.com/api/orders       → orders-api in production
 | The environment | **Subdomain** | `dev` | The host of the environment: `dev.example.com` |
 | The service or Docker frontend | **Exposure path** | `/api/orders` | Where the app answers on the host of every environment |
 
-The **Exposure** section appears once [GitOps](./gitops.md) is on. Changes apply from the next deploy
-of each environment.
+The **Exposure** section lives on **Settings → Delivery**, below the GitOps section. It appears once
+[GitOps](./gitops.md) is on **and** its configuration repository is saved: turning the switch on is
+not enough until you press **Save**. Changes apply from the next deploy of each environment.
 
 ### Domain and certificate issuer
 
@@ -43,7 +44,8 @@ ports** rather than changing Traefik.
 
 ### Subdomain of an environment
 
-Set it in the environment form, next to **Kubernetes namespace**. Left empty, a **Production**
+Set it in the environment form, next to **Kubernetes namespace**. Both fields appear only while GitOps
+is on. Left empty, a **Production**
 environment takes the domain itself, and any other environment takes its slug in lowercase, so `UAT`
 lands on `uat.example.com`. Two environments of the project cannot share a host: the deploy is
 refused.

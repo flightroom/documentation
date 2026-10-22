@@ -159,10 +159,11 @@ between *published* and *live* is the platform's main safety property.
 
 **Publish step fails with an authentication error**
 
-The secret is missing, misnamed, or names a key that has been deleted. Check the exact spelling of
-`MICROFRONTEND_ORCHESTRATOR_API_KEY`, and that the key still exists in **Settings → API Keys**. An
-**Expired** badge is not the cause — expired keys still authenticate. On a personal GitHub account,
-suspect the missing organization secret described above.
+The secret is missing, misnamed, or names a key that has been deleted, revoked or has expired. Check
+the exact spelling of `MICROFRONTEND_ORCHESTRATOR_API_KEY`, and that the key still exists in
+**Settings → Access → API Keys** without an **Expired** badge: the error message says *API key
+expired on …* or *API key revoked* when that is the cause. On a personal GitHub account, suspect the
+missing organization secret described above.
 
 **"Entity not found" for the slug**
 

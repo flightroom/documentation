@@ -10,8 +10,18 @@ keywords: [helm, kubernetes, self-hosting, installation, chart, ingress, persist
 
 The chart lives in the repository, under
 [`helm/mfe-orchestrator`](https://github.com/flightroom/flightroom/tree/main/helm/mfe-orchestrator).
-It installs the standard image `lory1990/mfe-orchestrator`, which serves the frontend and the API
-behind nginx on port `80`.
+It installs the standard Flightroom image, which serves the frontend and the API behind nginx on
+port `80`.
+
+:::caution[Set the image explicitly]
+The chart in the repository still defaults to `lory1990/mfe-orchestrator` at tag `4.0.0`, its
+`appVersion`. Releases are now published as `lory1990/flightroom`, so pass the current image on
+every install and upgrade — see [Image version](#image-version):
+
+```bash
+--set image.repository=lory1990/flightroom --set image.tag=5.1.0
+```
+:::
 
 :::info[MongoDB and Redis are not part of the chart]
 The chart deploys the application only. Point it at instances you already run, or install them with
@@ -33,6 +43,8 @@ cd flightroom
 
 helm install mfe-orchestrator ./helm/mfe-orchestrator \
   --namespace mfe-orchestrator --create-namespace \
+  --set image.repository=lory1990/flightroom \
+  --set image.tag=5.1.0 \
   --set env.NOSQL_DATABASE_URL="mongodb://root:example@mongodb:27017" \
   --set env.REDIS_URL="redis://redis:6379" \
   --set envSecrets.JWT_SECRET="$(openssl rand -hex 32)"
@@ -70,8 +82,10 @@ helm upgrade mfe-orchestrator ./helm/mfe-orchestrator -f my-values.yaml
 
 ## Configuration
 
-Every [environment variable](./environment-variables.md) the application understands is set from
-`values.yaml`, and any variable not listed there can simply be added to the same maps:
+`values.yaml` lists most of the [environment variables](./environment-variables.md) the application
+understands, but not all of them — the AI, repository and Argo CD variables, for example, are not
+there. That does not matter: `env` and `envSecrets` are plain maps, so any variable can be added to
+them and reaches the container as is.
 
 | Values key | Rendered as | Use for |
 | --- | --- | --- |
@@ -121,13 +135,19 @@ effect.
 
 ## Image version
 
-`image.tag` defaults to the chart's `appVersion`, so a plain install runs the version the chart was
-released with — `4.0.0` for chart `0.2.0`. Override it to pin a different one:
+`image.tag` defaults to the chart's `appVersion`, and `image.repository` to
+`lory1990/mfe-orchestrator`: chart `0.2.0` still ships `appVersion` `4.0.0` under the old image name.
+The image is published today as `lory1990/flightroom`, with the release tag (`5.1.0`) as its tag, so
+set both:
 
 ```yaml
 image:
-  tag: "4.0.0"
+  repository: lory1990/flightroom
+  tag: "5.1.0"
 ```
+
+Use the standard image here, not the `-all-in-one` tag: the chart expects MongoDB and Redis outside
+the pod.
 
 ## Storage of the uploaded microfrontends
 
@@ -146,6 +166,24 @@ persistence:
 With `persistence.enabled: false` the microfrontends live in the container filesystem and are lost
 at every restart. If you scale beyond one replica, use a `ReadWriteMany` volume — otherwise keep
 `replicaCount: 1`.
+
+## Repository clones
+
+The repositories edited with AI are cloned inside the pod, under `repositories.mountPath`
+(default `/repositories`). The chart always sets `REPOSITORIES_FOLDER` to that path, so do not set
+the variable under `env` yourself.
+
+```yaml
+repositories:
+  mountPath: /repositories
+  sizeLimit: 10Gi       # upper bound of the emptyDir
+  # existingClaim: my-repositories-claim
+```
+
+The folder is a cache — a missing clone is simply cloned again — so it is an `emptyDir` by default,
+lost at every restart and never shared between replicas. Point `repositories.existingClaim` at a PVC
+to keep the clones across restarts. `sizeLimit` caps the whole folder; the cap per repository is
+`env.REPOSITORIES_MAX_SIZE_MB` (see [Environment variables](./environment-variables.md#repositories)).
 
 ## Ingress
 
@@ -169,6 +207,42 @@ ingress:
 Align `env.FRONTEND_URL` — and `env.BACKEND_URL`, which defaults to `<FRONTEND_URL>/api` — with the
 public hostname. The uploads go through this ingress, so raise the body size limit if your bundles
 are large.
+
+:::caution[Trust the ingress hop with `TRUST_PROXY`]
+The image trusts only its own nginx (`TRUST_PROXY=127.0.0.1`). Behind an ingress controller the
+request reaches that nginx from the controller's pod IP, so unless that hop is trusted too every
+client shares one rate-limit bucket. List exactly the proxies you run — for example the loopback
+plus your pod CIDR — and never `true` on a pod reachable from outside:
+
+```yaml
+env:
+  TRUST_PROXY: "loopback,10.0.0.0/8"
+```
+
+A hop count such as `"2"` stops the boot. The chart's install notes warn when the ingress is enabled
+and `env.TRUST_PROXY` is not set.
+:::
+
+## MCP server
+
+The `env` block of `values.yaml` has a section for the remote [MCP server](../build-with-ai/mcp-server.md),
+off by default. To turn it on, set the public URL and a real signing key — the boot stops with
+`MCP_ENABLED` on and `FRONTEND_URL` missing, or with a `JWT_SECRET` shorter than 32 bytes:
+
+```yaml
+env:
+  FRONTEND_URL: https://console.example.com
+  MCP_ENABLED: true
+  # MCP_DCR_ENABLED, MCP_CIMD_ENABLED, MCP_API_KEY_ENABLED: default true
+  # CIMD_ALLOWED_HOSTS, OAUTH_ISSUER_URL, MCP_RESOURCE_URL: leave empty unless needed
+  # MCP_RATE_LIMIT_MAX: 120   # leave commented out: an empty value fails validation
+
+envSecrets:
+  JWT_SECRET: <output of openssl rand -hex 32>
+```
+
+Every variable of the section is described under
+[MCP server and OAuth](./environment-variables.md#mcp-server-and-oauth).
 
 ## MongoDB and Redis
 

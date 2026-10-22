@@ -52,7 +52,7 @@ Files that usually hold credentials:
 | Category | Paths |
 | --- | --- |
 | Git internals | `.git` |
-| CI configuration | `.github/workflows/`, `.github/actions/`, `.gitlab-ci.yml`, `.gitlab/`, `azure-pipelines*.yml`, `.azure-pipelines/`, `.circleci/`, `bitbucket-pipelines.yml`, `Jenkinsfile*`, `.husky/` |
+| CI configuration | `.github/workflows/`, `.github/actions/`, `.gitlab-ci.yml`, `.gitlab/`, `azure-pipelines*.yml`, `azure-pipelines*.yaml`, `.azure-pipelines/`, `.circleci/`, `bitbucket-pipelines.yml`, `Jenkinsfile*`, `.husky/` |
 | Lockfiles | `pnpm-lock.yaml`, `package-lock.json`, `yarn.lock`, `npm-shrinkwrap.json`, `bun.lock`, `bun.lockb` |
 | Registry configuration | `.npmrc`, `.yarnrc`, `.yarnrc.yml`, `.pnpmfile.cjs` |
 | Ignored files | Anything the repository's `.gitignore` excludes |
@@ -86,6 +86,11 @@ Files that usually hold credentials:
 | See AI change requests | Every member of the project |
 | Ask for a change, apply, open a pull request, discard | Project **Admin** and **Editor**, plus organization **Owner** and **Admin**. A **Viewer** cannot |
 | Manage the organization's AIs and which projects use them | Organization **Owner** and **Admin** |
+
+A member whose access is limited to **Specific domains** (see
+[Changing a role](../project-settings/users-and-roles.md#changing-a-role)) sees and starts only the jobs
+whose microfrontends and services all belong to their domains. Jobs on the whole project are hidden
+from them.
 
 Maestro and MCP clients act with the user's own permissions: on a project where the user is a Viewer,
 every change is refused. See [Console assistant](./console-assistant.md) and

@@ -11,7 +11,7 @@ keywords: [profile, avatar, profile picture, marketing consent, personal data]
 The profile page is about the person signed in rather than about a project. Open it from the
 **account button at the bottom of the sidebar** — the one carrying your name — and then **Profile**.
 
-![The profile page, with the profile picture, personal data and marketing consent cards](../assets/profile.png)
+![The profile page, with the profile picture and personal data cards](../assets/profile.png)
 
 Three cards, and the third is conditional: **Marketing communications** exists only on an
 installation that [collects a consent](#marketing-communications). The page lives inside the console

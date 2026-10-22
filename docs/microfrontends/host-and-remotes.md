@@ -34,7 +34,12 @@ itself a remote of `shell`:
 
 Nothing stops a remote from being a host of other remotes, and nothing stops a remote from
 having several parents — a shared design-system remote consumed by three hosts is a perfectly
-normal shape.
+normal shape. The one exception is a microfrontend of the **Frontend** kind, served by its own Docker
+container: it can have children but no parents, so in the Diagram view no link can end on it.
+
+In the Diagram view, drag from a node's bottom handle to another node to make the second a remote
+of the first. Dropping the link on empty canvas starts a new microfrontend already set as a child of
+the node you dragged from. To remove a relation, select the link and press **Delete**.
 
 ## Why the graph matters
 
@@ -54,7 +59,7 @@ from `1.3.0` to `1.4.0` in production is a deployment, not a host rebuild.
 ## Remote naming
 
 Module Federation remote names cannot contain `/` or `-`, so Flightroom derives the name
-from the slug by stripping them:
+from the slug by replacing every `/` with `_` and removing every `-`:
 
 | Slug | Remote name |
 | --- | --- |
@@ -87,7 +92,8 @@ next to the microfrontend selector: **Integrate my microfrontends**, for every m
 project that consumes another one, and **Integrate only this one**, for the selected one. Both open
 the same dialog, which shows the config that would be written for each repository and a diff against
 what that repository holds today; you pick which ones to commit, and the write lands on the default
-branch of each.
+branch of each. Committing wires microfrontends of every domain together, so it needs access to the
+**whole project**: a member limited to specific domains can open the dialog but not commit.
 
 ## Shared dependencies
 

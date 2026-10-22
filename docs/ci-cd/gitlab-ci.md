@@ -135,9 +135,22 @@ placeholders, which the scaffolder replaces before the initial commit, as it doe
 | Placeholder | Replaced with |
 | --- | --- |
 | `%microfrontendSlug%` | The slug of the microfrontend, as it appears in the console |
-| `%domain%` | The base URL of the console, without `/api`: `BACKEND_URL` if the installation sets it, `https://console.flightroom.dev` otherwise |
+| `%domain%` | The value of the installation's `BACKEND_URL`, inserted verbatim; `https://console.flightroom.dev` when `BACKEND_URL` is not set |
 
 If you add this job to a repository by hand, write those two values in yourself.
+
+:::caution[`%domain%` is the API URL, and the job appends `/api` to it]
+`BACKEND_URL` is the public URL of the **API** — usually the console URL followed by `/api` — and
+the scaffolder copies it into `%domain%` as it is, without removing anything. The job above then
+appends `/api/microfrontends/…`, so an installation whose `BACKEND_URL` ends in `/api` produces
+uploads to `…/api/api/microfrontends/…`, which fail. Two more cases to check:
+
+- With `BACKEND_URL` unset, `%domain%` is `https://console.flightroom.dev` — not your installation,
+  even if `FRONTEND_URL` is set.
+- Either way, the fix is the same: make `MICROFRONTEND_ORCHESTRATOR_DOMAIN` the console URL
+  **without** `/api` (e.g. `https://console.example.com`), in the file or as a project CI/CD
+  variable.
+:::
 
 Both are plain job variables, so a **project** CI/CD variable of the same name wins over them: once
 the YAML is correct you can set `MICROFRONTEND_ORCHESTRATOR_DOMAIN` in the project settings to publish
@@ -209,11 +222,17 @@ The repository was scaffolded by a console older than the one that replaces the 
 GitLab, or the job was copied by hand from `template-pipelines`. Replace them as described
 [above](#the-publish-job).
 
+**The upload URL contains `/api/api/`, or points at the wrong installation**
+
+`%domain%` was filled from `BACKEND_URL`, which already ends in `/api`, or from the default used
+when `BACKEND_URL` is unset. Set `MICROFRONTEND_ORCHESTRATOR_DOMAIN` to the console URL without
+`/api` — see [the caution above](#the-publish-job).
+
 **`api-key` empty / authentication failure**
 
 Either the variable is not defined at a scope the project can see, or it is **Protected** and the tag
-is not. Check both, and confirm the key still exists in **Settings → API Keys** — an **Expired**
-badge is not the cause, since expired keys still authenticate. Only a deleted key stops working.
+is not. Check both, and confirm the key still exists in **Settings → Access → API Keys** and is not
+**Expired**: an expired or revoked key is refused, with *API key expired on …* or *API key revoked*.
 
 **`dist/` missing in the deploy job**
 

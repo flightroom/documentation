@@ -9,17 +9,19 @@ keywords: [api key, ci authentication, automation, project scope]
 # API keys for CI/CD
 
 An API key authenticates a machine — a CI pipeline, a deploy script, an automation job — against a
-single project. Keys live under **Settings → API Keys**.
+single project. Keys live on the project's **API Keys** page, reached from **Settings → Access →
+API Keys**.
 
 ## Creating a key
 
-1. Go to **Settings → API Keys** and click **Create API Key**.
+1. Go to **Settings → Access → API Keys** and click **Create API Key**.
 
-   ![The API Keys page of a project with no keys yet](../assets/api-keys.png)
+   ![The API Keys page with Create API Key and a ci-pipeline key marked Active](../assets/api-keys.png)
 
 2. Give it a **Name** describing where it will be used, e.g. *catalog GitHub Actions*.
-3. Pick an **Expiration Date**. The date is sent as the *start* of the selected day (midnight UTC),
-   so pick the day after the last one you want the key dated for.
+3. Pick an **Expiration Date**. The dialog proposes one six months from now. A day you pick
+   yourself is sent as the *start* of that day — midnight in your browser's time zone, not UTC — so
+   pick the day after the last one you want the key to work on.
 4. Click **Create Key**.
 
    ![The Create API Key dialog, with a name and an expiry date](../assets/api-key-dialog.png)
@@ -44,20 +46,26 @@ key first, update the consumer, then delete the old one.
 
 ## What a key can call
 
-The endpoints a pipeline needs:
+Exactly these endpoints accept a key — `<API_BASE>` is the API URL, e.g.
+`https://console.example.com/api`:
 
-- the [upload](#using-a-key) of a microfrontend version:
+| Endpoint | What it does | Body | Role |
+| --- | --- | --- | --- |
+| `POST <API_BASE>/microfrontends/by-slug/:slug/upload/:version` | [Uploads](./manual-upload.md) the bundle of a microfrontend version | multipart, field `file` (a ZIP) | any |
+| `POST <API_BASE>/microfrontends/by-slug/:slug/versions/:version` | Registers the image of a version of a microfrontend served by its own Docker container | JSON: `image` (required), `digest`, `commitSha` | `MANAGER` |
+| `POST <API_BASE>/microfrontends/by-slug/:slug/environments/:envSlug/deployments` | Reports that a version of that Docker microfrontend now runs in an environment | JSON: `version` (required), `image`, `commitSha` | `MANAGER` |
+| `POST <API_BASE>/services/by-slug/:slug/versions/:version` | Registers the image of a [service](../kubernetes/services.md) version | JSON: `image` (required), `digest`, `commitSha` | `MANAGER` |
+| `POST <API_BASE>/services/by-slug/:slug/environments/:envSlug/deployments` | Reports that a service version now runs in an environment | JSON: `version` (required), `image`, `commitSha` | `MANAGER` |
 
-  ```
-  POST <API_BASE>/microfrontends/by-slug/:slug/upload/:version
-  ```
+The two `microfrontends/…/versions` and `…/deployments` routes refuse a microfrontend served by
+Flightroom — its CI uploads a bundle instead — and the upload refuses a Docker one. The template
+pipelines call the right ones for you.
 
-- registering the version of a Docker frontend or a [service](../templates/service-templates.md)
-  once its image is pushed, and reporting where it was deployed. These require a `MANAGER` key; the
-  template pipelines call them for you.
-
-Plus the [MCP server](../build-with-ai/mcp-server.md), where a key stands in for clients that cannot
-sign in with OAuth.
+Plus the [MCP server](../build-with-ai/mcp-server.md) at `<API_BASE>/mcp`, where a key stands in for
+clients that cannot sign in with OAuth. There it goes in `Authorization: Bearer <key>` (or the
+`api-key` header); the `?apiKey=` query parameter is **not** accepted on `/mcp`. An operator can turn
+this fallback off with `MCP_API_KEY_ENABLED=false` — see
+[environment variables](../self-hosting/environment-variables.md#mcp-server-and-oauth).
 
 Everything else on the API — creating a deployment, editing a microfrontend, reading the build
 status — is authenticated with the token of a signed-in user and answers an API key with an
@@ -69,9 +77,10 @@ authentication error. So a pipeline can *publish* a version, and it cannot *depl
 A key carries a role in the database — `MANAGER` or `VIEWER` — and neither the console nor the API
 gives you anything to do with it.
 
-- **You cannot choose it.** The create dialog asks for a name and an expiry date, nothing else, and
-  every key it produces is a `MANAGER`. Keys created automatically for a scaffolded repository are
-  `MANAGER` too.
+- **You cannot choose it in the console.** The create dialog asks for a name and an expiry date,
+  nothing else, and every key it produces is a `MANAGER`. `POST /api-keys` accepts an optional
+  `role` in its body and defaults to `MANAGER` when it is missing. Keys created automatically for a
+  scaffolded repository are `MANAGER` too.
 - **It is checked where it matters for CI and AI clients.** Registering the version of a service or
   a Docker frontend, and reporting where it was deployed, require a `MANAGER` key. The
   [MCP server](../build-with-ai/mcp-server.md) gives a `VIEWER` key read-only tools. Uploading a
@@ -127,7 +136,8 @@ curl -X POST \
   "<API_BASE>/microfrontends/by-slug/catalog/upload/1.4.0"
 ```
 
-A query parameter is also accepted, for clients that cannot set headers:
+On every endpoint except `/mcp`, a query parameter is also accepted, for clients that cannot set
+headers:
 
 ```
 <API_BASE>/microfrontends/by-slug/catalog/upload/1.4.0?apiKey=…

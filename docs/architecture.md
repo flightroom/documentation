@@ -23,7 +23,7 @@ The orchestrator ships as **one container**, listening on port 80. Inside it the
 processes: nginx serves the console as static files and proxies `/api/` to a Node process on
 localhost:3000, which is the authenticated management API and the public serve API together. All of
 it therefore arrives on one port, from one image. State lives in MongoDB — Redis is optional and
-holds no state, see below. Artifacts — the actual microfrontend bundles — live outside the database,
+holds only short-lived caches and locks, see below. Artifacts — the actual microfrontend bundles — live outside the database,
 either on the orchestrator's own storage or in a cloud bucket you own.
 
 ```mermaid
@@ -46,7 +46,7 @@ flowchart TB
     subgraph state["State, and one optional cache"]
         direction LR
         mongo[("MongoDB<br/>projects · environments · microfrontends<br/>deployments · storages · members · API keys")]
-        redis[("Redis · optional<br/>caches Auth0 / Google token lookups")]
+        redis[("Redis · optional<br/>token and API-key caches · repository locks<br/>pending assistant actions")]
     end
 
     subgraph artifacts["Where the bundles are stored"]
@@ -60,7 +60,7 @@ flowchart TB
     subgraph optional["External services · optional"]
         direction LR
         idp["Identity providers<br/>Auth0 · Entra ID · Google<br/>or local login"]
-        smtp["SMTP<br/>invitations, password reset"]
+        smtp["SMTP<br/>activation, invitations, password reset"]
     end
 
     ext["Your CDN or static host<br/>hosting type: Custom URL"]
@@ -74,7 +74,7 @@ flowchart TB
     mgmt --> storage
     serve --> storage
     mgmt --> mongo
-    mgmt -.->|"Auth0 and Google login only"| redis
+    mgmt -.->|"when REDIS_URL is set"| redis
     serve --> mongo
 
     console -.-> idp
@@ -103,11 +103,22 @@ A few things worth reading off the diagram:
   [API key](./ci-cd/api-keys.md).
 - **Artifacts are not in the database.** MongoDB holds configuration and deployment snapshots;
   bundles live on disk or in object storage.
-- **Redis is optional, and caches one thing.** Without `REDIS_URL` the plugin logs a warning and
-  returns, and the platform runs without it. Its only consumer in the whole backend caches the
-  responses of the Google `tokeninfo` and Auth0 `/userinfo` calls, keyed by the token, for an hour —
-  so local and Entra ID logins never touch it, the rate limiter keeps its counters in memory, and
-  nothing on the serve path reads it at all.
+- **Redis is optional, and has four consumers.** Without `REDIS_URL` the plugin logs a warning and
+  returns, and the platform runs without it. What uses it when it is there:
+
+  | Consumer | What it keeps | For how long | Without Redis |
+  | --- | --- | --- | --- |
+  | Token cache | The answer of Auth0 `/userinfo`, keyed by a SHA-256 of the token, and of Google `tokeninfo`, keyed by the token | Auth0: one hour, never past the token's own expiry. Google: one hour | Every request asks the provider again |
+  | MCP API-key cache | Which API keys were just found valid by the [MCP server](./build-with-ai/mcp-server.md), keyed by a SHA-256 of the key | 60 seconds, never past the key's expiry | Kept in memory, per process |
+  | Repository locks | One lock per working copy, so two [AI changes](./build-with-ai/ai-changes.md) never share a checkout | 60 seconds, renewed while the change runs | Kept in memory, per process |
+  | Pending assistant actions | The destructive actions the [console assistant](./build-with-ai/console-assistant.md#confirming-actions) is waiting for you to confirm | 15 minutes | Kept in memory, per process |
+
+  Local and Entra ID logins never touch it, the rate limiter keeps its counters in memory, and
+  nothing on the serve path reads it at all. With a **single replica** Redis only saves calls to the
+  identity provider. With **more than one** it matters: the in-memory fallbacks are per process, so
+  without Redis two replicas can run AI changes on the same checkout at once, a confirmation can land
+  on a replica that never saw the action it confirms, and an API key revoked on one replica can keep
+  working on another for up to a minute.
 - **Git providers are reached from the management API**, not shown above to keep the picture
   readable: with a [repository](./repositories/connect/github.md) connected, the platform scaffolds
   a repo from a template, injects a build pipeline and creates the deploy secret that pipeline

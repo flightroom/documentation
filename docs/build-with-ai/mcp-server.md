@@ -29,8 +29,12 @@ Set these on the backend:
 | `FRONTEND_URL` | required | Public URL of the console: the consent page lives there |
 | `JWT_SECRET` | required | Your own secret, at least 32 bytes (`openssl rand -hex 32`). With MCP on, the backend refuses to start on a missing, placeholder or short one |
 | `MCP_API_KEY_ENABLED` | `true` | Lets clients that cannot do OAuth use a project API key (see below) |
-| `MCP_RATE_LIMIT_MAX` | `120` | MCP requests per minute for each grant or API key |
+| `MCP_RATE_LIMIT_MAX` | `120` | MCP requests per minute for each grant or API key, on top of the per-IP `RATE_LIMIT_MAX` (default `100`) |
 | `MCP_DCR_ENABLED` | `true` | Dynamic client registration, what most clients use today |
+| `MCP_CIMD_ENABLED` | `true` | Client ID metadata documents: the client is identified by the URL of a document it publishes |
+| `CIMD_ALLOWED_HOSTS` | empty | Comma-separated hosts allowed to publish a client metadata document. Empty accepts any host. A client from a listed host is not flagged *Unverified application* on the consent page |
+| `OAUTH_ISSUER_URL` | derived | Public URL of the OAuth authorization server, when it cannot be derived from `BACKEND_URL` or `FRONTEND_URL` (`<FRONTEND_URL>/api`) |
+| `MCP_RESOURCE_URL` | derived | Public URL of the MCP server, when it is not `<issuer>/mcp` |
 
 The discovery documents live at the origin root, outside `/api`
 (`/.well-known/oauth-protected-resource`, `/.well-known/oauth-authorization-server`,
@@ -50,11 +54,15 @@ server URL**. With the default layout it is `https://<your console>/api/mcp`.
   claude mcp add --transport http flightroom https://<your console>/api/mcp
   ```
 
+![The AI assistants page, with the MCP server URL to copy, the API key alternative and no connected assistants yet](../assets/mcp-clients.png)
+
 ### The consent page
 
 The client sends you to the console, where you sign in as usual and see **Connect *client***:
 
-1. **Choose the projects to share**: one or more, grouped by organization.
+1. **Choose the projects to share**: one or more, at most 50, grouped by organization. The checkbox
+   next to each organization (**Select all**) selects all its projects. With more than 8 projects
+   the list gets a **Search projects** box.
 2. **Allow changes**, or leave it off for read-only access. With it, the client can also change the
    projects, deploy, and create new projects in the organizations of the shared projects you
    administer.
@@ -63,21 +71,44 @@ The client sends you to the console, where you sign in as usual and see **Connec
 The page warns when something deserves a second look: *Unverified application* (the client's name is
 self-asserted), *Redirect address differs from publisher*, *Local application*, *Custom link scheme*.
 
+### When the connection fails
+
+If the request cannot go on, the console shows **Connection failed** with the reason:
+
+| Code | Shown as | Means |
+| --- | --- | --- |
+| `invalid_client` | **Unknown application** | The application that started the request is not recognized |
+| `invalid_redirect_uri` | **Invalid redirect address** | The application asked to be sent to an address that is not allowed |
+| `invalid_request` | **Request not valid** | The request is invalid, expired or belongs to another account. Start the connection again from your assistant |
+| `server_error` | **Something went wrong** | An unexpected error. Also shown for any other code |
+
+![The Connection failed page showing Request not valid for an invalid or expired request](../assets/oauth-error.png)
+
 ## What a client can do
 
 | Scope | Granted by | Allows |
 | --- | --- | --- |
-| `mfe:read` | Always | Reading the project: microfrontends, services, domains, environments, deployments, canary users, variables, build status, storages and repository connections (credentials masked), dependency and integration plans |
-| `mfe:write` | **Allow changes** | Everything the console does inside a project, **deploy and rollback included**, plus creating projects. Rollback re-activates a snapshot and does not touch Kubernetes: see [Rolling back a Kubernetes deploy](../kubernetes/rollback.md) |
+| `mfe:read` | Always | Reading the project: microfrontends, services, domains with their links and their deployed versions, environments, deployments, canary users, variables, config maps, secrets (values masked), build status, storages, databases and repository connections (credentials masked), dependency and integration plans |
+| `mfe:write` | **Allow changes** | Everything the console does inside a project, **deploy and rollback included**, plus creating projects and creating a microfrontend or a service with its repository from a template (`microfrontend_scaffold`, `service_scaffold`). Rollback re-activates a snapshot and does not touch Kubernetes: see [Rolling back a Kubernetes deploy](../kubernetes/rollback.md) |
 
 The role caps each project separately and is read again on every call. On a project where you are a
 **Viewer**, every write is refused whatever the grant says, and the consent page tells you which
 selected projects stay read-only. Demoting a member takes write access away from their clients
 immediately.
 
-Left out on purpose: API keys, creating or editing storages and repository connections (their input
-is a secret), deleting projects, organizations, members and invitations, the user profile, bundle
-upload, and Flightroom's own AI code changes. One connection creates at most 10 projects.
+Left out on purpose:
+
+- API keys, and listing or revoking MCP clients;
+- creating or editing storages, databases, secrets and repository connections (their input is a
+  secret);
+- organization settings, creating an organization, deleting projects, organizations, members and
+  invitations;
+- the GitOps and pipeline templates settings of a project;
+- bulk creation and deletion, and the layout of the canvas;
+- the user profile, bundle upload, and Flightroom's own AI code changes.
+
+These stay in the console, where some of them are available to [Maestro](./console-assistant.md).
+One connection creates at most 10 projects.
 
 ## Changing code from your own coding agent
 
@@ -144,11 +175,14 @@ claude mcp add --transport http flightroom https://<your console>/api/mcp \
 
 ## Managing connections
 
-**Settings → Access → AI assistants** lists the connected clients that include the current project:
-**Assistant**, **User**, **Access** (*Read only* or *Read and write*), **Connected on** and **Last
-used**. A project owner or an organization admin sees and can revoke everyone's connections that
-include the project; other members see and revoke their own. **Revoke access** removes the whole
-grant, with all its projects, and takes effect on the client's next request.
+The **AI assistants** page (`/mcp-clients`, also reached from **Settings → Access → AI assistants**)
+lists the connected clients that include the current project: **Assistant**, **Projects**, **User**,
+**Access** (*Read only* or *Read and write*), **Connected on** and **Last used**. A project owner or an
+organization admin sees and can revoke everyone's connections that include the project; other
+members see and revoke their own.
+
+To revoke one, press the trash icon on its row and confirm in the **Revoke access** dialog. It removes
+the whole grant, with all its projects, and takes effect on the client's next request.
 
 A grant also ends by itself:
 
