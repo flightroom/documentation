@@ -58,7 +58,7 @@ services:
       retries: 5
 
   flightroom:
-    image: lory1990/mfe-orchestrator:4.0.0
+    image: lory1990/flightroom:5.1.0
     container_name: flightroom
     restart: always
     ports:
@@ -102,7 +102,7 @@ permanent slug, and it mishandles anything longer than two words.
 
 ## Before you call it production
 
-- **Pin the version.** The file above names `lory1990/mfe-orchestrator:4.0.0` on purpose: the
+- **Pin the version.** The file above names `lory1990/flightroom:5.1.0` on purpose: the
   `latest` tag is rebuilt from the development branches on every push, so it is not a release
   channel. Bump the tag deliberately, when you decide to upgrade. The same goes for `mongo:8.0` and
   `redis:8-alpine`.
