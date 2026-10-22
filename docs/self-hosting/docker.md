@@ -25,7 +25,7 @@ Two images are published, and the difference is what runs inside the container:
 | Image | Contains | Use it for |
 | --- | --- | --- |
 | `lory1990/flightroom:all-in-one` | Orchestrator, MongoDB, Redis and Nginx | A working installation from a single `docker run` |
-| `lory1990/mfe-orchestrator:4.0.0` | Orchestrator and Nginx only | Installations that point at a MongoDB and a Redis you already run |
+| `lory1990/flightroom:5.1.0` | Orchestrator and Nginx only | Installations that point at a MongoDB and a Redis you already run |
 
 The standard image does **not** bring a database with it: started on its own it has nothing to
 connect to. Give it `NOSQL_DATABASE_URL` and `REDIS_URL`, or use
@@ -87,7 +87,7 @@ docker run -d --name flightroom --restart unless-stopped \
   -e JWT_SECRET="$(openssl rand -hex 32)" \
   -e SECRETS_ENCRYPTION_KEY="$(openssl rand -base64 32)" \
   -v upload_microfrontends:/upload-microfrontends \
-  lory1990/mfe-orchestrator:4.0.0
+  lory1990/flightroom:5.1.0
 ```
 
 A standalone MongoDB works, but MongoDB only offers **transactions** on a replica set: pointed at a
