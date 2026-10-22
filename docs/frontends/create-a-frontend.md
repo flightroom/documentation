@@ -148,7 +148,7 @@ The **Kind** at the top of the **General** tab decides who serves the code:
 | | Bundle | Docker |
 | --- | --- | --- |
 | Served by | Flightroom, from the hub, your bucket or a custom URL | Its own Docker container |
-| Configured in | **Hosting** tab | **Container** tab — runtime, image, URLs, environment, config maps and secrets, as for a [service](../kubernetes/services.md) |
+| Configured in | **Hosting** tab | **Container** tab — runtime, image, endpoint (the **Expose** switch and the exposure path), environment, config maps and secrets, as for a [service](../kubernetes/services.md) |
 | Version | Chosen in **Release** | Read-only: set by the pipeline each time it registers an image version |
 | Canary | Available | None: Flightroom cannot split the traffic of a container |
 | Parents | Any | None. It cannot be the remote of a host, so in the Diagram view no link can end on it |

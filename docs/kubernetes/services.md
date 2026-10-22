@@ -64,25 +64,27 @@ template does not overwrite what you typed.
 | **Readiness probe path** | Kubernetes sends traffic to the container only while this path answers. `/health/ready` by default |
 | **API docs path** | Optional. The page of the public API documentation, e.g. `/docs` |
 | **OpenAPI spec path** | Optional. E.g. `/openapi.json` |
-| **Exposure path** | Optional. Where the service answers on the host of every environment, e.g. `/api/orders`. See [Exposure](./exposure.md) |
 | **Image repository** | Optional. E.g. `ghcr.io/acme/orders-api`. Left blank, the first version the CI registers fills it |
 
 Paths start with `/`, hold no spaces and are at most 256 characters long.
 
 ### Endpoints
 
-One base URL per environment of the project: where the service is reachable there, for example
-`https://orders-api.dev.example.com`. Each one is an absolute `http` or `https` URL, without
-credentials, query (`?`) or fragment (`#`). Leave it blank where the service is not exposed.
+Whether the service is reachable from outside the cluster, and at which path. Both are the same in
+every environment of the project.
 
-The **API docs path** and **OpenAPI spec path** are relative to these URLs: the overview of the
-service links each environment's documentation from them.
+| Field | Notes |
+| --- | --- |
+| **Expose** | One switch for every environment. Off, the service gets no route and answers only inside the cluster |
+| **Exposure path** | Required when exposed. The subpath the service answers at on the host of every environment, e.g. `/api/orders`. The prefix is stripped before the request reaches the container |
 
-:::info[Endpoints are not exposure]
-The endpoints only record where the service answers, for people and for the documentation links. They
-do not create any route. What puts a service on a URL in Kubernetes is its **Exposure path**, together
-with the project's [exposure](./exposure.md) settings.
-:::
+When the project has an [exposure](./exposure.md) domain, the card previews the resulting URL of each
+environment: `https://<environment host><exposure path>`, for example
+`https://dev.example.com/api/orders`. The **API docs path** and **OpenAPI spec path** are relative
+to that URL: the overview of the service links each environment's documentation from it.
+
+The same card, with the same switch, is on the **Container** tab of a
+[Docker frontend](../frontends/create-a-frontend.md#bundle-or-docker), where it starts switched on.
 
 ### Code repository
 

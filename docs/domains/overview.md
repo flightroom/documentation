@@ -2,8 +2,8 @@
 sidebar_position: 1
 title: Functional domains
 sidebar_label: Overview
-description: "Group the frontends and services of one business capability: the map of the domains and their relations, the versions deployed in each environment, and a page per domain to change, structure and deploy it."
-keywords: [functional domain, domains, galaxy, domain relation, deployed versions, structure, deploy a domain]
+description: "Group the frontends and services of one business capability: the map of the domains and their relations, the versions deployed in each environment, and a page per domain to change and deploy it."
+keywords: [functional domain, domains, galaxy, domain relation, deployed versions, deploy a domain]
 ---
 
 # Functional domains
@@ -86,11 +86,11 @@ GitOps and nothing else shows *not reported* in every backend cell. Add the call
 pipeline: see [Reporting where a version runs](../kubernetes/services.md#reporting-where-a-version-runs).
 :::
 
-The same information, for one domain, is on the **Overview** of its structure (below).
-
 ## A domain's page
 
-A domain has two tabs, **Edit with AI** and **Structure**, and a **Deploy** button on both.
+A domain opens on **Edit with AI**, with **Create version**, **Build and deploy** and **Deploy**
+buttons in its header. Its name, description
+and AI context are changed from **Edit** on its card in the **Domains** page.
 
 ### Edit with AI
 
@@ -99,35 +99,9 @@ agent works on every frontend and service of the domain that has a code reposito
 and proposes one change per repository. See
 [Change a whole domain](../build-with-ai/ai-changes.md#change-a-whole-domain).
 
-The tab is always there. Without an AI it reads *AI editing is not available in this project: the
+The page is there even without an AI: then it reads *AI editing is not available in this project: the
 organization has no AI it can use.* A domain with no member, or none with a repository, is handled by
 [Generate a domain](../build-with-ai/generate-a-domain.md), which creates them first.
-
-### Structure
-
-`/domain/:id/structure` shows the members of the domain, split into **Frontend** (its frontends)
-and **Backend** (its services), in four views:
-
-| View | Shows |
-| --- | --- |
-| **Diagram view** (the default) | Frontend and backend on one canvas. Drag from a frontend's dot to another frontend or to a service to link them; drop the link on empty canvas to create a new frontend under it. Select a link and press Delete to remove it, double-click a block to open it. Positions are shared with the Frontends page |
-| **Overview** | Two cards listing the members with their version, and the **Deployed versions** of the domain per environment |
-| **Grid view** | The members as cards |
-| **Table view** | The members as a table |
-
-![The Diagram view of the Checkout domain structure, with the checkout frontend above the Orders API service](../assets/domain-structure-diagram.png)
-
-**Edit** in the header changes the name, description and AI context of the domain.
-
-### Adding frontends and services
-
-**Add frontend** and **Add service** open the same menu:
-
-| Entry | What it does |
-| --- | --- |
-| **Create a new frontend** / **Create a new service** | Opens the creation form with the domain already set |
-| **Add existing** | Picks frontends or services of the project to put in this domain. Those in another domain are moved here |
-| **Import from repository** | Creates one frontend or one service per repository of a code repository connection, in this domain. Shown only when the project has a connection. See [Import repositories](../repositories/import-frontends.md) |
 
 ### Deploying a domain
 
@@ -136,6 +110,28 @@ frontends and services of this domain are deployed; the other domains keep the v
 environment serves now. Config maps and secrets are still deployed as they are now. The button is
 hidden while the project has no environment. See [Deployments](../deployments/overview.md) and
 [Deploy to Kubernetes](../kubernetes/overview.md).
+
+### Build and deploy
+
+**Build and deploy** releases the domain in one go. Enter the version (letters, digits, dots, dashes
+and underscores, at most 128), the branch (`main` when left empty) and the environment, then press
+**Build and deploy**. The console then:
+
+1. **Build**: tags the repository of every frontend and service of the domain with the version, as
+   **Create version** does. Every repository is checked first; if one fails, none is tagged and the
+   dialog lists the outcome of each repository.
+2. **CI**: waits for the pipeline of every tagged repository to register the version. The release
+   fails if a version is still missing after 60 minutes, or as soon as every run of the tag failed or
+   was canceled.
+3. **Versions**: sets the version on every frontend and service that was built, even when the one
+   they had looks newer. Members without a code repository are left out and keep their version.
+4. **Deploy**: deploys the domain to the environment, as **Deploy** does.
+
+The steps after the build run in the console, so the release goes on if you close the dialog or the
+browser. Opening **Build and deploy** again while it runs shows its progress, member by member, and
+the error if it fails. A domain runs one release at a time. Each step acts with the rights of the
+member who started it: a viewer does not see the button, and it is hidden while the project has no
+environment.
 
 ## Members limited to some domains
 
