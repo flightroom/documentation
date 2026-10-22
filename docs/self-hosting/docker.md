@@ -51,8 +51,8 @@ permanent slug, and it mishandles anything longer than two words.
 What you should know about this image:
 
 - **Everything persistent lives in `/data`**: the database (`/data/db`), the Redis dump
-  (`/data/redis`), the uploaded microfrontends (`/data/microfrontends`) and the JWT secret
-  (`/data/secrets`). Mount that one volume and the installation survives an image upgrade.
+  (`/data/redis`), the uploaded microfrontends (`/data/microfrontends`), the clones of the
+  repositories edited with AI (`/data/repositories`) and the JWT secret (`/data/secrets`). Mount that one volume and the installation survives an image upgrade.
 - **The JWT secret is generated on the first start** and kept in the volume, so tokens are not
   signed with a well known key. Pass `JWT_SECRET` yourself if you prefer to manage it.
 - **`SECRETS_ENCRYPTION_KEY` is not generated.** It is the one secret the entrypoint does not create
@@ -99,15 +99,20 @@ that matters to you. It is what the all-in-one image does.
 
 | Tag | What it points at |
 | --- | --- |
-| `4.0.0` | A released version. This is what you want in production |
-| `latest` | The head of the development branches, rebuilt on every push |
-| `4.0.0-all-in-one` | The all-in-one image of a released version |
-| `all-in-one` | The head of the development branches, all-in-one flavour |
+| `5.1.0` | A released version (the current one). This is what you want in production |
+| `latest` | The head of the `main` and `development` branches, rebuilt on every push |
+| `5.1.0-all-in-one` | The all-in-one image of a released version |
+| `all-in-one` | The most recent all-in-one build, from a branch push or a release |
 
-`latest` is not a release channel here: it is rebuilt from the branches, so pin a version tag
-anywhere you care about reproducibility. The [Docker Compose file](./docker-compose.md), the
-[Terraform module](./terraform.md) and the [Helm chart](./helm.md) shipped with the project all
-name a released version for that reason.
+`latest` and `all-in-one` are not release channels here: they are rebuilt from the branches, so pin
+a version tag — `5.1.0` or `5.1.0-all-in-one` — anywhere you care about reproducibility. The
+`docker run` above uses `all-in-one` for brevity; replace it with `5.1.0-all-in-one` to stay on a
+release.
+
+Check what the deployment files shipped with the project actually reference before relying on them:
+the [Docker Compose page](./docker-compose.md) pins `5.1.0`, while the [Terraform module](./terraform.md#images)
+follows a development build and the [Helm chart](./helm.md#image-version) needs the image set
+explicitly.
 
 ## Container variables
 

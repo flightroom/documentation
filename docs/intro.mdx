@@ -86,23 +86,30 @@ To get started, you need to create an account. You have two options:
 ![The Flightroom sign-in page](./assets/console-login.png)
 
 **Option 1: Register with Email**
-1. Click on **"Register"** or **"Sign Up"**
+1. Click **Register**, next to *Don't have an account?* under the login form
 2. Enter your email address and create a password
-3. Verify your email — on the hosted console, and on any self-hosted instance with SMTP configured;
-   without SMTP there is no verification step at all
+3. Open the activation email and follow its link, within 24 hours. Until you do, the account cannot
+   be used: the password is accepted, but the console sends you straight back to the login form.
+   This applies on the hosted console and on any self-hosted instance with SMTP configured; without
+   SMTP there is no activation step at all. See
+   [Registration and activation](./account/email-flows.md#registration-and-activation)
 4. Sign in with your credentials
-5. Create your organization. The [five-step project wizard](./project-settings/projects.md#creating-a-project)
-   then opens inside it: name, environments, storage, repositories, collaborators
+5. Create your organization on the **Create your organization** screen. The
+   [five-step project wizard](./project-settings/projects.md#creating-a-project) then opens inside
+   it: name, environments, storage, repositories, collaborators
+6. On **Project ready!**, choose **Start deploying your microfrontends**. The console opens on the
+   **AI agent** page, or on **Microfrontends** while your organization has no AI yet — Step 3 adds one
 
 ![Creating an account with email and password](./assets/console-register.png)
 
 **Option 2: Sign in with Google SSO**
-1. Click on **"Sign in with Google"**
+1. Under **Or continue with**, click **Google**
 2. Select your Google account
 3. Authorize Flightroom to access your basic profile
-4. You'll be automatically signed in
-5. Create your organization. The [five-step project wizard](./project-settings/projects.md#creating-a-project)
-   then opens inside it: name, environments, storage, repositories, collaborators
+4. You'll be automatically signed in — there is no activation email for an account created this way
+5. Create your organization, then go through the
+   [five-step project wizard](./project-settings/projects.md#creating-a-project) exactly as in
+   Option 1
 
 :::tip[Recommended]
 Using Google SSO is faster and you don't need to remember another password!
@@ -173,29 +180,31 @@ users, [deploy it to Kubernetes](./kubernetes/overview.md).
 If you would rather start from a template without the AI — for example a web interface served by
 Flightroom and composed into a host with Module Federation — create a microfrontend directly.
 
-1. Return to the **[Home page](https://console.flightroom.dev)** by clicking on the home icon or logo in the navigation menu
-2. Click the **Add New Microfrontend** box at the center of the screen
+1. Open **Microfrontends** in the sidebar
+2. Click **Add New Microfrontend**, at the top right of the page
 
-![Add New Microfrontend](./assets/add-new-microfrontend.png)
+   ![The Microfrontends page header with the search field, the domain filter, the view switcher and the Add New Microfrontend button](./assets/add-new-microfrontend.png)
 
 3. Choose a template from the list
 
-![Choose A template](./assets/choose-a-template.png)
+   ![The Templates library, with the framework, compiler and type filters above the template cards](./assets/choose-a-template.png)
 
-4. Fill in the required information. The form is split into tabs — **General**, **Hosting** and
-   **Repository** — and what the template needs is spread over two of them:
- * **General → name**: A descriptive name for your microfrontend
- * **General → slug**: A URL-friendly identifier (e.g., "my-app"). It is filled in from the name as
-   you type, and cannot be changed after creation
- * **Repository → source code provider**: The repository connection to create the new repository in.
-   Already selected when the project has only one, or when one of them is the default
- * **Repository → repository name**: The name of the repository to create. Also pre-filled from the
-   name, so you only touch it if you want a different one
+4. Fill in the required information. The form is split into tabs — **General**, **AI context**,
+   **Hosting** and, when the project has a code repository connection, **Repository** — and what
+   the template needs is spread over two of them.
 
-Because you came from a template, the **Repository** tab arrives with its switch already on. If the
-tab is missing entirely, the project has no repository connection yet — go back to Step 2.
+   ![The creation form: the Release card with the version, then the General tab with kind, name Wishlist, slug wishlist, description and domain](./assets/frontend-fill-information.png)
 
-![Add New Microfrontend](./assets/frontend-fill-information.png)
+   * **General → name**: A descriptive name for your microfrontend
+   * **General → slug**: A URL-friendly identifier (e.g., "my-app"). It is filled in from the name as
+     you type, and cannot be changed after creation
+   * **Repository → source code provider**: The repository connection to create the new repository in.
+     Already selected when the project has only one, or when one of them is the default
+   * **Repository → repository name**: The name of the repository to create. Also pre-filled from the
+     name, so you only touch it if you want a different one
+
+   Because you came from a template, the **Repository** tab arrives with its switch already on. If the
+   tab is missing entirely, the project has no repository connection yet — go back to Step 2.
 
 5. Click **Save** to finalize the setup
 

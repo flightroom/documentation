@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 title: GitOps repositories
 sidebar_label: GitOps
 description: "Turn on GitOps and every Deploy commits the namespace, config maps, secrets and Helm values of an environment to your repositories before anything is recorded as deployed."
@@ -13,6 +13,11 @@ console, say what each environment runs, and Argo CD applies them to the cluster
 
 GitOps lives under **Settings → Delivery**, in the section **GitOps for environments, config maps
 and secrets**.
+
+The same tab holds, once GitOps is saved, the [Exposure](./exposure.md) and [Argo CD](./argo-cd.md)
+sections, and, whether GitOps is on or not, the **Pipeline templates** a new microfrontend or service
+gets when its repository is created. See
+[Your own pipeline templates](../templates/templates-library.md#your-own-pipeline-templates).
 
 ## Turning it on
 

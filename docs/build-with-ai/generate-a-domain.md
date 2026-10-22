@@ -25,7 +25,8 @@ repository, scaffolded from a Flightroom template, and the agent writes the code
 
 Open **Domains** in the sidebar and click **New domain**. Give it a **Name** (for example
 *Payments*) and, optionally, a **Description** and an **AI context**: notes for the agent about this
-domain only, such as its rules and vocabulary.
+domain only, such as its rules and vocabulary. See [Functional domains](../domains/overview.md) for
+everything else a domain page offers.
 
 ## 2. Describe what you need
 
@@ -56,11 +57,11 @@ The dialog **Create these components for *domain*?** lists them under **Frontend
 | Checkbox | Untick a component to leave it out |
 | **Name** | Display name |
 | **Slug** | 2 to 50 lowercase letters, digits or dashes, starting with a letter or a digit. Unique in the project |
-| **Repository name** | By convention it ends with `-fe` for a frontend and `-be` for a backend |
+| **Repository name** | Letters, digits, `.`, `_` and `-`, up to 100, starting with a letter or a digit, not ending with `.`, `.git` or `.atom`. By convention it ends with `-fe` for a frontend and `-be` for a backend |
 | **Template** | The Flightroom template the repository is scaffolded from |
 
 Below the list choose the **Code repository connection** to create the repositories with, and
-whether they are **Private repositories**. Then confirm with **Create *N* components and generate**.
+whether they are **Private repositories** (on by default). Then confirm with **Create *N* components and generate**.
 
 ### Templates
 
@@ -98,5 +99,8 @@ kind. Confirm with **Create *N* repositories and generate**, and the job starts 
 | *The AI did not propose anything to create* | Describe in the request what the domain should do and try again |
 | *The repository already exists at the provider…* | Possibly left there by an attempt that failed. Pick another name, or delete it at the provider and try again |
 | *A microfrontend (or service) with this slug already exists in the project* | Pick another slug |
+| *You do not have permission to create code repositories in this project.* | Your project role is **Viewer**. Ask an Admin or an Editor of the project to run it |
+| *The template no longer exists* | Pick another template for the component |
+| *The pipeline templates of the project could not be read: nothing was created* | The project uses [its own pipeline templates](../templates/templates-library.md#your-own-pipeline-templates) and their repository or branch cannot be read. Fix them in **Settings**, or go back to the official templates, and try again |
 | *…one agent works on at most 10 repositories* | Select fewer components; you can start a job on the others later |
 | *AI editing is not available in this project* | The organization has no AI the project can use. See [AI models](./ai-models.md) |

@@ -69,24 +69,34 @@ This is the part Flightroom generates. Open **Integration → Frontend Integrati
 your host, set **Bundler** to Vite (or leave it on Automatic if that is the microfrontend's stored
 stack) and copy the **Module Federation** tab:
 
-![The Module Federation tab of the Integration page, with the remotes of the selected host filled in](../assets/integration-vite.png)
+![The Module Federation tab with React and Vite selected, the install command and the generated vite.config.js with the remotes of the selected host](../assets/integration-vite.png)
 
 ```js
 // vite.config.js
-import { defineConfig } from 'vite';
-import federation from '@originjs/vite-plugin-federation';
+import { defineConfig } from 'vite'
+import federation from '@originjs/vite-plugin-federation'
+import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [
+    react(),
     federation({
       name: 'shell',
+      // A host is consumable as a remote too: the orchestrator serves this file at
+      // assets/remoteEntry.js, which is what the catalogue entry declares.
       filename: 'remoteEntry.js',
+      exposes: {
+        './App': './src/App'
+      },
       remotes: {
-        'catalog': {
+        // One entry per microfrontend this host consumes. The key is the name you import
+        // from ("catalog/Button"), the string passed to remoteUrl() is the slug in
+        // the orchestrator. Never write a url here: the backend resolves the version.
+        catalog: {
           external: `import('@mfe-orchestrator-hub/client').then(m => m.remoteUrl('catalog'))`,
           externalType: 'promise'
         },
-        'cart': {
+        cart: {
           external: `import('@mfe-orchestrator-hub/client').then(m => m.remoteUrl('cart'))`,
           externalType: 'promise'
         }
@@ -133,6 +143,13 @@ configure({
 })
 */
 ```
+
+This is a whole `vite.config.js`, not a fragment: the framework plugin (`@vitejs/plugin-react`,
+`@vitejs/plugin-vue` or `@analogjs/vite-plugin-angular`) is part of it. A microfrontend registered as
+a **host** also gets an `exposes` block with its root component — `./src/App` for React,
+`./src/App.vue` for Vue, `./src/app/app.component.ts` for Angular — because a host can itself be
+consumed as a remote. The bootstrap comment names the entry point of the framework: `src/main.tsx`,
+`src/main.js` or `src/main.ts`.
 
 The `remotes` block is derived from your relation graph: one entry per child of the selected host.
 Note that it holds **no URL at all**. `externalType: 'promise'` tells the plugin that `external` is

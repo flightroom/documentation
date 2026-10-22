@@ -12,7 +12,11 @@ A **bucket** — a *storage* in the console — is a connection to object storag
 configured, microfrontend builds are stored in your own cloud account instead of on the platform,
 while Flightroom continues to handle versioning, deployments and serving.
 
-Buckets live under **Settings → Storages**.
+Buckets live on the **Storages** page, under **Cloud** in the sidebar. It is also reachable from
+**Settings → Resources**, through the **Storages** card.
+
+The page lists the project's storages with their **Name** (and provider logo), **Bucket Name** — the
+container name, for Azure — **Path** and **Default**, plus the edit and delete actions.
 
 ![The Storages page of a project with no bucket configured yet](../assets/storages-empty.png)
 
@@ -86,14 +90,19 @@ makes rollback instant: nothing is overwritten or deleted on a new release.
 
 ## Adding a storage
 
-1. Go to **Settings → Storages** and click **New Storage**.
+1. Open **Storages** and click **New Storage**.
 2. Give it a **Name** and pick the **Provider**.
 
-   ![Choosing a storage provider](../assets/storage-providers.png)
+   ![The Provider select open, offering Amazon S3, Google Cloud Storage and Azure Blob Storage](../assets/storage-providers.png)
 
 3. Fill in the provider-specific credentials — see the per-provider pages.
 4. Optionally set a **Path** prefix inside the bucket.
-5. Save.
+5. Optionally click **Test connection**. Flightroom uploads a small probe file,
+   `.flightroom-connection-test`, under the folder the project's builds go to, reads it back, then
+   tries to delete it — so a pass means uploads and serving will both work. When the credentials are
+   not allowed to delete, the probe simply stays where it is. The test runs on the values in the
+   form: nothing is saved yet.
+6. Click **Create** (**Update** when editing).
 
 ![The New Storage form, showing the Amazon S3 credential fields](../assets/storage-dialog.png)
 
@@ -102,8 +111,13 @@ A storage's provider type is fixed at creation. To move from S3 to GCS, create a
 re-point your microfrontends at it.
 :::
 
-You can mark one storage as the **default** for the project, which is then preselected for new
-microfrontends.
+You can mark one storage as the **default** for the project with the star in the **Default**
+column. A new microfrontend then starts on **Custom Source** with that storage already selected,
+instead of on the Flightroom Hub.
+
+Adding, editing, testing, deleting a storage and changing the default are refused to a **Viewer**,
+and they need access to the **whole project**: a storage can serve microfrontends of every domain, so
+a member limited to specific domains cannot change one.
 
 ## Using a storage
 
@@ -114,13 +128,24 @@ as usual — the platform routes the artifact to your bucket. See
 Existing versions are not migrated when you change a microfrontend's storage. Change it, then
 publish a new version.
 
+:::caution[Deleting a storage does not check who uses it]
+The console deletes a storage without looking at which microfrontends point at it. Those
+microfrontends keep referencing a storage that no longer exists, and their next deployment has
+nothing to serve their files from. Re-point them first, then delete.
+:::
+
 ## Credentials and least privilege
 
 Flightroom needs to read and write objects under its prefix, and nothing else. Each provider
 page includes a minimal permission set — grant that rather than a broad administrative role.
 
-Credentials are stored by the platform and never returned to the browser once saved. Rotate them
-on your provider's normal schedule and update the storage when you do.
+Credentials are stored by the platform and never returned to the browser once saved: when you edit
+a storage, the secret fields — secret access key, account key, connection string, client secret,
+JSON key — show a masked placeholder. Leave it as it is to keep the stored value. If you change the
+provider account the storage authenticates as — the access key ID on S3, the authentication type,
+account name, tenant or client ID on Azure — the stored secret is no longer lent to it and saving
+asks you to type it again. Rotate credentials on your provider's normal schedule and update the
+storage when you do.
 
 ## Housekeeping
 

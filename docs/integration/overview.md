@@ -33,7 +33,7 @@ hosts and remotes alike — nothing is filtered out. What the type changes is on
 generated config carries an `exposes` block; the `remotes` block comes from the microfrontend's
 children in the relation graph, so one with no children simply gets none.
 
-![The Integration page generating a Vite Module Federation config for the shell host](../assets/integration-frontend.png)
+![The Integration page on the Frontend Integration tab for the storefront shell, with the Framework and Bundler selects on Automatic and a Stack not detected notice](../assets/integration-page.png)
 
 ### Choosing the stack
 
@@ -50,8 +50,9 @@ The Module Federation tab has two selects instead, both defaulting to **Automati
 **Automatic** means the stack stored on the microfrontend — taken from the template it was created
 from, detected in its repository, or set by hand — and a badge above the snippet says which of the
 three it was. The selects are overrides, for when detection got it wrong or when you want to read
-another stack's instructions. A microfrontend whose stack is unknown shows neither config nor error
-until you pick one.
+another stack's instructions. A microfrontend whose stack is unknown shows no config: a **Stack not
+detected** panel takes its place, asking you to pick the framework and the bundler in the selects —
+or to connect the repository so the stack can be read from it.
 
 Picking **Web Component** as the bundler produces no configuration at all: web component
 microfrontends are plain scripts registering a custom element, so there is nothing to write into a
@@ -103,7 +104,9 @@ dynamically.
 - Costs one HTTP request during startup
 
 This is what the **Direct API Access via CURL** tab is for: a single call to `/serve/all/...` returns
-the whole environment — microfrontends with URLs and versions, plus the environment variables. The tab
+the whole environment — microfrontends with URLs and versions, plus the environment variables. A
+microfrontend of the **Frontend** kind, served by its own Docker container, is left out: no host loads
+it as a remote. The tab
 shows the `curl` line for the selected environment and, underneath it, a live `<iframe>` preview of
 `/api/serve/all/{environmentId}`, so you can read the real response without leaving the page. The
 SDK's `manifest()` gives you the same thing without writing the fetch.
@@ -124,7 +127,9 @@ committed together:
 | Environment Variables | **Add the script to my hosts** | The `<script>` tag for `window.globalConfig`, into the document of every host |
 
 The buttons are always there: nothing is gated on the selected microfrontend's repository being
-connected. What each one opens is a dialog that first computes a plan **for the whole project** —
+connected. Committing is: it wires together microfrontends of every domain, so it needs access to the
+**whole project**. A member limited to specific domains can open the dialog and read the plan, but
+not commit it. What each one opens is a dialog that first computes a plan **for the whole project** —
 because the remotes of one microfrontend are the other microfrontends of it — with narrowing deciding
 only what is shown and what can be committed.
 

@@ -13,7 +13,8 @@ button that activates microfrontends. Behind the button, every deploy is a Git c
 CD you already run applies that commit to the cluster.
 
 An **agent** is deployed exactly like any other backend: it is a **service** that happens to call a
-model. Everything on this page applies to both. How apps and agents get written in the first place
+model. Everything on this page applies to both. How a service is created and configured in the
+console is covered in [Services](./services.md). How apps and agents get written in the first place
 is covered in [Build with AI](../build-with-ai/overview.md).
 
 ## What one click does
@@ -53,7 +54,9 @@ deploys to the cluster it runs in.
 | Web interface served by Flightroom | Microfrontend of kind **Microfrontend** | A static bundle served by Flightroom from your bucket, as described in [Deployments](../deployments/overview.md) |
 
 A service or a Docker frontend is deployed once it has an **Image repository** and a version
-registered by its CI pipeline. One without either is left out of the deploy.
+registered by its CI pipeline. One without either is left out of the deploy. The first version the
+pipeline registers also fills the **Image repository** when it is still blank. See
+[Services](./services.md#image-versions).
 
 The same **Deploy** moves both worlds at once: the microfrontends are snapshotted and activated as
 before, and the containers are committed to Git. The deployments page shows each deployment with its
@@ -116,7 +119,8 @@ and the health of each application in Argo CD.
 
 ## Set it up
 
-1. Connect a [code repository](../repositories/connect/github.md) to the project.
+1. Connect a [code repository](../repositories/connect/github.md) to the project, and create your
+   [services](./services.md).
 2. Turn on [GitOps](./gitops.md) and pick the configuration and applications repositories.
 3. Set the [exposure](./exposure.md) domain and, if you want TLS, a certificate issuer.
 4. Prepare and [initialize Argo CD](./argo-cd.md).
@@ -125,6 +129,7 @@ and the health of each application in Argo CD.
 
 ## Where to go next
 
+- [Services](./services.md): creating a service and registering its image versions
 - [GitOps repositories](./gitops.md): what each deploy commits
 - [Rollback](./rollback.md): bringing a Kubernetes deploy back to a known-good state
 - [Databases](./databases.md): registering the SQL databases your apps work with

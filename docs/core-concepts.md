@@ -80,9 +80,12 @@ provide a read-only **System AI** from its configuration. See
 A **project** is the container every configuration object belongs to, and the boundary the project
 roles are written against: microfrontends, environments, storages, repositories and API keys belong
 to exactly one project. A project has a `name`, a `slug` and an `id` — all three, plus its free-text
-`description`, live under **Settings → Project Information**. Two more fields are not editable
-there: the `organizationId` of the organization that owns it, fixed at creation, and an `isActive`
-flag.
+`description`, live under **Settings → General → Project Information**, where only the name and the
+description can be edited. The same tab holds the project's AI `context`, under **Project AI
+context**, and **Settings → Delivery** holds its `gitOps`, `exposure` and `pipelines` settings. Two
+more fields are not editable anywhere in the console: the `organizationId` of the organization that
+owns it, fixed at creation, and an `isActive` flag. See
+[Projects and access control](./project-settings/projects.md#project-settings).
 
 Access to a project is granted either by an explicit project membership or by administering the
 organization that owns it — see

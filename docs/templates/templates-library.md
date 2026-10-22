@@ -36,17 +36,33 @@ Vite, and both still resolve every remote URL through the [client SDK](../integr
 A microfrontend created from one of these remotes is served by the template's entry point
 (`index.js`, `parcel.js`) rather than by the generic `assets/remoteEntry.js`.
 
+The library also lists the four [service templates](./service-templates.md) (Node.js & Fastify,
+Python & FastAPI, Spring Boot, Quarkus). Picking one of them creates a backend service instead of a
+microfrontend: it opens **New service** (`/service/new?template=<slug>`). They are not offered when you
+add a child to a microfrontend, which only takes microfrontends.
+
 ## Browsing
 
-The library opens automatically when you click **Add New Microfrontend**. You can filter by:
+The library opens when you click **Add New Microfrontend** in a project that has a
+[code repository connection](../repositories/connect/github.md). Without one there is nothing to
+create a repository in, so the button goes straight to the form of a new microfrontend
+(`/microfrontend/new`).
 
-- **Framework** — React, Vue, Angular
-- **Compiler** — Vite, Webpack, Web Component, single-spa, micro-lc
-- **Host type** — host or remote
-- **Free text** search by name
+You can filter by:
+
+- **Framework** (*All Frameworks*, React, Vue, Angular, and the languages of the service templates)
+- **Compiler** (*All Compilers*, Vite, Webpack, Web Component, single-spa, micro-lc, Docker for
+  services)
+- **Host Type**: *All Types*, **Host**, **Remote** or **Backend service**
+- **Search by name...**, free text on the template name
+
+The **Framework** and **Compiler** selects only appear when the catalogue has more than one value to
+choose from.
 
 Each card links to the template's repository via **View on GitHub**, so you can read exactly what
 you are about to get before committing to it.
+
+![The Templates library with the framework, compiler and type filters, the search box and the React templates as cards](../assets/templates-library.png)
 
 ## Host versus remote templates
 
@@ -203,10 +219,16 @@ project rather than following whichever template you happened to pick.
 When you create a microfrontend from a template, Flightroom does more than copy files. It also:
 
 1. Creates the repository in your connected provider
-2. Injects a **build-and-deploy pipeline** for that provider and compiler, looked up as
-   `<type>/<compiler>/<provider>` in
-   [`template-pipelines`](https://github.com/mfe-orchestrator/template-pipelines)
-3. Registers the microfrontend in your project, linked to the new repository
+2. Injects a **build-and-deploy pipeline** for that provider and compiler from
+   [`template-pipelines`](https://github.com/mfe-orchestrator/template-pipelines), or from
+   [your own pipeline templates](#your-own-pipeline-templates). The first folder found wins:
+   `<type>/<compiler>/<templateSlug>/<provider>`, for that template only, then
+   `<type>/<compiler>/<provider>`
+3. On a Webpack template, sets the Module Federation name in `webpack.config.*` to the one derived
+   from the microfrontend's slug (dashes removed), the name a host configured by the console loads
+   the remote by. Only the line marked with a `// mfe-orchestrator:federation-name` comment is
+   rewritten: the template keeps a valid name of its own, so it builds as it is
+4. Registers the microfrontend in your project, linked to the new repository
 
 The single-spa and micro-lc templates have their own pipeline folders, `single-spa` and `micro-lc`.
 Their remotes publish `dist/` like the Vite ones. Their hosts build with `VITE_MFE_BACKEND_URL`,
@@ -218,15 +240,40 @@ worth knowing before you rely on them.
 
 ### Placeholders are replaced in the pipeline only
 
-The pipelines carry `%microfrontendSlug%` and `%domain%` placeholders. Both are replaced before the
-initial commit, on every provider, with the same values: your microfrontend's slug, and the base URL
-of the console the pipeline publishes to — `BACKEND_URL` when the installation sets it,
+The pipelines carry `%microfrontendSlug%`, `%serviceSlug%` and `%domain%` placeholders, so one
+pipeline can serve microfrontends and services alike. They are replaced before the initial commit, on
+every provider, with the same values: the slug of what is created (both slug placeholders get it), and
+the base URL of the console the pipeline publishes to — `BACKEND_URL` when the installation sets it,
 `https://console.flightroom.dev` otherwise. The pipelines add `/api` to it themselves.
 
-What is copied differs by provider. On GitHub the whole `<type>/<compiler>/github` directory goes
-into `.github/`; on **GitLab** and **Azure DevOps** a single file is copied to the repository root
-(`.gitlab-ci.yml`, `azure-pipelines.yml`). Only those copied files are touched: a placeholder in the
-template's own files is committed as it is.
+What is copied differs by provider. On GitHub the template's own `.github/workflows` is deleted first,
+so two release workflows never run side by side, then the whole matching `github` folder goes into
+`.github/` (the rest of the template's `.github` stays). On **GitLab** and **Azure DevOps** a single
+file is copied to the repository root (`.gitlab-ci.yml`, `azure-pipelines.yml`), replacing the
+template's. Only those copied files are touched: a placeholder in the template's own files of a
+microfrontend is committed as it is. Service templates are different: their placeholders are
+replaced across the whole repository, see [Service templates](./service-templates.md).
+
+When no folder matches, nothing is injected and the template **keeps the pipeline it ships with**.
+
+### Your own pipeline templates
+
+A project can take its pipelines from a repository of its own instead of the official
+`template-pipelines`. In **Settings → Delivery → Pipeline templates**, turn on **Use the pipeline
+templates of a repository of the project**, then pick the **Pipeline templates repository** (through
+one of the project's code repository connections) and, optionally, a **Branch or tag**; left empty,
+the repository's default branch is used.
+
+- Only a project **Admin**, or an organization Owner or Admin, can change it.
+- The repository follows the same layout, `<type>/<compiler>/<provider>/` with `github`, `gitlab` or
+  `azure_dev_ops` as provider, for example `service/docker/github/workflows/release.yml`. A
+  `<type>/<compiler>/<templateSlug>/<provider>/` folder wins for that template only.
+- There is **no fallback** to the official templates: a template your repository has no folder for
+  keeps the pipeline it ships with.
+- If the repository or the branch cannot be read when a microfrontend or a service is created,
+  nothing is created and the console says *The pipeline templates of the project could not be read*.
+  Fix the repository or the branch, or go back to the official templates, and try again.
+- Repositories already created are left as they are.
 
 ### Where the API key lives
 
@@ -281,7 +328,9 @@ Each entry declares the template's name, framework, compiler, host type, entry p
 and download URL.
 
 Because the manifest is fetched at request time, new templates appear in every installation —
-hosted and self-hosted alike — without an upgrade.
+hosted and self-hosted alike — without an upgrade. An installation can also keep templates of its
+own in its database: they are listed together with the manifest's. The four service templates ship
+with the backend instead of the manifest.
 
 ### Anatomy of a manifest entry
 
@@ -305,10 +354,11 @@ hosted and self-hosted alike — without an upgrade.
 ```
 
 The `type` and `compiler` fields do double duty: besides filtering the catalogue, they select which
-pipeline is injected, by looking up `<type>/<compiler>/<provider>` in the
+pipeline is injected, by looking up `<type>/<compiler>/<slug>/<provider>`, then
+`<type>/<compiler>/<provider>`, in the
 [`template-pipelines`](https://github.com/mfe-orchestrator/template-pipelines) repository. A
 template whose combination has no pipeline is still usable — the repository is created and the
-files pushed — but no CI file is added, and you will need to supply your own.
+files pushed — and it keeps the CI files it ships with, if any.
 
 ## Contributing a template
 

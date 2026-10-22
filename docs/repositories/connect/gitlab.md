@@ -110,7 +110,7 @@ In the **Add Repository** dialog, enter the following information:
    - For GitLab.com, use: `https://gitlab.com`
    - For self-hosted GitLab, use your instance URL: `https://your-gitlab-instance.com`
 
-4. **Personal Access Token**: Paste the PAT you created in Step 2
+3. **Personal Access Token**: Paste the PAT you created in Step 2
    - Copy and paste the full token
    - Make sure there are no extra spaces
 
@@ -125,12 +125,12 @@ If the test is successful, you'll see a **green checkmark** and a success messag
 ### 3.3 Select the Group
 
 The test does more than validate the token: it returns the groups the token can see, and a **Select
-project** dropdown appears under the green checkmark listing them. Pick the group new microfrontend
+Project** dropdown appears under the green checkmark listing them. Pick the group new microfrontend
 repositories should be created in.
 
 This step is not optional. The field is required and **Connect GitLab** stays disabled until the test
-has succeeded, so the form cannot be submitted without a selection. The group is also what MFE
-Orchestrator needs in order to create the group-level CI/CD variable holding the deploy key — see
+has succeeded, so the form cannot be submitted without a selection. The group is also what
+Flightroom needs in order to create the group-level CI/CD variable holding the deploy key — see
 [Deploy with GitLab CI](../../ci-cd/gitlab-ci.md#the-cicd-variable).
 
 ### 3.4 Save the Connection

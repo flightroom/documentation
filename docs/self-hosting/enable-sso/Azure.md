@@ -55,7 +55,7 @@ configuration it serves the console only when it is set.
 ### Variables that are read but have no effect
 
 The frontend builds MSAL from the client ID and the tenant ID and hardcodes everything else, so the
-four variables below are accepted and then ignored. Configure the equivalent on the Entra ID app
+three variables below are accepted and then ignored. Configure the equivalent on the Entra ID app
 registration:
 
 | Variable Name | Why it does nothing |
@@ -63,7 +63,11 @@ registration:
 | `AZURE_ENTRAID_REDIRECT_URI` | MSAL uses `window.location.origin` — see the caution above |
 | `AZURE_ENTRAID_AUTHORITY` | The authority is built as `https://login.microsoftonline.com/<tenant id>` |
 | `AZURE_ENTRAID_SCOPES` | Login requests the MSAL defaults; token acquisition asks for `openid profile email offline_access` |
-| `AZURE_ENTRAID_API_AUDIENCE` | Never read |
+
+`AZURE_ENTRAID_API_AUDIENCE` is the exception: it is optional, but the backend does read it. When it
+verifies an Entra ID token it accepts two audiences — the client ID, which is what the ID token the
+console sends carries, and this value. Set it only if something calls the API with an Entra ID access
+token issued for your own API (for example `api://<client id>`) instead of the console's ID token.
 
 ## Step 5: Update Docker Configuration
 

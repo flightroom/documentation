@@ -12,10 +12,11 @@ Every microfrontend is built by the CI of the provider its repository lives on. 
 that collects those runs, checking whether the last pipeline passed means one browser tab per
 repository.
 
-The **Builds** page is that place: one row per microfrontend, the outcome of its latest run, the
-recent history behind it, and the version each environment is currently serving.
+The **Builds** page is that place: one row per microfrontend and per backend service, the outcome
+of its latest run, the recent history behind it, and the version each environment is currently
+serving.
 
-![The Builds page with a status badge per microfrontend and one row expanded on its last runs](../assets/builds-page.png)
+![The Builds page: one row per microfrontend and backend service, with its type, last build, last built version and the version each environment serves](../assets/builds-page.png)
 
 :::info[Nothing is stored]
 The runs are read from the providers when you open the page, and re-read while you keep it open.
@@ -25,15 +26,17 @@ nothing more.
 
 ## Reading the table
 
-One row per microfrontend of the current project, sorted by name:
+One row per microfrontend of the current project, then one per backend service, each group sorted
+by name:
 
 | Column | Content |
 | --- | --- |
-| **Microfrontend** | Name and slug |
-| **Last build** | Status badge of the most recent run, or why no run could be read |
+| **Name** | Name and slug |
+| **Type** | **Frontend** for a microfrontend, **Backend** for a service |
+| **Last build** | Status label of the most recent run, with a link to it on the provider, or why no run could be read |
 | **Tag / branch** | The ref that run was started from, tags included |
 | **Last built version** | The most recent version whose bundle actually reached the platform |
-| One column per environment | The version that environment serves, taken from its **active deployment** |
+| One column per environment | The version that environment serves — for a microfrontend, taken from its **active deployment** |
 
 The environment columns come after the fixed ones, in the order the environments are configured on
 the project, and the production one is flagged with a badge.
@@ -56,19 +59,23 @@ started it, and a link to the run on the provider. *Who started it* never appear
 pipelines list endpoint does not carry it, so the field is left unset and the run is shown without
 it.
 
-## Status badges
+## Status labels
 
 Each provider describes a run in its own vocabulary; the console reduces all of them to six
-buckets.
+statuses. The API returns the code in the first column, the page shows the label in the second.
 
-| Status | Meaning |
-| --- | --- |
-| `QUEUED` | Accepted but not started — including a GitLab pipeline waiting on a manual action |
-| `RUNNING` | In progress |
-| `SUCCESS` | Finished and passed (Azure `partiallySucceeded` counts as passed) |
-| `FAILED` | Finished and failed, timed out, or failed to start |
-| `CANCELED` | Canceled or skipped — and a GitHub run whose conclusion is `neutral` |
-| `UNKNOWN` | The provider reported a state this platform does not know |
+| Status | Label | Meaning |
+| --- | --- | --- |
+| `QUEUED` | Queued | Accepted but not started — including a GitLab pipeline waiting on a manual action |
+| `RUNNING` | Running | In progress |
+| `SUCCESS` | Succeeded | Finished and passed (Azure `partiallySucceeded` counts as passed) |
+| `FAILED` | Failed | Finished and failed, timed out, or failed to start |
+| `CANCELED` | Canceled | Canceled or skipped — and a GitHub run whose conclusion is `neutral` |
+| `UNKNOWN` | Unknown | The provider reported a state this platform does not know |
+
+When the project has an AI provider, a **Failed** run in an expanded row carries **Explain the
+failure**, which asks the [console assistant](../build-with-ai/console-assistant.md) to read the logs
+of the failed jobs, explain the cause and suggest a fix.
 
 A run still in progress is `RUNNING`, whatever result the provider left on it from a previous
 attempt: GitHub and Azure DevOps both split the outcome over two fields, and the second one only
@@ -76,17 +83,17 @@ means something once the first says the run is over.
 
 Cancellation is the exception, on both providers that report it as a state of its own. Azure DevOps
 `cancelling` and GitLab `canceling` are runs that have not finished yet, and both are shown as
-`CANCELED` rather than `RUNNING`, because the outcome is already decided.
+**Canceled** rather than **Running**, because the outcome is already decided.
 
 ## When a row has no runs
 
-A microfrontend without runs says why, instead of showing an empty history:
+A row without runs says why, instead of showing an empty history:
 
-| Reason | Cause |
-| --- | --- |
-| `NO_REPOSITORY` | No code repository is connected to the microfrontend, or the connection is disabled |
-| `REPOSITORY_NOT_FOUND` | It points at a code repository connection that no longer exists |
-| `PROVIDER_ERROR` | The provider call failed — revoked token, network error, missing Azure configuration |
+| Reason | Shown as | Cause |
+| --- | --- | --- |
+| `NO_REPOSITORY` | No linked repository | No code repository is connected to the microfrontend or service, or the connection is disabled |
+| `REPOSITORY_NOT_FOUND` | Linked repository not found | It points at a code repository connection that no longer exists |
+| `PROVIDER_ERROR` | Unable to read builds from the provider | The provider call failed — revoked token, network error, missing Azure configuration |
 
 `PROVIDER_ERROR` is confined to the row that produced it: one unreachable provider never blanks the
 page, and the row keeps its versions. A microfrontend whose repository is reachable but has never
@@ -134,9 +141,11 @@ Both endpoints are authenticated and scoped to the project carried by the `Proje
 | `GET` | `/api/builds/stream` | The same snapshot, pushed over SSE as it changes |
 
 Neither takes a query parameter or a body. The snapshot carries the environments of the project,
-and for each microfrontend its `selectedVersion`, `latestBuiltVersion`, a
-`versionByEnvironmentId` map and up to five `builds`; a microfrontend that could not be read
-carries `unavailableReason` and an empty `builds`.
+then a `microfrontends` and a `services` list; each entry has its `selectedVersion`,
+`latestBuiltVersion`, a `versionByEnvironmentId` map and up to five `builds`, and one that could not
+be read carries `unavailableReason` and an empty `builds`. For a service, `latestBuiltVersion` is the
+last image its CI registered and the environment versions are the latest deploys its pipeline
+reported there.
 
 :::note[`EventSource` cannot be used]
 The API requires an `Authorization` and a `Project-Id` header on every call — the console sends an

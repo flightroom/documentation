@@ -8,12 +8,21 @@ keywords: [edit with ai, ai change, proposal, pull request, merge request, apply
 
 # Change code with AI
 
-Every microfrontend, service and functional domain opens on its **Edit with AI** tab (the other tab
-is **Details & settings**, or **Structure** for a domain). There you describe a change, an agent
-proposes it on a branch of the repository, and you decide what to do with it.
+Every microfrontend, service and functional domain opens on its **Edit with AI** tab. There you
+describe a change, an agent proposes it on a branch of the repository, and you decide what to do
+with it. The other tabs are:
+
+| Opened on | Tabs |
+| --- | --- |
+| A microfrontend | **Edit with AI**, **Details & settings** |
+| A service | **Edit with AI**, **Overview**, **Details & settings** |
+| A [functional domain](../domains/overview.md) | **Edit with AI**, **Structure** |
 
 It is available when the project can use an [AI](./ai-models.md) and what you are changing has a
-code repository linked.
+code repository linked. Otherwise, on a microfrontend or a service the **Edit with AI** tab is
+hidden and the page opens on **Details & settings** (on **Overview** for a service). A domain always
+shows the tab: without an AI it reads *AI editing is not available in this project: the organization
+has no AI it can use.*
 
 ## Ask for a change
 
@@ -30,11 +39,17 @@ The composer reads **What do you want to change in *name*?**
 
 The request is queued and the agent starts. While it works the console shows where it is (*Preparing
 the repository*, *The agent is working*, *Pushing the proposal on its branch*…), and **Show the
-agent's progress log** opens the details.
+agent's progress log** opens the details. Two events only show up when the agent has to wait:
+
+- *Waiting for the repository to be free*: another request is working on the same repository, and
+  this one starts when it is done.
+- *The model hit its rate limit: retrying shortly*: the AI provider asked to slow down, and the agent
+  tries again on its own.
 
 The agent reads the repository together with the AI context of the project, of the domain and of
 what it is changing. In a service repository it also follows an `AGENTS.md` or `CLAUDE.md` at the
-root, if there is one.
+root, if there is one. Files it reads are cut at 100 KB: past that size a file is usually generated
+or vendored, rarely something to edit by hand.
 
 ## Read the proposal
 
@@ -100,6 +115,9 @@ span a backend endpoint and the screens that call it.
 
 - The agent still proposes **one change per repository**, each on its own branch, and each one is
   applied or opened as a pull request on its own. One pull request per repository.
+- **Apply all (*N*)** pushes every pending proposal of the request onto the base branch of its
+  repository in one go, after a confirmation. A repository that cannot be applied goes back to its
+  proposal, with the error on it.
 - Each message of the conversation shows one tab per repository, with its files and diff.
 - Each repository starts from its default branch, or from a branch you pick. One choice can set them
   all: each repository's default branch, or a branch that every one of them has.

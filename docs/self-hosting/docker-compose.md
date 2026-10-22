@@ -21,7 +21,7 @@ Before you begin, ensure you have the following prerequisites:
 
 ## Start the configuration container
 
-1. Download the follwoing [docker-compose.yaml](https://github.com/flightroom/flightroom/blob/main/docker-compose.yaml) file or create a `docker-compose.yaml` file with the following content:
+1. Create a `docker-compose.yaml` file with the following content:
 
 ```yaml
 services:
@@ -72,6 +72,13 @@ services:
       # users, deployments of the last week). No names, no URLs, no personal
       # data. Uncomment the line below to turn it off.
       # TELEMETRY_DISABLED: "true"
+      # Remote MCP server for AI clients (Claude, Cursor, VS Code). Needs
+      # FRONTEND_URL (the public URL of the console) and a JWT_SECRET of your
+      # own: at least 32 bytes, generate it with `openssl rand -hex 32` (the
+      # backend refuses to start on a placeholder or a short one).
+      # MCP_ENABLED: "true"
+      # FRONTEND_URL: https://console.example.com
+      # JWT_SECRET: <output of openssl rand -hex 32>
     volumes:
       - upload_microfrontends:/upload-microfrontends
     depends_on:
@@ -83,6 +90,18 @@ volumes:
   redis_data:
   upload_microfrontends:
 ```
+
+:::note[This is not a copy of the repository's file]
+The [`docker-compose.yaml`](https://github.com/flightroom/flightroom/blob/main/docker-compose.yaml)
+in the repository has the same services but names `lory1990/flightroom:all-in-one`, a tag rebuilt
+from the branches that also starts its own MongoDB and Redis inside the container. Use the content
+above, which pins the standard `5.1.0` image, rather than downloading that file as is.
+:::
+
+The commented block at the end of `environment` turns on the remote
+[MCP server](../build-with-ai/mcp-server.md). Uncomment all three lines together: with
+`MCP_ENABLED` on, the backend refuses to start without `FRONTEND_URL` or with a `JWT_SECRET`
+shorter than 32 bytes.
 
 2. Run the following command to start the container:
 ```bash
@@ -106,7 +125,10 @@ permanent slug, and it mishandles anything longer than two words.
   `latest` tag is rebuilt from the development branches on every push, so it is not a release
   channel. Bump the tag deliberately, when you decide to upgrade. The same goes for `mongo:8.0` and
   `redis:8-alpine`.
-- **Set your own `JWT_SECRET`.** Without it the tokens are signed with the built-in default.
+- **Set your own `JWT_SECRET`.** Without it the tokens are signed with the built-in default. Use
+  `openssl rand -hex 32`: with the MCP server on, anything shorter than 32 bytes stops the boot.
+- **Set `FRONTEND_URL`** to the public URL of the console. It is the base of the links in the
+  invitation and password-reset emails, and it has no default.
 - **Set a `SECRETS_ENCRYPTION_KEY`.** 32 bytes, base64 or hex — `openssl rand -base64 32`. Without
   it the credentials a project stores (bucket keys, storage connection strings, repository tokens)
   are written to MongoDB in the clear, and the backend logs a warning at boot saying so. Keep the

@@ -2,8 +2,8 @@
 sidebar_position: 3
 title: Managing an organization
 sidebar_label: Managing an organization
-description: Switch between organizations, create one, and use the organization page — name, description, id, members, pending invitations and the danger zone.
-keywords: [organization, switch organization, create organization, members, invitations, danger zone]
+description: Switch between organizations, create one, and use the Organization settings page — details, members, pending invitations, AI and the danger zone.
+keywords: [organization, switch organization, create organization, organization settings, members, invitations, AI, danger zone]
 ---
 
 # Managing an organization
@@ -20,7 +20,7 @@ The header reads *organization › project*, and both parts are useful:
 | Element | What it does |
 | --- | --- |
 | The organization name in the breadcrumb | Links straight to the organization page |
-| **Organization settings** | The same page: details, members and danger zone |
+| **Organization settings** | The same page: details, members, AI and danger zone |
 | **Switch organization** | Opens the picker |
 | **Create new organization** | Opens the creation form directly, skipping the list |
 
@@ -76,18 +76,27 @@ no project is selected yet and the project wizard opens.
 
 ## The organization page
 
-`/organization` is the organization's own page. It is headed **Organization members**, but it
-carries three things: the **Organization details** card, the membership tables, and the one
-irreversible action on the organization.
+`/organization` is the organization's own page, titled **Organization settings** with the subtitle
+*Details, members and AI of …* and the organization's name. It is split into three tabs, and the tab
+in use is part of the address (`?tab=general`, `?tab=members`, `?tab=ai`), so a link can point
+straight to one of them:
+
+| Tab | What it holds |
+| --- | --- |
+| **General** | The [details](#details) of the organization and, for owners only, the [danger zone](#danger-zone) |
+| **Members** | The member count, the [members](#members) and [pending invitations](#inviting-a-member) tables, and **Invite user** |
+| **AI** | The [AIs](#ai) the projects of the organization use, and which project may use which |
 
 :::info[The old address still works]
-Until 4.0.0 this page lived in the sidebar at `/organization-users`. That path now redirects to
-`/organization`, so existing links and bookmarks keep working.
+Until 4.0.0 the members lived in the sidebar at `/organization-users`. That path now redirects to
+`/organization?tab=members`, so existing links and bookmarks keep working.
 :::
 
 ### Details
 
-![The organization details card with name, description, identifier and save button](../assets/organization-details.png)
+The **General** tab opens on the **Organization details** card.
+
+![The General tab, with the Organization details card and the danger zone refusing to delete an organization that still holds a project](../assets/organization-settings-general.png)
 
 | Field | Notes |
 | --- | --- |
@@ -99,7 +108,9 @@ A plain member sees the name and the description as text, with no form and no sa
 
 ### Members
 
-![The organization members table, with the owner shown as a badge because they are the last one, and the projects column reading All projects](../assets/organization-members.png)
+The **Members** tab shows the number of members on its label, and opens on the members table.
+
+![The Members tab, with Invite user and the members table, the owner shown as a badge because they are the last one, and the projects column reading All projects](../assets/organization-settings-members.png)
 
 The table has one row per accepted member:
 
@@ -119,7 +130,7 @@ project of the organization** with it.
 
 ### Inviting a member
 
-**Invite user**, at the top right of the page, is available to owners and admins.
+**Invite user**, at the top right of the **Members** tab, is available to owners and admins.
 
 ![The invite a user to the organization dialog, with an email field and a role selector](../assets/organization-invite.png)
 
@@ -145,13 +156,27 @@ added to the organization straight away instead — a confirmation link that can
 leave them stuck. See [Environment Variables](../self-hosting/environment-variables.md).
 :::
 
+### AI
+
+The **AI** tab lists the **Artificial intelligences** of the organization — the models its projects
+use for the [console assistant](../build-with-ai/console-assistant.md) and every other AI feature.
+Owners and admins add, edit and delete them with **Add AI** and the row actions; everybody else sees
+the list read-only, or a note to ask an owner or an admin when there is none.
+
+Below it, owners and admins of an organization with at least one AI find **Project access**, which
+says which AIs each project may use: *All (default)*, including those added later, or only the ones
+selected. A project left with no AI has the AI features turned off.
+See [AI models](../build-with-ai/ai-models.md) for the providers, the credentials and the access
+rules.
+
+![The AI tab, with the system AI in the Artificial intelligences table and Project access set to All (default) for the project](../assets/organization-settings-ai.png)
+
 ### Danger zone
 
-![The danger zone refusing to delete an organization that still holds a project](../assets/organization-danger-zone.png)
+Only an **owner** sees this section, at the bottom of the **General** tab.
 
-Only an **owner** sees this section, and deleting an organization is deliberately not a cascade: an
-organization holds every project of a tenant, and wiping all of them behind one click is not
-something a confirmation dialog can make safe.
+Deleting an organization is deliberately not a cascade: an organization holds every project of a
+tenant, and wiping all of them behind one click is not something a confirmation dialog can make safe.
 
 So the action is refused while the organization still holds projects, and says so before you try it.
 Delete the projects first, one at a time, where

@@ -21,7 +21,10 @@ re-upload. It is re-activating a snapshot that already exists.
 **Redeploy** lives on the deployments in **History**, next to **View canary users**. The active
 deployment has no Redeploy button — re-activating what is already active would be a no-op.
 
-![The active deployment above an older one expanded in History, with its versions, variables and the Redeploy action](../assets/deployments-history.png)
+Redeploying needs access to the **whole project**: an older snapshot rolls back the microfrontends
+and services of every domain at once, so a member limited to specific domains is refused.
+
+![The active deployment collapsed above deployment #1 expanded in History, with its microfrontend and backend versions](../assets/deployments-history.png)
 
 Reading the two snapshots against each other is the whole point. Above, `#2` and `#1` carry the same
 versions, because nothing was edited between the two deployments — which is itself the answer to
@@ -78,6 +81,7 @@ route follows it. See [Serve API](../integration/serve-api.md) for the routes th
 Everything in the snapshot, together:
 
 - Microfrontend versions
+- Backend service versions
 - Hosting configuration and entry points
 - Canary settings
 - Environment variables

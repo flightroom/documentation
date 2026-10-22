@@ -61,21 +61,27 @@ In the **Scopes** section of the token creation dialog, configure the following 
 
    > *This grants access to read source code, commits, and branches - required for fetching repository content and managing deployments*
 
-**2. Configure Build Scope**
+**2. Configure Project and Team Scope**
+   1. Find the **Project and Team** section in the scopes list
+   2. Select **Read**
+
+   > *This grants access to projects and team information - required for listing the projects of the organization when you connect*
+
+**3. Configure Build Scope**
    1. Scroll down to find the **Build** section
    2. Click on the dropdown next to **Build**
    3. Select **Read, write & manage**
 
    > *This grants access to build pipelines and build results - required for triggering builds and monitoring build status*
 
-**3. Configure Release Scope**
+**4. Configure Release Scope**
    1. Continue scrolling to find the **Release** section
    2. Click on the dropdown next to **Release**
    3. Select **Read, write & manage**
 
    > *This grants access to release pipelines and deployment information - required for managing releases and deployment workflows*
 
-**4. Configure Variable Groups Scope**
+**5. Configure Variable Groups Scope**
    1. Find the **Variable Groups** section in the scopes list
    2. Select **Read, create, & manage**
 
@@ -85,11 +91,13 @@ In the **Scopes** section of the token creation dialog, configure the following 
 After selecting all scopes, verify that you have:
 
 - Code: Read, write & manage
+- Project and Team: Read
 - Build: Read, write & manage
 - Release: Read, write & manage
 - Variable Groups: Read, create, & manage
 
-The connection screen lists the same four next to the form.
+The connection screen lists four of them next to the form: it leaves out Project and Team, which
+Flightroom still needs to list the projects of the organization.
 :::
 
 ### 2.4 Generate the Token
@@ -151,8 +159,9 @@ deploy key — see
 If the connection test fails, check the following:
 
 - **Invalid Organization Name**: Verify that the organization name matches exactly what appears in your Azure DevOps URL
-- **Insufficient Permissions**: Ensure you selected all four required scopes — Code, Build and
-  Release with "Read, write & manage", and Variable Groups with "Read, create, & manage"
+- **Insufficient Permissions**: Ensure you selected all five required scopes — Code, Build and
+  Release with "Read, write & manage", Project and Team with "Read", and Variable Groups with
+  "Read, create, & manage"
 - **Expired Token**: Check if your PAT has expired and create a new one if needed
 - **Network Issues**: Verify that you have internet connectivity and can access Azure DevOps
 

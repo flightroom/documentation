@@ -15,21 +15,35 @@ Flightroom documentation. It acts **as you**: with your permissions, on the curr
 Maestro is available when the project can use at least one [AI](./ai-models.md). Otherwise it is
 hidden.
 
+The console opens on Maestro (`/assistant`) when you sign in. In a project without an AI it opens on
+**Microfrontends** instead.
+
+![The Maestro page answering a project overview request, with the tools it called and Recent conversations on the right](../assets/assistant-overview.png)
+
 ## Opening it
 
 - As a side panel, from anywhere in the project: **⌘J** on macOS, **Ctrl+J** elsewhere, or the Maestro
   button in the header.
-- As a full page: **AI agent**, the first entry of the sidebar.
+- As a full page: **AI agent**, the first entry of the sidebar. On a wide screen the page keeps
+  **Recent conversations** open in a column on the right.
 
-Type in **Ask something about the project…** and press **Send**. Suggestions such as *Give me an
-overview of the project* or *Are there failed builds? Why?* get you started. Some pages also offer a
-button that asks Maestro for you: **Explain the failure** on a failed build, **Analyze the latest
-deployment**, **Analyze the conflicts** on shared dependencies, **Check the variables** across
-environments.
+Type in **Ask something about the project…** (up to 4,000 characters) and press **Send**. While
+Maestro answers, **Stop** interrupts it: the answer ends with *Answer stopped.*
 
-Next to the message box you can pick the **AI** and the **Reasoning effort**. Every answer shows the
-tokens it used. Conversations are saved per project: **Recent conversations** reopens them, **New
-conversation** starts a fresh one.
+Suggestions get you started, and they follow the page you are on: *Are there failed builds? Why?* on
+Builds, *What changed in the latest deployment?* on Deployments, *Are there conflicts between shared
+dependencies?* on Dependencies, *Is any environment missing variables?* on the variables page, then
+general ones such as *Give me an overview of the project*. Some pages also offer a button that asks
+Maestro for you: **Explain the failure** on a failed build, **Analyze the latest deployment**,
+**Analyze the conflicts** on shared dependencies, **Check the variables** across environments.
+
+Next to the message box you can pick the **AI** and the **Reasoning effort**. Maestro starts at
+*Medium*; [code changes](./ai-changes.md) start at *High*. The console remembers the last choice of
+each. When the AI reasons before answering, its thoughts show in a folded **Reasoning** block above
+the answer. Every answer shows the tokens it used.
+
+Conversations are saved per project: **Recent conversations** reopens them, **New conversation**
+starts a fresh one, and **Delete conversation** removes one for good.
 
 ## Confirming actions
 
@@ -44,7 +58,10 @@ Actions that need confirmation include:
   to a repository;
 - changing a member's role, removing a member, revoking an API key or an AI client connection;
 - inviting to a project or an organization, resending an invitation, creating an API key;
-- discarding an AI change, setting canary users.
+- applying an AI change or an AI job, opening the pull request of an AI change, discarding an AI
+  change;
+- scaffolding a repository from a template, renaming a repository;
+- setting canary users.
 
 The card names what the action acts on (users, environments, microfrontends with version and host,
 services, domains, the AI change with its request and files) instead of raw ids. A deploy card shows,
@@ -64,8 +81,10 @@ the proposals. See [Change code with AI](./ai-changes.md#change-several-componen
 Some things stay in the console pages on purpose, because their input or output is a secret that
 would travel to the AI provider:
 
-- storages;
-- code repository connections;
+- creating or editing storages and databases. Maestro can list them, test their connection and
+  delete them (after confirmation), and set the default storage;
+- creating or editing code repository connections;
+- creating or editing secrets;
 - your user profile;
 - bundle upload.
 

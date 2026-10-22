@@ -32,12 +32,28 @@ paths above, so the cluster knows when it is up from the first deploy.
 ## What a template gives you
 
 - **A Dockerfile**, so the CI pipeline produces the image Kubernetes runs.
-- **CI pipeline definitions** for GitHub Actions, GitLab CI and Azure Pipelines.
+- **CI pipeline definitions** for GitHub Actions, GitLab CI and Azure Pipelines. When the repository
+  is created, the pipeline of your provider can be replaced by the one of the official
+  `template-pipelines` or of [your own pipeline templates](./templates-library.md#your-own-pipeline-templates).
 - **Health checks and an OpenAPI description** at the paths in the table.
 - **An `AGENTS.md` and a `CLAUDE.md`**, so any coding agent — Flightroom's or your own — knows the
   conventions of the repository from its first commit.
 - **Tests**, which your CI runs on every branch the AI pushes. The AI itself cannot change CI
   configuration or lockfiles: see [Guardrails](../build-with-ai/guardrails.md).
+
+## Placeholders
+
+When a service is created from a template, two placeholders are replaced in every text file of the
+repository, not only in the pipeline, before the initial commit:
+
+| Placeholder | Replaced with |
+| --- | --- |
+| `%serviceSlug%` | The slug of the service |
+| `%domain%` | The base URL of the console the pipeline publishes to: `BACKEND_URL` when the installation sets it, `https://console.flightroom.dev` otherwise |
+
+Binary files are left untouched.
+
+## Where they live
 
 The templates are MIT licensed and live on GitHub as `flightroom/template-service-node-fastify`,
 `template-service-python-fastapi`, `template-service-spring-boot` and `template-service-quarkus`.

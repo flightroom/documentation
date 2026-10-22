@@ -16,7 +16,8 @@ You can set environment variables in different ways depending on your deployment
 
 - **Docker**: Use the `-e` flag: `docker run -e VARIABLE_NAME=value`
 - **Docker Compose**: Add them to the `environment` section in your `docker-compose.yml`
-- **Terraform**: Configure them in your Terraform variables file
+- **Terraform**: `frontend_url`, `jwt_secret`, `mcp_enabled` and `anthropic_api_key` are input
+  variables; add any other one to the container's `env` list — see [Terraform](./terraform.md#3-set-the-input-variables)
 - **Helm**: Put the plain ones under `env` and the sensitive ones under `envSecrets` in
   `values.yaml` — see [Helm](./helm.md#configuration)
 
@@ -37,7 +38,7 @@ it — the platform logs a warning and does not connect, it does not fall back t
 ### General Configuration
 | Variable | Default Value | Description |
 |-----------|---------------|-------------|
-| `FRONTEND_URL` | `http://localhost:3000` | URL of the frontend application. |
+| `FRONTEND_URL` | *(no default)* | Public URL of the console, for example `https://console.example.com`. **Set it**: it is the base of every link in the invitation, activation and password-reset emails, the fallback `BACKEND_URL` is built from, and the address of the MCP consent page — with `MCP_ENABLED=true` and no `FRONTEND_URL` the boot stops. |
 | `BACKEND_URL` | *(empty, falls back to `FRONTEND_URL` + `/api`)* | Public URL of the API, written into the generated configuration. |
 | `PORT` | `3000` | Port the backend listens on, behind the in-container nginx. |
 | `NODE_ENV` | `prod` *(development/prod/test/local)* | Node.js environment mode. Any other value stops the boot. |
@@ -92,12 +93,16 @@ in that state.
 #### JWT
 | Variable | Default Value | Description |
 |-----------|---------------|-------------|
-| `JWT_SECRET` | `your-secret-key` | Secret key for JWT generation and validation. |
+| `JWT_SECRET` | `your-secret-key` | Secret key for JWT generation and validation. Read directly from the process environment, not through the schema. |
 
 :::caution[The JWT default is a published constant]
 `your-secret-key` is in the source, so an installation that leaves `JWT_SECRET` unset signs its
 tokens with a key anybody can read. Set one — `openssl rand -hex 32` — everywhere except the
 all-in-one image, which generates one into its volume on the first start.
+
+With `MCP_ENABLED=true` this stops being advice: the boot refuses to start when `JWT_SECRET` is
+unset, is a placeholder (`change-me`, `changeme`, `your-secret-key`, `secret`) or is shorter than
+32 bytes.
 :::
 
 #### Secrets encryption
@@ -133,26 +138,106 @@ in the clear on purpose, and what losing the key costs — is on
 |-----------|---------------|-------------|
 | `AZURE_ENTRAID_TENANT_ID` | *(empty)* | Azure Entra ID tenant ID. |
 | `AZURE_ENTRAID_CLIENT_ID` | *(empty)* | Client ID of the registered Azure application. |
-| `AZURE_ENTRAID_REDIRECT_URI` | *(empty)* | Redirect URI for Azure authentication. |
-| `AZURE_ENTRAID_AUTHORITY` | `https://login.microsoftonline.com` | Authentication authority URL. |
-| `AZURE_ENTRAID_SCOPES` | `openid profile email` | Required scopes during login. |
-| `AZURE_ENTRAID_API_AUDIENCE` | *(empty)* | Protected API identifier in Azure. |
+| `AZURE_ENTRAID_REDIRECT_URI` | *(empty)* | No effect: the console always uses its own origin as redirect URI. |
+| `AZURE_ENTRAID_AUTHORITY` | `https://login.microsoftonline.com` | No effect: the console builds the authority as `https://login.microsoftonline.com/<tenant id>`. |
+| `AZURE_ENTRAID_SCOPES` | `openid profile email` | No effect: served to the frontend, which does not apply it. |
+| `AZURE_ENTRAID_API_AUDIENCE` | *(empty)* | Optional extra audience the backend accepts on an Entra ID token, next to the client ID. See [Azure](./enable-sso/Azure.md#variables-that-are-read-but-have-no-effect). |
 
 #### Google OAuth
 | Variable | Default Value | Description |
 |-----------|---------------|-------------|
 | `GOOGLE_CLIENT_ID` | *(empty)* | Client ID for Google OAuth authentication. |
 | `GOOGLE_CLIENT_SECRET` | *(empty)* | Client secret for Google OAuth authentication. |
-| `GOOGLE_REDIRECT_URI` | *(empty)* | Redirect URI for Google OAuth. |
-| `GOOGLE_AUTH_SCOPE` | `https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile` | Required scopes to get Google email and profile. |
-| `GOOGLE_AUTH_HOSTED_DOMAIN` | *(empty)* | Restricts the Google login to a single Workspace domain. |
-| `GOOGLE_API_AUDIENCE` | *(empty)* | Protected API identifier for Google. |
+| `GOOGLE_REDIRECT_URI` | *(empty)* | Redirect URI sent with the code-for-token exchange; it must be the value Google expects for the popup code — see [Google](./enable-sso/Google.md). |
+| `GOOGLE_AUTH_SCOPE` | `https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile` | Served to the frontend but not applied: the login button requests `openid profile email`. |
+| `GOOGLE_AUTH_HOSTED_DOMAIN` | *(empty)* | Served to the frontend, which does not apply it: it does **not** restrict the login to a Workspace domain. See [Google](./enable-sso/Google.md#variables-that-are-read-but-have-no-effect). |
+| `GOOGLE_API_AUDIENCE` | *(empty)* | Served to the frontend and not used. No effect. |
 
 #### GitHub (code repositories)
 | Variable | Default Value | Description |
 |-----------|---------------|-------------|
 | `CODE_REPOSITORY_GITHUB_CLIENT_ID` | *(empty)* | Client ID for the GitHub OAuth application used to connect repositories. |
 | `CODE_REPOSITORY_GITHUB_CLIENT_SECRET` | *(empty)* | Client secret of the same application. |
+
+### Proxy
+
+| Variable | Default Value | Description |
+|-----------|---------------|-------------|
+| `TRUST_PROXY` | *(empty in the schema; `127.0.0.1` in both images)* | Which proxies the backend trusts for the client IP it rate-limits on. `true` trusts every hop; anything else is a comma-separated list of addresses or CIDRs, for example `loopback,10.0.0.0/8`. |
+
+Both published images set `TRUST_PROXY=127.0.0.1`, which trusts the nginx inside the container and
+nothing else. That is right when clients reach the container directly. Behind an ingress controller
+or a load balancer, the extra hop must be trusted too — add its address or CIDR to the list —
+otherwise every request appears to come from the proxy and all clients share one rate-limit bucket.
+
+:::caution[A hop count stops the boot]
+A plain number such as `TRUST_PROXY=1` is refused at startup. List the proxies instead.
+:::
+
+### MCP server and OAuth
+
+The remote [MCP server](../build-with-ai/mcp-server.md) and the OAuth authorization server in front
+of it. Everything below except `MCP_ENABLED` only matters once it is on.
+
+| Variable | Default Value | Description |
+|-----------|---------------|-------------|
+| `MCP_ENABLED` | `false` | Turns on `/api/mcp` and the OAuth endpoints. Requires `FRONTEND_URL` and a `JWT_SECRET` of at least 32 bytes, or the boot stops. |
+| `MCP_DCR_ENABLED` | `true` | Dynamic client registration (RFC 7591). |
+| `MCP_CIMD_ENABLED` | `true` | Client ID metadata documents. |
+| `CIMD_ALLOWED_HOSTS` | *(empty: any host)* | Comma-separated hosts allowed to publish a client metadata document. |
+| `MCP_API_KEY_ENABLED` | `true` | Lets a client that cannot do OAuth use a project [API key](../ci-cd/api-keys.md) on `/api/mcp`. |
+| `MCP_RATE_LIMIT_MAX` | `120` | MCP requests per minute for each grant or API key, on top of `RATE_LIMIT_MAX` per IP. |
+| `OAUTH_ISSUER_URL` | *(falls back to `BACKEND_URL`, then `FRONTEND_URL` + `/api`)* | The issuer of the MCP tokens and the base of every OAuth endpoint. Set it only when it cannot be derived. |
+| `MCP_RESOURCE_URL` | *(falls back to the issuer + `/mcp`)* | The resource the access tokens are minted for. |
+
+### AI
+
+The system AI, offered to every organization next to the AIs it defines itself. Which provider
+needs which variables, and what the organizations see, is on [AI models](../build-with-ai/ai-models.md).
+
+| Variable | Default Value | Description |
+|-----------|---------------|-------------|
+| `AI_PROVIDER` | *(empty)* | `anthropic`, `azure-foundry`, `gemini`, `azure-openai` or `aws-bedrock`. Unset, an `ANTHROPIC_API_KEY` alone turns Claude on; with neither there is no system AI. |
+| `ANTHROPIC_API_KEY` | *(empty)* | API key for `anthropic`. |
+| `ANTHROPIC_MODEL` | `claude-opus-5-5` | Model for `anthropic`. |
+| `AZURE_FOUNDRY_RESOURCE` | *(empty)* | Resource name of Claude on Microsoft Foundry (`https://<resource>.services.ai.azure.com`). Required with `azure-foundry`. |
+| `AZURE_FOUNDRY_API_KEY` | *(empty)* | API key, required with `azure-foundry`. |
+| `AZURE_FOUNDRY_MODEL` | `claude-opus-5-5` | Deployment name of the Claude model on Foundry. |
+| `GEMINI_API_KEY` | *(empty)* | API key, required with `gemini`. |
+| `GEMINI_MODEL` | *(no default)* | Required with `gemini`: no model is assumed. |
+| `AZURE_OPENAI_ENDPOINT` | *(empty)* | `https://<resource>.openai.azure.com/`. Required with `azure-openai`. |
+| `AZURE_OPENAI_API_KEY` | *(empty)* | API key, required with `azure-openai`. |
+| `AZURE_OPENAI_DEPLOYMENT` | *(empty)* | Deployment of the GPT model, required with `azure-openai`. |
+| `AZURE_OPENAI_REASONING` | `false` | `true` for reasoning deployments (o-series, GPT-5 and later). |
+| `AZURE_OPENAI_ENDPOINT_SUFFIXES` | *(empty)* | Extra host suffixes an Azure OpenAI endpoint may use besides the public cloud's, comma separated — for sovereign clouds. |
+| `AWS_BEDROCK_REGION` | *(empty)* | Required with `aws-bedrock`. |
+| `AWS_BEDROCK_ACCESS_KEY_ID` | *(empty)* | Required with `aws-bedrock`. |
+| `AWS_BEDROCK_SECRET_ACCESS_KEY` | *(empty)* | Required with `aws-bedrock`. |
+| `AWS_BEDROCK_MODEL` | *(no default)* | Model id or inference profile, required with `aws-bedrock`. |
+| `AI_MAX_EFFORT` | *(empty: every level)* | Highest reasoning effort users may pick with the system AI: `low`, `medium`, `high`, `xhigh` or `max`. Any other value fails validation. |
+| `ASSISTANT_RATE_LIMIT_MAX` | `20` | Assistant questions per IP per minute. |
+
+:::caution[A provider without its credentials stops the boot]
+An `AI_PROVIDER` that is not one of the five values, or that is missing one of the variables it
+requires, fails the container at startup rather than at the first question.
+:::
+
+### Repositories
+
+Where the repositories behind the microfrontends are cloned to be edited with AI. The folder is a
+cache: deleting it only costs a new clone.
+
+| Variable | Default Value | Description |
+|-----------|---------------|-------------|
+| `REPOSITORIES_FOLDER` | `/repositories` (`/data/repositories` in the all-in-one image) | Root of the clones, laid out as `<org>/<project>/<microfrontend>`. |
+| `REPOSITORIES_MAX_SIZE_MB` | `500` | A repository bigger than this on disk is refused, and removed, after the clone. |
+| `REPOSITORIES_EVICT_AFTER_DAYS` | `14` | Working copies not used for this many days are deleted. |
+
+### Argo CD
+
+| Variable | Default Value | Description |
+|-----------|---------------|-------------|
+| `ARGOCD_ALLOW_INSECURE_HTTP` | `false` | Lets a project use an Argo CD served over plain `http`. For a local cluster only: the Argo CD token and the repository credentials cross the network in the clear. See [Argo CD](../kubernetes/argo-cd.md). |
 
 ### Observability and telemetry
 
@@ -168,12 +253,16 @@ would send are on [Telemetry](./telemetry.md).
 | `TELEMETRY_ENABLED` | *(empty)* | Explicit switch for the telemetry ping. |
 | `TELEMETRY_ENDPOINT` | `https://telemetry.mfe-orchestrator.dev/api/telemetry/self-hosted` | Where the anonymous ping is sent. |
 | `TELEMETRY_INTERVAL_HOURS` | `24` | Hours between two pings. |
-| `SENTRY_DSN` | *(empty)* | Sentry DSN of the backend. Leave empty to disable error reporting. |
+| `SENTRY_DSN` | *(empty)* | Sentry DSN of the backend. Leave empty to disable error reporting. Read directly from the process environment. |
 
 :::note[Variables outside this list are ignored]
 The container validates its configuration against a fixed schema and drops anything it does not
 know, so a misspelled name fails silently rather than being picked up. `LOG_LEVEL` and
 `AZURE_ENTRAID_CLIENT_SECRET`, which earlier versions of this page listed, are read by nothing.
+
+Three variables in the tables above are the exception: `JWT_SECRET`, `SENTRY_DSN` and
+`NPM_REGISTRY_URL` are not in the schema and are read directly from the process environment, so
+they work even though validation never sees them.
 
 Worse than a name that is dropped is a name that is accepted. `HOST`, `NOSQL_DB_URL`,
 `NOSQL_DB_DATABASE` and `NOSQL_DB_PASSWORD` are declared in the schema, so they pass validation and

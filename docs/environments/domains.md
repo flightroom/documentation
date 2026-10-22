@@ -70,7 +70,7 @@ because what you register on one stage constrains what the others may hold.
 The domains of every environment are visible together on the Environments page, which is the
 quickest way to spot a stage that is still missing one:
 
-![The Environments page showing the allowed domains of each environment](../assets/environments-list.png)
+![The Environments page with its Allowed Domains column, still empty on every environment](../assets/environments-list.png)
 
 ## Overlapping domains
 

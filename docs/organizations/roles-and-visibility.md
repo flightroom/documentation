@@ -64,20 +64,26 @@ no endpoint where it was forgotten.
 | Organization role | Project membership | Result |
 | --- | --- | --- |
 | Owner or Admin | none | Reaches the project, with full project rights |
-| Owner or Admin | Admin / Editor / Viewer | Reaches the project; the project role does not restrict them |
-| Member | Admin / Editor / Viewer | Reaches that project only — and with full rights on it, whichever role they hold |
+| Owner or Admin | Admin / Editor / Viewer, whole project or specific domains | Reaches the project; neither the project role nor a domain scope restricts them |
+| Member | Admin | Reaches that project only, with full rights on it, members included |
+| Member | Editor | Reaches that project only; cannot manage its members or change its delivery settings |
+| Member | Viewer | Reaches that project only; on top of the Editor's limits, cannot write to its Git provider or its cloud |
+| Member | Editor / Viewer on **Specific domains** | As above, and confined to the microfrontends and services of the domains they were given |
 | Member | none | Does not reach the project at all |
 | none | any | Does not reach the project at all |
 
-:::danger[Nobody is limited by a project role]
-Giving somebody the *Viewer* role on a project does not make them read-only — not an organization
-admin, and not a plain member either. The single gate that authorizes every project write asks
-whether you are a member, never which role you hold, so anyone who reaches a project can rename it,
-invite to it and delete it. An organization admin reaches every project of the organization on top of
-that, without being invited.
+:::caution[A project role limits writes, but not all of them]
+The project role is enforced on a defined set of actions. Managing the members of a project needs a
+project **Admin** of the whole project, or an organization Owner or Admin. A **Viewer** is refused
+committing to the GitOps repositories, creating, editing or deleting storages and databases, and
+creating a code repository — including the one created with a new microfrontend or service. An
+organization Owner or Admin is never refused any of these, whatever their project role.
 
-The only boundary that holds is reachability: keep somebody out of the organization, or out of the
-project, if they must not change it. Read-only access does not exist yet.
+Everything outside that set is still open to whoever reaches the project, Viewers included —
+renaming it, editing microfrontends, environments and variables among others. So a Viewer is not
+read-only. The full list is in
+[What the role decides](../project-settings/users-and-roles.md#what-the-role-decides); keep somebody
+out of the project, or out of the organization, if they must not change it at all.
 :::
 
 ## Pending invitations are not memberships

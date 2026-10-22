@@ -75,22 +75,23 @@ The file looks like this:
 
 ## Step 5: Add the storage in Flightroom
 
-Go to **Settings → Storages → New Storage** and select **Google Cloud Storage**:
+Open **Storages** (under **Cloud** in the sidebar), click **New Storage** and select **Google Cloud
+Storage**:
 
 | Field | Value |
 | --- | --- |
 | **Name** | A label, e.g. *Production GCS* |
 | **Bucket Name** | `acme-microfrontends` |
 | **Path** | Optional prefix inside the bucket, e.g. `mfe` |
-| **Authentication Type** | **Service Account** |
-| **Service Account Credentials** | Paste the **entire contents** of the JSON key file |
+| **Service Account JSON Key** | Paste the **entire contents** of the JSON key file |
 
 ![The New Storage form with the Google Cloud Storage fields](../assets/storage-form-gcs.png)
 
-Paste the whole JSON document, not just the private key — the platform reads `client_email` and
-`private_key` out of it.
+There is no authentication type to pick: a service account key is the only method offered for Google
+Cloud Storage. Paste the whole JSON document, not just the private key — the platform reads
+`client_email` and `private_key` out of it.
 
-Save.
+Click **Test connection** to check the key and the permissions before saving, then **Create**.
 
 ## Step 6: Point a microfrontend at it
 
@@ -105,9 +106,10 @@ Then [deploy](../deployments/overview.md) the environment.
 
 ## Troubleshooting
 
-**Invalid JSON / parse error on save**
+**`The service account key is not valid JSON`**
 
-The credentials field must contain valid, complete JSON. A common cause is pasting a fragment, or an
+Reported by **Test connection** — saving does not parse the key, so a broken one otherwise only shows
+up when files fail to upload or serve. The field must contain valid, complete JSON. A common cause is pasting a fragment, or an
 editor mangling the `\n` escapes inside `private_key`. Copy directly from the downloaded file
 without reformatting.
 
@@ -137,7 +139,8 @@ Service account JSON keys do not expire by default, which makes them convenient 
 risk. Rotate them on a schedule:
 
 1. Create a second key for the same service account.
-2. Update the storage in Flightroom with the new JSON.
+2. Edit the storage in Flightroom and replace the masked **Service Account JSON Key** with the new
+   JSON.
 3. Verify a file still serves.
 4. Delete the old key in the Cloud console.
 

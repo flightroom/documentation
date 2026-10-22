@@ -22,15 +22,21 @@ environment stays a separate, explicit step.
 
 The import needs a **code repository connection on the project** — a
 [GitHub](./connect/github.md) account or organization, a [GitLab](./connect/gitlab.md) group, or
-an [Azure DevOps](./connect/azure.dev-ops.md) project — configured under **Settings → Code
-repositories**. Until at least one connection exists the action is not shown at all, because
+an [Azure DevOps](./connect/azure.dev-ops.md) project — configured under **Settings → Resources → Code
+Repositories**. Until at least one connection exists the action is not shown at all, because
 there would be nothing to list.
 
 ## Where the action is
 
 On the **Microfrontends** dashboard, **Import from repository** sits next to
-**New microfrontend** in the page header, and again in the empty state of a project that has no
+**Add New Microfrontend** in the page header, and again in the empty state of a project that has no
 microfrontend yet.
+
+On the **Structure** of a [functional domain](../domains/overview.md), the **Add microfrontend** and
+**Add service** menus also offer **Import from repository**. From there every imported repository
+lands in that domain, and from **Add service** it becomes a **service** instead of a microfrontend
+(see [Importing as services](#importing-as-services)). It is the only place in the console to import
+services.
 
 ![The Import from repository action in the microfrontends dashboard header](../assets/repository-import-action.png)
 
@@ -46,8 +52,8 @@ the **slug** the microfrontend would get.
 - **Search** — filters the list by repository name.
 - **Select all** — selects the repositories currently visible, so it composes with the search:
   filter by prefix, select all, refine, import.
-- **Already imported** — repositories already linked to a microfrontend of this project carry an
-  *Already imported* badge in place of the slug and cannot be selected. The API still reports the
+- **Already imported** — repositories already linked to a microfrontend or a service of this
+  project carry an *Already imported* badge in place of the slug and cannot be selected. The API still reports the
   slug they were imported with, in `slug` and in `importedAs`.
 
 A repository counts as already imported when its provider id matches the one stored on a
@@ -79,14 +85,25 @@ used (`header`, `header-2`, `header-3`), and the suffix is allocated across the 
 importing two repositories that slugify identically produces two microfrontends rather than a
 failure.
 
+## Importing as services
+
+Imported as services, each repository creates a service with the same name, slug, description and
+code repository link, and no version: the first one is registered by its CI, as for a service made
+from a template. Services have a slug space of their own, separate from the microfrontends'.
+
+A service slug takes **2 to 50** lowercase letters, digits or dashes, because it names the CI
+registration URL of the service. A repository whose slug would be longer lands in **failed**: create
+that service by hand with a shorter slug.
+
 ## Partial results are the normal case
 
 Repositories are imported **independently**: one that fails does not abort the batch and does
 not roll back what has already been created. The result splits into three lists:
 
-- **imported** — the created microfrontends, with the slug and the id each one got.
+- **imported** — the created microfrontends or services, with the slug and the id each one got
+  (`microfrontendId` or `serviceId`).
 - **skipped** — repositories that were not touched, with the reason: `ALREADY_IMPORTED` for one
-  already linked to a microfrontend, `NOT_FOUND` for an explicitly requested id the connection
+  already linked to a microfrontend or a service, `NOT_FOUND` for an explicitly requested id the connection
   does not expose (a repository deleted or made private since the list was loaded).
 - **failed** — repositories whose creation raised an error, with the error message.
 
@@ -107,8 +124,12 @@ Both endpoints are authenticated and scoped to the project owning the connection
 GET /api/repositories/:codeRepositoryId/importable-repositories
 ```
 
-Optional `groupId` query parameter — GitLab only — lists the repositories of that group instead
-of the one configured on the connection.
+Optional query parameters:
+
+- `groupId` — GitLab only — lists the repositories of that group instead of the one configured on
+  the connection.
+- `target` — `microfrontend` (the default) or `service`: the slug shown is the one a microfrontend,
+  or a service, would get.
 
 ```json
 [
@@ -127,7 +148,7 @@ of the one configured on the connection.
 ```
 
 An already imported repository carries `alreadyImported: true` and an `importedAs` object with
-the `_id`, `slug` and `name` of the microfrontend it is linked to.
+the `_id`, `slug` and `name` of the microfrontend or service it is linked to.
 
 ### Import
 
@@ -139,12 +160,16 @@ POST /api/repositories/:codeRepositoryId/import
 {
   "repositoryIds": ["812345678", "812345679"],
   "groupId": 4242,
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "target": "microfrontend",
+  "domainId": "6717c0f2f1a2b3c4d5e6f701"
 }
 ```
 
-Every field is optional. **Omitting `repositoryIds` imports every repository of the connection
-that is not linked to a microfrontend yet** — the "adopt the whole organization" call, which is
+Every field is optional. `target` is `microfrontend` (the default) or `service`; any other value is
+refused with `IMPORT_TARGET_INVALID`. `version` applies to microfrontends only. `domainId` puts
+every created member in that functional domain of the project. **Omitting `repositoryIds` imports
+every repository of the connection that is not linked to a microfrontend or a service yet** — the "adopt the whole organization" call, which is
 also what makes the endpoint usable from a bootstrap script.
 
 ```json

@@ -75,7 +75,8 @@ The first entries should be your files, not a directory prefix.
 
 ## Requirements and behaviour
 
-- The file must be a **ZIP** — the request is rejected on both MIME type and `.zip` extension.
+- The file must be a **ZIP**: it is accepted when its MIME type is `application/zip` **or** its
+  file name ends in `.zip`, and rejected only when neither holds.
 - The microfrontend must already exist in the project, matched by **slug**.
 - The archive is extracted into the version's folder, wherever that microfrontend is
   [hosted](../microfrontends/hosting-options.md) — the platform's own storage or your bucket.
@@ -84,6 +85,9 @@ The first entries should be your files, not a directory prefix.
   under the same version and is still served.
 - **Custom URL** microfrontends cannot be uploaded to; the request fails. Publishing is entirely
   yours in that case.
+- Microfrontends served by **their own Docker container** cannot be uploaded to either: the request
+  fails with `FRONTEND_UPLOAD_NOT_ALLOWED`. Their pipeline registers the version of the pushed image
+  instead — see [what a key can call](./api-keys.md#what-a-key-can-call).
 
 :::caution[Overwriting a deployed version]
 Re-uploading a version that some environment is currently serving changes what those users get,

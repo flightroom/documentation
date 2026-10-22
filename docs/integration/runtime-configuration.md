@@ -11,10 +11,11 @@ keywords: [runtime configuration, environment variables, browser, single build]
 This page shows how to read an environment's [environment variables](../environments/environment-variables.md)
 from the browser, so a single build can be configured differently in each stage.
 
-The console generates both snippets with your ids already substituted, under
-**Integration → Environment Variables**.
+The console generates three snippets with your ids already substituted, under
+**Integration → Environment Variables**: the `<script>` tag of option 1, a usage example reading
+`window.globalConfig`, and the direct `fetch` of option 2.
 
-![The Integration page's Environment Variables tab, with both snippets filled in](../assets/integration-environment-variables.png)
+![The Integration page's Environment Variables tab: the Add the script to my hosts button, the script tag and the usage example](../assets/integration-environment-variables.png)
 
 ## Option 1: the generated script
 
@@ -61,6 +62,13 @@ if (featureFlag) {
 
 Because the script is a blocking `<script>` in `<head>`, `window.globalConfig` is guaranteed to
 exist by the time your bundle runs — no loading state, no race.
+
+:::caution[Keep quotes and backslashes out of values read this way]
+The script writes each value between double quotes exactly as stored, without escaping it. A value
+containing a `"`, a `\` or a line break produces a broken script — or a different value than the
+one you saved — and `window.globalConfig` may then not be defined at all. If a value needs those
+characters, read it with [option 2](#option-2-fetch-the-json) instead, which returns proper JSON.
+:::
 
 ### Values are always strings
 

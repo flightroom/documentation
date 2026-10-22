@@ -30,40 +30,59 @@ A connected code repository. If you have not connected one yet, follow
 1. From the **Microfrontends** page, click **Add New Microfrontend**. Next to it,
    **Import from repository** takes the other route, starting from code you already have.
 
-   ![The Microfrontends page header with the search field, the view switcher and the Import from repository and Add New Microfrontend buttons](../assets/add-new-microfrontend.png)
+   ![The Microfrontends page header with the search field, the domain filter, the view switcher and the Add New Microfrontend button](../assets/add-new-microfrontend.png)
+
+   Both depend on a connected code repository. Without one, **Import from repository** is hidden and
+   **Add New Microfrontend** skips the templates library and opens the empty form directly — the
+   [from scratch](#from-scratch) route.
 
 2. Choose a template from the [templates library](../templates/templates-library.md), which opens
    as a page of its own. Templates are grouped by framework and filtered by framework, compiler
    and host type, so you can narrow down to, for example, *Vite + React + remote*. **Create From
-   Scratch**, the first card, skips the template and leaves you with an empty repository.
+   Scratch**, the first card, skips the template.
 
    ![The templates library page: the framework, compiler and type filters above the template cards grouped by framework](../assets/choose-a-template.png)
 
 3. Fill in the microfrontend details. The form is the same one you get when editing later, minus
-   the danger zone: a **Release** card on top, then three tabs.
+   the danger zone: a **Release** card on top, then the tabs.
 
    **Release**
 
-   - **Version** — required, the version this microfrontend starts on
+   - **Version** — required, the version this microfrontend starts on. Pre-filled with `1.0.0`
    - **Canary Settings** — off by default, and there is no reason to turn it on while creating.
+     When you do, the type starts on **Session** and the deployment type on **Based on Version**.
      See [canary releases](./canary-releases.md)
 
    **General**
 
-   - **Name** — the display name
-   - **Slug** — lowercase and URL-friendly; this ends up in your public URLs, so choose carefully
+   - **Kind** — **Microfrontend** (served by Flightroom, the default) or **Frontend** (served by
+     its Docker container). See [Microfrontend or Frontend](#microfrontend-or-frontend)
+   - **Name** — the display name, 3 to 100 characters
+   - **Slug** — 3 to 50 characters. While you type the name, the slug is derived from it: lowercase,
+     with every character other than a letter or a digit turned into `-`. You can still edit it
+     before saving. It ends up in your public URLs, so choose carefully
    - **Description** — optional
+   - **Domain** — optional, the [functional domain](../core-concepts.md#functional-domain) the
+     microfrontend belongs to
 
-   **Hosting** — see [hosting options](./hosting-options.md)
+   ![The creation form: the Release card with the version, then the General tab with kind, name Wishlist, slug wishlist, description and domain](../assets/frontend-fill-information.png)
 
-   **Repository**
+   **AI context** — optional Markdown notes for the AI agents that work on this microfrontend, at
+   most 20,000 characters. What applies to every microfrontend belongs in the project context, in
+   **Settings**.
+
+   **Hosting** — see [hosting options](./hosting-options.md). A **Frontend** has a **Container** tab
+   here instead.
+
+   **Repository** — only shown when the project has a code repository connection. Created from a
+   template, its **Code Repository** switch is already on:
 
    - **Source Code Provider** — which connected repository the new repo is created in
-   - **Repository Name** — the name of the repository to create. Availability is checked as you
-     type
-   - **Private Repository** — a switch. Off creates a public repository
-
-   ![The creation form: the chosen template, the Release card with the version, and the General tab with name, slug and description](../assets/frontend-fill-information.png)
+   - **GitLab Group** — on a GitLab connection that can see more than one group, the group to
+     create it under
+   - **Repository Name** — the name of the repository to create, pre-filled from the slug.
+     Availability is checked as you type
+   - **Private Repository** — a switch, on GitHub. Off creates a public repository
 
 4. Click **Save**.
 
@@ -78,22 +97,30 @@ Creating from a template is not just a `git init`. Flightroom:
    (`.github/workflows/build-and-deploy.yml`), a GitLab CI file (`.gitlab-ci.yml`) or an Azure
    DevOps pipeline (`azure-pipelines.yml`). The pipeline is pre-filled with your microfrontend's
    slug and the API base URL of this installation.
-4. **Creates an API key** with the `MANAGER` role, valid for one year, and stores it in the
-   provider as a secret named `MICROFRONTEND_ORCHESTRATOR_API_KEY` (on Azure DevOps, inside a
-   variable group called `MFE_ORCHESTRATOR_SECRETS`). This is the credential the pipeline uses
-   to upload build artifacts.
-5. **Registers the microfrontend** in the project, linked to the new repository.
+4. **Registers the microfrontend** in the project, linked to the new repository, with the
+   template's entry point and stack.
+
+The pipeline authenticates its upload with the secret `MICROFRONTEND_ORCHESTRATOR_API_KEY`. Most of
+the time that secret already exists before you create anything: an API key with the `MANAGER` role,
+valid for one year, is created when the code repository **connection** is made, and stored where
+every repository of the connection can read it — an organization secret on a GitHub organization, a
+CI/CD variable of the group on GitLab, the variable group `MFE_ORCHESTRATOR_SECRETS` on Azure
+DevOps. Scaffolding adds a key of its own, as a secret of the new repository, only on a **personal
+GitHub account**, where there is no organization to hold one. See
+[keys created for you](../ci-cd/api-keys.md#keys-created-for-you).
 
 :::info
-Because the deploy secret is created automatically, the generated pipeline works on its first
-run — you do not have to copy any key by hand.
+Because the deploy secret is in place, the generated pipeline works on its first run — you do not
+have to copy any key by hand. Keys expire after a year: when the pipeline's upload starts failing
+with an authentication error, that is the first thing to check.
 :::
 
 ## From scratch
 
-Pick **Create From Scratch** in the templates library when the code already exists, or when you
-want to bring your own project layout. You will be asked for the same general information, plus
-the hosting configuration:
+Pick **Create From Scratch** in the templates library — or click **Add New Microfrontend** in a
+project with no code repository connection — when the code already exists, or when you want to
+bring your own project layout. You fill in the same release and general information, plus the
+hosting configuration:
 
 - **Flightroom Hub** — you will upload builds to the platform
 - **Custom Source** — you will upload builds to your own bucket
@@ -102,32 +129,67 @@ the hosting configuration:
 See [Hosting options](./hosting-options.md) for the details of each, and
 [Versions and builds](./versions-and-builds.md) for how to get artifacts in.
 
-You can optionally link an existing repository under **Code repository** — this enables the
-**Build** action on the microfrontend card, but Flightroom will not add a pipeline to a
-repository it did not create. To use the same automation, copy the relevant pipeline from the
-[template-pipelines repository](https://github.com/mfe-orchestrator/template-pipelines) and
-create an [API key](../ci-cd/api-keys.md) yourself.
+The **Code Repository** switch of the **Repository** tab starts off. Turned on at creation, it
+creates a **new, empty** repository; there is no template to push and no pipeline to add. To link a
+repository that already exists, save first and pick it under **Select Repository** when editing, or
+use **Import from repository** on the Microfrontends page, which creates one microfrontend for each
+repository you tick among those of a connection — repositories already linked to a microfrontend or
+a service are skipped. A linked repository enables the
+**Build** action on the microfrontend card, but Flightroom will not add a pipeline to a repository
+it did not create. To use the same automation, copy the relevant pipeline from the
+[template-pipelines repository](https://github.com/mfe-orchestrator/template-pipelines); the API key
+it needs is usually already there from the connection (see above), and otherwise you
+[create one](../ci-cd/api-keys.md) yourself.
+
+## Microfrontend or Frontend
+
+The **Kind** at the top of the **General** tab decides who serves the code:
+
+| | Microfrontend | Frontend |
+| --- | --- | --- |
+| Served by | Flightroom, from the hub, your bucket or a custom URL | Its own Docker container |
+| Configured in | **Hosting** tab | **Container** tab — runtime, image, URLs, environment, config maps and secrets, as for a [service](../kubernetes/services.md) |
+| Version | Chosen in **Release** | Read-only: set by the pipeline each time it registers an image version |
+| Canary | Available | None: Flightroom cannot split the traffic of a container |
+| Parents | Any | None. It cannot be the remote of a host, so in the Diagram view no link can end on it |
+| Bundle upload | Accepted | Refused with `FRONTEND_UPLOAD_NOT_ALLOWED`: its pipeline registers the image of each version instead |
+
+A microfrontend created under a parent — from a link dropped on empty canvas in the Diagram view —
+is always a **Microfrontend**, and one that already has parents cannot be switched to **Frontend**.
+The templates scaffold a pipeline that uploads a bundle: pick **Frontend** on a template and the
+form warns you to change the pipeline so it builds the Docker image and registers its version.
+
+A Frontend never appears in the manifest of [`/serve/all`](../integration/serve-api.md): no host
+loads it as a remote.
 
 ## Editing a microfrontend
 
-Clicking a microfrontend opens the same form in edit mode. **Release** sits at the top, outside the
-tabs, because the version and the canary are what decide which bytes a browser gets; everything
-else is behind a tab:
+Opening a microfrontend from its card leads to the same form in edit mode — directly through
+**Configuration**, or, when the card offers **Edit with AI**, through the **Details & settings** tab
+next to the AI workspace. **Release** sits at the top, outside the tabs, because the version and the
+canary are what decide which bytes a browser gets; everything else is behind a tab:
 
 | Where | Contains |
 | --- | --- |
-| Release (above the tabs) | Version, and **Canary Settings** — progressive rollout, see [Canary releases](./canary-releases.md) |
-| General | Name, slug, description, continuous deployment |
-| Hosting | Hosting type, entry point, storage or URL |
-| Repository | The linked repository |
+| Release (above the tabs) | Version, and **Canary Settings** — progressive rollout, see [Canary releases](./canary-releases.md). A Frontend shows its version read-only and no canary |
+| General | Kind, name, slug (read-only), description, domain |
+| AI context | Markdown notes for AI agents, at most 20,000 characters |
+| Hosting | Hosting type, storage or URL, entry point. **Container** instead, for a Frontend |
+| Repository | The linked repository — only when the project has a code repository connection |
 | Danger Zone | Delete this microfrontend |
+
+In **Repository**, **Select Repository** lists the repositories of the chosen connection, so you can
+link one or change it. Once a repository is linked and saved, **Rename repository** renames it at the
+provider; local clones then have to update their remote URL — GitHub and GitLab redirect the old one,
+Azure DevOps does not. The card of a microfrontend with a linked repository also carries **Clone
+repo**, with the HTTPS and SSH clone commands and shortcuts to clone in VS Code or IntelliJ IDEA.
 
 Switching tab keeps what you typed: every panel stays mounted, so a value entered under **Hosting**
 survives a detour through **General**. A tab whose fields failed validation is marked with a dot,
 and submitting an invalid form jumps to the first one — an error is never hidden behind an inactive
 tab.
 
-![The microfrontend form in edit mode: the Release card with the version and the canary settings above the General, Hosting, Repository and Danger Zone tabs](../assets/microfrontend-form.png)
+![The Add New Microfrontend form: the Release card with the version and the canary switch, above the General, AI context and Hosting tabs](../assets/microfrontend-form.png)
 
 Remember that edits take effect for your users only after the next
 [deployment](../deployments/overview.md).
