@@ -44,7 +44,7 @@ it — the platform logs a warning and does not connect, it does not fall back t
 | `NODE_ENV` | `prod` *(development/prod/test/local)* | Node.js environment mode. Any other value stops the boot. |
 | `REGISTRATION_ALLOWED` | `true` | **Hides the *Register* link; it does not close the route.** The backend reads it in one place only, to build the `canRegister` flag the console uses to decide what to render. With it set to `false` both `POST /users/registration` and `POST /startup/registration` still create usable accounts. See [The first startup](./first-startup.md#the-endpoint-stays-open). |
 | `ALLOW_EMBEDDED_LOGIN` | `true` | If `true`, enables the login system within the application. |
-| `MICROFRONTEND_HOST_FOLDER`| `/upload-microfrontends` | Folder containing the host microfrontends. |
+| `MICROFRONTEND_HOST_FOLDER`| `/upload-microfrontends` | Folder containing the uploaded frontend bundles. |
 | `ALLOWED_ORIGINS` | *(empty)* | List of allowed URLs for cross-origin requests comma separated. |
 | `ALLOWED_SERVE_ORIGINS` | *(falls back to `ALLOWED_ORIGINS`)* | The same list, applied only to the `/serve/*` endpoints your host applications call. |
 | `RATE_LIMIT_MAX` | `100` | Requests per IP per minute. An empty value fails validation — leave it unset to keep the default. |
@@ -224,12 +224,12 @@ requires, fails the container at startup rather than at the first question.
 
 ### Repositories
 
-Where the repositories behind the microfrontends are cloned to be edited with AI. The folder is a
+Where the repositories behind the frontends are cloned to be edited with AI. The folder is a
 cache: deleting it only costs a new clone.
 
 | Variable | Default Value | Description |
 |-----------|---------------|-------------|
-| `REPOSITORIES_FOLDER` | `/repositories` (`/data/repositories` in the all-in-one image) | Root of the clones, laid out as `<org>/<project>/<microfrontend>`. |
+| `REPOSITORIES_FOLDER` | `/repositories` (`/data/repositories` in the all-in-one image) | Root of the clones, laid out as `<org>/<project>/<frontend>`. |
 | `REPOSITORIES_MAX_SIZE_MB` | `500` | A repository bigger than this on disk is refused, and removed, after the clone. |
 | `REPOSITORIES_EVICT_AFTER_DAYS` | `14` | Working copies not used for this many days are deleted. |
 

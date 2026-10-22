@@ -27,12 +27,12 @@ Organization
 ├── Members (Owner, Admin, Member)
 └── Project
     ├── Environment (dev, uat, prod, …)
-    ├── Microfrontend (host or remote, versioned)
+    ├── Frontend (host or remote, versioned)
     ├── Storage / Bucket, Code Repository, API Key
     └── Members (Admin, Editor, Viewer)
 ```
 
-The project is still the boundary every other object belongs to — microfrontends, environments,
+The project is still the boundary every other object belongs to — frontends, environments,
 deployments, API keys are all project-scoped, and nothing about that changed. What the organization
 adds is a boundary *above* the project: an authorization level that decides reachability rather than
 ownership. See [Core concepts](../core-concepts.md#the-object-model).
@@ -86,8 +86,8 @@ before it reaches anything else. The first run therefore goes:
    ![The Create your organization screen, with the name and description of a new organization filled in](../assets/organization-first-create.png)
 
 3. The [project wizard](../project-settings/projects.md#creating-a-project) opens inside it. Its last
-   screen offers **Start deploying your microfrontends**, which opens the console on the
-   **AI agent** page, [Maestro](../build-with-ai/console-assistant.md) — or on **Microfrontends**
+   screen offers **Start deploying your frontends**, which opens the console on the
+   **AI agent** page, [Maestro](../build-with-ai/console-assistant.md) — or on **Frontends**
    when the project can use no AI yet.
 
 If somebody invited you instead, the pending invitation is offered on that same screen, above the

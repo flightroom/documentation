@@ -2,8 +2,8 @@
 sidebar_position: 3
 title: Core concepts and object model
 sidebar_label: Core concepts
-description: "Organizations, projects, functional domains, microfrontends, services, environments and deployments: the objects Flightroom is built around, and how they relate."
-keywords: [object model, organizations, projects, functional domains, services, environments, deployments, microfrontends]
+description: "Organizations, projects, functional domains, frontends, services, environments and deployments: the objects Flightroom is built around, and how they relate."
+keywords: [object model, organizations, projects, functional domains, services, environments, deployments, frontends]
 ---
 
 # Core concepts and object model
@@ -14,8 +14,8 @@ to the API — maps onto one of them.
 
 :::info[Apps and agents, in the console's words]
 The site talks about *apps* and *AI agents*. The console names what they are made of: a web
-interface is a **microfrontend**, a backend is a **service**, and an agent is a service that calls
-the AI model your organization chose. A **functional domain** groups the microfrontends and
+interface is a **frontend**, a backend is a **service**, and an agent is a service that calls
+the AI model your organization chose. A **functional domain** groups the frontends and
 services of one business capability. There is no separate agent runtime: an agent is built,
 reviewed and deployed like any other service.
 :::
@@ -32,8 +32,8 @@ Organization
 ├── Members (Owner, Admin, Member)
 ├── AI (the models the organization may use)
 └── Project
-    ├── Functional domain (groups microfrontends and services)
-    ├── Microfrontend (web interface: served by Flightroom, or as a Docker container)
+    ├── Functional domain (groups frontends and services)
+    ├── Frontend (web interface: served by Flightroom, or as a Docker container)
     │   └── Built version (one record per bundle or image)
     ├── Service (backend or agent, runs as a Docker container)
     │   └── Config maps and Secrets (one value per environment)
@@ -48,10 +48,10 @@ Organization
 ```
 
 One line in that tree is worth expanding, because the console does not spell it out. A
-microfrontend carries a single `version` field: the version *currently selected*, the one the next
+frontend carries a single `version` field: the version *currently selected*, the one the next
 deployment would freeze. The versions you can select are separate records, one per bundle that has
-reached the platform, keyed by microfrontend and version string. That is why the version of a
-microfrontend is a list you pick from rather than free text, and why a version stays selectable long
+reached the platform, keyed by frontend and version string. That is why the version of a
+frontend is a list you pick from rather than free text, and why a version stays selectable long
 after another has been deployed over it.
 
 ### Organization
@@ -78,7 +78,7 @@ provide a read-only **System AI** from its configuration. See
 ### Project
 
 A **project** is the container every configuration object belongs to, and the boundary the project
-roles are written against: microfrontends, environments, storages, repositories and API keys belong
+roles are written against: frontends, environments, storages, repositories and API keys belong
 to exactly one project. A project has a `name`, a `slug` and an `id` — all three, plus its free-text
 `description`, live under **Settings → General → Project Information**, where only the name and the
 description can be edited. The same tab holds the project's AI `context`, under **Project AI
@@ -115,13 +115,13 @@ answer on — see [Deploy to Kubernetes](./kubernetes/overview.md).
 :::info[Why domains matter]
 Some public endpoints resolve the environment automatically from the browser's `Referer`
 header, by matching it against the environment's **Allowed Domains**. This is what lets a
-single microfrontend URL serve the right version to `app.example.com` and to
+single frontend URL serve the right version to `app.example.com` and to
 `staging.example.com`. See [Environments → Allowed domains](./environments/domains.md).
 :::
 
 ### Functional domain
 
-A **functional domain** groups the microfrontends and services that work on the same business
+A **functional domain** groups the frontends and services that work on the same business
 capability, such as *Payments* or *Onboarding*. It is the natural unit for building with AI: on an
 empty domain, one request makes the AI propose the components it needs and create their
 repositories, and a single AI job can change every repository of the domain at once. A domain can
@@ -136,24 +136,24 @@ already in place. Its configuration comes from **config maps** and **secrets**, 
 environment, delivered as environment variables. See
 [Deploy to Kubernetes](./kubernetes/overview.md).
 
-### Microfrontend
+### Frontend
 
-A **microfrontend** is a web interface registered in a project. Its **kind** says how it is
-served: as a static bundle served by Flightroom, or as its own Docker container deployed to
-Kubernetes like a service. A microfrontend served by Flightroom is either:
+A **frontend** is a web interface registered in a project. Its **kind** says how it is
+served: **Bundle**, a static bundle served by Flightroom, or **Docker**, its own Docker container
+deployed to Kubernetes like a service. A frontend served by Flightroom is either:
 
-- a **host** — the shell application that loads other microfrontends, or
-- a **remote** — a microfrontend consumed by a host.
+- a **host** — the shell application that loads other frontends, or
+- a **remote** — a frontend consumed by a host.
 
 Hosts and remotes are wired together by declaring parent/child relations in the console, and
 Flightroom turns those relations into the `remotes` block of your Module Federation
 configuration.
 
-![The microfrontends of a project, drawn as a host with its remotes](./assets/microfrontends-diagram-view.png)
+![The frontends of a project, drawn as a host with its remotes](./assets/frontends-diagram-view.png)
 
-Each microfrontend has a `slug` (unique per project), a `version`, and a **hosting type** that
+Each frontend has a `slug` (unique per project), a `version`, and a **hosting type** that
 tells the platform where its files actually live. See
-[Microfrontends → Hosting options](./microfrontends/hosting-options.md).
+[Frontends → Hosting options](./frontends/hosting-options.md).
 
 ### Environment variable
 
@@ -165,7 +165,7 @@ without a rebuild. See [Runtime configuration](./integration/runtime-configurati
 ### Storage (bucket)
 
 A **storage** is a connection to an object storage bucket you own — Amazon S3, Azure Blob
-Storage or Google Cloud Storage. Microfrontend builds can be uploaded to your own bucket
+Storage or Google Cloud Storage. Frontend builds can be uploaded to your own bucket
 instead of to the hub, which keeps your artifacts inside your own cloud account. See
 [Buckets](./buckets/overview.md).
 
@@ -179,13 +179,13 @@ pushed to a branch of one of these repositories. See [Code Repositories](./repos
 ### Deployment
 
 A **deployment** is an immutable snapshot of everything an environment needs at a point in
-time: the full list of microfrontends with their versions and hosting configuration, the
+time: the full list of frontends with their versions and hosting configuration, the
 environment's variables, and the storage configuration.
 
 This is the single most important idea in Flightroom:
 
 :::tip[Editing is not deploying]
-Changing a microfrontend's version, adding a variable, or connecting a bucket does **not**
+Changing a frontend's version, adding a variable, or connecting a bucket does **not**
 affect what your users see. Those changes sit in the project configuration until you press
 **Deploy**, which freezes them into a new snapshot and activates it.
 :::
@@ -223,7 +223,7 @@ At **project** level, the role decides what they can do inside one:
 | Role | In the API | Can do |
 | --- | --- | --- |
 | Admin | `OWNER` | Everything, including managing members and the GitOps and Argo CD settings |
-| Editor | `MEMBER` | Build with AI, manage microfrontends, services, variables and storages, and deploy |
+| Editor | `MEMBER` | Build with AI, manage frontends, services, variables and storages, and deploy |
 | Viewer | `VIEWER` | Cannot use the AI, create repositories, change storages or databases, or deploy with GitOps on. Other project settings are not role-checked |
 
 See [Roles and project visibility](./organizations/roles-and-visibility.md) and
@@ -236,7 +236,7 @@ Kubernetes:
 
 ```
 1. Describe              A project member asks for an app, an agent or a
-      │                  change, on a domain, microfrontend or service
+      │                  change, on a domain, frontend or service
       │
 2. Propose               The AI writes it on an ai/… branch of your
       │                  repositories; your CI checks the branch
@@ -254,17 +254,17 @@ Kubernetes:
 Steps 1 to 3 are described in [Build with AI](./build-with-ai/overview.md), steps 4 and 5 in
 [Deploy to Kubernetes](./kubernetes/overview.md).
 
-For a microfrontend served by Flightroom, the path from commit to browser is different:
+For a frontend served by Flightroom, the path from commit to browser is different:
 
 ```
-1. Commit                Your microfrontend repository
+1. Commit                Your frontend repository
       │
 2. Build & upload        CI builds the bundle and uploads it to
       │                  Flightroom (hub or your own bucket),
       │                  tagged with a version
       │
 3. Register version      The version becomes selectable on the
-      │                  microfrontend in the console
+      │                  frontend in the console
       │
 4. Deploy                You create a deployment for an environment,
       │                  snapshotting versions + variables

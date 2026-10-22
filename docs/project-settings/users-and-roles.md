@@ -49,7 +49,7 @@ The console is not consistent about which of the two names it shows. The **invit
 | Invite and remove members, change their role | Project **Admin**, or an organization Owner or Admin |
 | Change the GitOps, Argo CD and pipeline-template settings | Project **Admin**, or an organization Owner or Admin |
 | Ask for an AI change, apply it, open its pull request, discard it | Anyone but a **Viewer** |
-| Create a code repository, for a microfrontend or a service | Anyone but a **Viewer** |
+| Create a code repository, for a frontend or a service | Anyone but a **Viewer** |
 | Create, edit, test or delete storages and databases | Anyone but a **Viewer** |
 | Deploy, when the project has GitOps on | Anyone but a **Viewer** |
 | Change anything through the [console assistant](../build-with-ai/console-assistant.md) or an [MCP client](../build-with-ai/mcp-server.md) | Anyone but a **Viewer**, within what their role allows |
@@ -59,7 +59,7 @@ organization as an Admin would.
 
 :::warning[What the role does not decide]
 Everything else is open to every member who reaches the whole project, Viewers included: renaming
-and deleting the project, editing microfrontends, services, environments and variables, and
+and deleting the project, editing frontends, services, environments and variables, and
 deploying a project that does not have GitOps on. The console may still show a button to a Viewer
 that the backend then refuses. Invite somebody to a project only if you are comfortable with them
 changing its configuration.

@@ -19,7 +19,7 @@ nothing to Git, so Argo CD has nothing to apply and the containers in Kubernetes
 last **Deploy** committed. The deployments page then shows the older snapshot as active, while the
 cluster still runs the newer one.
 
-That makes **Redeploy** the right tool for microfrontends served by Flightroom, as described in
+That makes **Redeploy** the right tool for frontends served by Flightroom, as described in
 [Rollback and redeploy](../deployments/rollback-and-redeploy.md), and the wrong one for services and
 Docker frontends.
 

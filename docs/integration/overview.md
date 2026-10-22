@@ -28,9 +28,9 @@ gate counts deployments, and the page then reads that environment's *last* deplo
 `deployedAt`, whether or not it happens to be the active one. If the environment has never been
 deployed, deploy first: there is nothing to integrate against until then.
 
-Pick a microfrontend from the selector at the top. It lists every microfrontend of that deployment,
+Pick a frontend from the selector at the top. It lists every frontend of that deployment,
 hosts and remotes alike — nothing is filtered out. What the type changes is only whether the
-generated config carries an `exposes` block; the `remotes` block comes from the microfrontend's
+generated config carries an `exposes` block; the `remotes` block comes from the frontend's
 children in the relation graph, so one with no children simply gets none.
 
 ![The Integration page on the Frontend Integration tab for the storefront shell, with the Framework and Bundler selects on Automatic and a Stack not detected notice](../assets/integration-page.png)
@@ -47,15 +47,15 @@ The Module Federation tab has two selects instead, both defaulting to **Automati
 | **Framework** | Automatic, React, Vue, Angular |
 | **Bundler** | Automatic, Vite, Webpack, Web Component, single-spa, micro-lc |
 
-**Automatic** means the stack stored on the microfrontend — taken from the template it was created
+**Automatic** means the stack stored on the frontend — taken from the template it was created
 from, detected in its repository, or set by hand — and a badge above the snippet says which of the
 three it was. The selects are overrides, for when detection got it wrong or when you want to read
-another stack's instructions. A microfrontend whose stack is unknown shows no config: a **Stack not
+another stack's instructions. A frontend whose stack is unknown shows no config: a **Stack not
 detected** panel takes its place, asking you to pick the framework and the bundler in the selects —
 or to connect the repository so the stack can be read from it.
 
 Picking **Web Component** as the bundler produces no configuration at all: web component
-microfrontends are plain scripts registering a custom element, so there is nothing to write into a
+frontends are plain scripts registering a custom element, so there is nothing to write into a
 bundler config, and the tab shows a runtime-integration note in place of one.
 
 **single-spa** and **micro-lc** are integration models rather than bundlers, so they produce no
@@ -69,7 +69,7 @@ host, the `configure()` bootstrap for `src/main.tsx`, and how React is shared:
 
 A remote of these stacks gets the Vite library build it needs instead: an ES module emitting
 `dist/index.js` for single-spa, a UMD script emitting `dist/parcel.js` for micro-lc. In both cases
-React stays external. **Integrate my microfrontends** writes the host file and adds the runtime
+React stays external. **Integrate my frontends** writes the host file and adds the runtime
 packages (`single-spa`, or `@micro-lc/orchestrator`) to `package.json`.
 
 ## The two integration models
@@ -87,7 +87,7 @@ URL of each remote at import time.
 
 - Standard Module Federation, plus one `configure()` call in your entry point
 - No version, no environment and no CDN path compiled in, so bumping a remote's version — or
-  putting it behind a [canary release](../microfrontends/canary-releases.md) — is just a deployment
+  putting it behind a [canary release](../frontends/canary-releases.md) — is just a deployment
 - Which remotes the host knows about is still fixed at build time: adding or removing one requires
   a host rebuild
 
@@ -104,8 +104,8 @@ dynamically.
 - Costs one HTTP request during startup
 
 This is what the **Direct API Access via CURL** tab is for: a single call to `/serve/all/...` returns
-the whole environment — microfrontends with URLs and versions, plus the environment variables. A
-microfrontend of the **Frontend** kind, served by its own Docker container, is left out: no host loads
+the whole environment — frontends with URLs and versions, plus the environment variables. A
+frontend of the **Docker** kind, served by its own Docker container, is left out: no host loads
 it as a remote. The tab
 shows the `curl` line for the selected environment and, underneath it, a live `<iframe>` preview of
 `/api/serve/all/{environmentId}`, so you can read the real response without leaving the page. The
@@ -122,15 +122,15 @@ committed together:
 
 | Tab | Button | Writes |
 | --- | --- | --- |
-| Frontend Integration | **Integrate my microfrontends** | The bundler config of every microfrontend of the project that consumes others, plus the packages that config needs |
-| Frontend Integration | **Integrate only this one** | The same, narrowed to the selected microfrontend |
+| Frontend Integration | **Integrate my frontends** | The bundler config of every frontend of the project that consumes others, plus the packages that config needs |
+| Frontend Integration | **Integrate only this one** | The same, narrowed to the selected frontend |
 | Environment Variables | **Add the script to my hosts** | The `<script>` tag for `window.globalConfig`, into the document of every host |
 
-The buttons are always there: nothing is gated on the selected microfrontend's repository being
-connected. Committing is: it wires together microfrontends of every domain, so it needs access to the
+The buttons are always there: nothing is gated on the selected frontend's repository being
+connected. Committing is: it wires together frontends of every domain, so it needs access to the
 **whole project**. A member limited to specific domains can open the dialog and read the plan, but
 not commit it. What each one opens is a dialog that first computes a plan **for the whole project** —
-because the remotes of one microfrontend are the other microfrontends of it — with narrowing deciding
+because the remotes of one frontend are the other frontends of it — with narrowing deciding
 only what is shown and what can be committed.
 
 The dialog then lists one row per repository with a status (*already integrated*, *config to create*,
@@ -149,8 +149,8 @@ resolved environment's deployment — the **active** one for everything except t
 | --- | --- |
 | Everything about this environment | `/serve/all/...` |
 | Just the runtime variables | `/serve/global-variables/...` |
-| One microfrontend's URL and version | `/serve/mfe/config/...` |
-| A microfrontend's actual files | `/serve/mfe/files/...` |
+| One frontend's URL and version | `/serve/mfe/config/...` |
+| A frontend's actual files | `/serve/mfe/files/...` |
 
 These endpoints are **public and unauthenticated** — they are meant to be called from browsers.
 The complete reference is in [Serve API](./serve-api.md).

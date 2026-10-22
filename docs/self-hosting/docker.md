@@ -51,7 +51,7 @@ permanent slug, and it mishandles anything longer than two words.
 What you should know about this image:
 
 - **Everything persistent lives in `/data`**: the database (`/data/db`), the Redis dump
-  (`/data/redis`), the uploaded microfrontends (`/data/microfrontends`), the clones of the
+  (`/data/redis`), the uploaded frontends (`/data/microfrontends`), the clones of the
   repositories edited with AI (`/data/repositories`) and the JWT secret (`/data/secrets`). Mount that one volume and the installation survives an image upgrade.
 - **The JWT secret is generated on the first start** and kept in the volume, so tokens are not
   signed with a well known key. Pass `JWT_SECRET` yourself if you prefer to manage it.

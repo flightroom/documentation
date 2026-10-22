@@ -142,7 +142,7 @@ namespace if it does not exist yet.
 
 Argo CD names fit 63 characters; a longer part is cut and ends with a hash. The Helm release of an
 application is its slug, and Helm refuses a release name over **53 characters**: an application with a
-longer slug fails to sync, with that error in Argo CD. Keep service and frontend slugs shorter.
+longer slug fails to sync, with that error in Argo CD. Keep service and Docker frontend slugs shorter.
 
 Two objects of the project that would get the same name stop the initialization: a service
 `orders-api` in environment `dev` and a service `orders` in environment `api-dev` would both be
@@ -160,7 +160,7 @@ configuration repository.
 CD.** A new environment's namespace joins the AppProject only then, and until then deploys leave it
 out of the ApplicationSets.
 
-New services and frontends need nothing: every deploy updates the ApplicationSet of each one, so a
+New services and Docker frontends need nothing: every deploy updates the ApplicationSet of each one, so a
 service deployed for the first time gets its Applications on its own. A deploy that cannot update
 Argo CD still goes through, and the reason shows in the section as *The last deploy did not update
 the applications in Argo CD*, until a deploy that does clears it.
@@ -171,7 +171,7 @@ When you re-align:
 - Deleted environments leave them. Argo CD deletes the environment's Application, but what it
   deployed stays in the cluster until you remove it; the Applications of the services in that
   environment are left for you to delete by hand.
-- The ApplicationSet of a deleted service or frontend is deleted with its Applications; its
+- The ApplicationSet of a deleted service or Docker frontend is deleted with its Applications; its
   workloads stay in the cluster.
 - The credentials of a repository no longer linked are removed from Argo CD, and a GitLab deploy
   token is revoked.

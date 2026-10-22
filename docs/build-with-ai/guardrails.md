@@ -89,7 +89,7 @@ Files that usually hold credentials:
 
 A member whose access is limited to **Specific domains** (see
 [Changing a role](../project-settings/users-and-roles.md#changing-a-role)) sees and starts only the jobs
-whose microfrontends and services all belong to their domains. Jobs on the whole project are hidden
+whose frontends and services all belong to their domains. Jobs on the whole project are hidden
 from them.
 
 Maestro and MCP clients act with the user's own permissions: on a project where the user is a Viewer,
@@ -126,6 +126,6 @@ The agent works on clones kept on the backend's disk.
 | `REPOSITORIES_EVICT_AFTER_DAYS` | `14` | Clones not used for this long are deleted |
 
 The folder is a **cache**: deleting it only costs a new clone. Clones are also removed when their
-microfrontend or project is deleted. On Kubernetes the Helm chart mounts an `emptyDir` there
+frontend or project is deleted. On Kubernetes the Helm chart mounts an `emptyDir` there
 (`repositories.sizeLimit`, 10Gi by default); set `repositories.existingClaim` to keep the clones
 across restarts. See also [Environment variables](../self-hosting/environment-variables.md).

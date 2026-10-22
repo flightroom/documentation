@@ -88,8 +88,8 @@ If the request cannot go on, the console shows **Connection failed** with the re
 
 | Scope | Granted by | Allows |
 | --- | --- | --- |
-| `mfe:read` | Always | Reading the project: microfrontends, services, domains with their links and their deployed versions, environments, deployments, canary users, variables, config maps, secrets (values masked), build status, storages, databases and repository connections (credentials masked), dependency and integration plans |
-| `mfe:write` | **Allow changes** | Everything the console does inside a project, **deploy and rollback included**, plus creating projects and creating a microfrontend or a service with its repository from a template (`microfrontend_scaffold`, `service_scaffold`). Rollback re-activates a snapshot and does not touch Kubernetes: see [Rolling back a Kubernetes deploy](../kubernetes/rollback.md) |
+| `mfe:read` | Always | Reading the project: frontends, services, domains with their links and their deployed versions, environments, deployments, canary users, variables, config maps, secrets (values masked), build status, storages, databases and repository connections (credentials masked), dependency and integration plans |
+| `mfe:write` | **Allow changes** | Everything the console does inside a project, **deploy and rollback included**, plus creating projects and creating a frontend or a service with its repository from a template (`frontend_scaffold`, `service_scaffold`). Rollback re-activates a snapshot and does not touch Kubernetes: see [Rolling back a Kubernetes deploy](../kubernetes/rollback.md) |
 
 The role caps each project separately and is read again on every call. On a project where you are a
 **Viewer**, every write is refused whatever the grant says, and the consent page tells you which
@@ -116,7 +116,7 @@ Flightroom's AI change jobs run only in the console. A coding agent on your mach
 Cursor…) gets two tools instead, so it can do the work locally and still hand it back as a pull
 request:
 
-1. `repository_checkout_get` (read) returns where to clone the repository of a microfrontend or a
+1. `repository_checkout_get` (read) returns where to clone the repository of a frontend or a
    service (an HTTPS URL without credentials: clone it with your own Git access), its default branch,
    and the AI context the team wrote for it, its domain and the project.
 2. The agent edits the clone, following that context.

@@ -89,7 +89,7 @@ build:
 ```
 
 :::caution[Host repositories stop at build]
-Microfrontend repositories get the `deploy` stage below already committed. Host repositories do not
+Frontend repositories get the `deploy` stage below already committed. Host repositories do not
 — like their GitHub and Azure DevOps counterparts they build and containerise, but do not publish
 themselves to Flightroom. Add the job below if you want a host published as a remote too.
 :::
@@ -112,7 +112,7 @@ deploy:
   dependencies:
     - build
   variables:
-    MICROFRONTEND_SLUG: "catalog"
+    FRONTEND_SLUG: "catalog"
     MICROFRONTEND_ORCHESTRATOR_DOMAIN: "https://console.flightroom.dev"
   before_script:
     - apk add --no-cache curl zip
@@ -122,8 +122,8 @@ deploy:
       curl --fail --show-error --silent -X POST \
         -H "api-key: ${MICROFRONTEND_ORCHESTRATOR_API_KEY}" \
         -F "file=@dist.zip" \
-        "${MICROFRONTEND_ORCHESTRATOR_DOMAIN%/}/api/microfrontends/by-slug/${MICROFRONTEND_SLUG}/upload/${CI_COMMIT_TAG}"
-    - echo "published ${MICROFRONTEND_SLUG} ${CI_COMMIT_TAG}"
+        "${MICROFRONTEND_ORCHESTRATOR_DOMAIN%/}/api/frontends/by-slug/${FRONTEND_SLUG}/upload/${CI_COMMIT_TAG}"
+    - echo "published ${FRONTEND_SLUG} ${CI_COMMIT_TAG}"
   only:
     - tags
 ```
@@ -134,7 +134,7 @@ placeholders, which the scaffolder replaces before the initial commit, as it doe
 
 | Placeholder | Replaced with |
 | --- | --- |
-| `%microfrontendSlug%` | The slug of the microfrontend, as it appears in the console |
+| `%microfrontendSlug%` | The slug of the frontend, as it appears in the console |
 | `%domain%` | The value of the installation's `BACKEND_URL`, inserted verbatim; `https://console.flightroom.dev` when `BACKEND_URL` is not set |
 
 If you add this job to a repository by hand, write those two values in yourself.
@@ -142,8 +142,8 @@ If you add this job to a repository by hand, write those two values in yourself.
 :::caution[`%domain%` is the API URL, and the job appends `/api` to it]
 `BACKEND_URL` is the public URL of the **API** — usually the console URL followed by `/api` — and
 the scaffolder copies it into `%domain%` as it is, without removing anything. The job above then
-appends `/api/microfrontends/…`, so an installation whose `BACKEND_URL` ends in `/api` produces
-uploads to `…/api/api/microfrontends/…`, which fail. Two more cases to check:
+appends `/api/frontends/…`, so an installation whose `BACKEND_URL` ends in `/api` produces
+uploads to `…/api/api/frontends/…`, which fail. Two more cases to check:
 
 - With `BACKEND_URL` unset, `%domain%` is `https://console.flightroom.dev` — not your installation,
   even if `FRONTEND_URL` is set.
@@ -159,7 +159,7 @@ somewhere else without touching the file again.
 Points worth noting:
 
 - `only: tags` keeps publishing tied to tags, which is what makes the console's **Build** action work
-  — see [Versions and builds](../microfrontends/versions-and-builds.md).
+  — see [Versions and builds](../frontends/versions-and-builds.md).
 - `CI_COMMIT_TAG` is the version. It is only set on tag pipelines, which is another reason for
   `only: tags`.
 - `--fail` on `curl` is essential: without it the job passes even when the upload is rejected.
@@ -170,9 +170,9 @@ Points worth noting:
 
 The job reads `MICROFRONTEND_ORCHESTRATOR_API_KEY`. It is created as a **group-level** CI/CD variable
 when you connect the GitLab repository to a project — or edit that connection — not when a
-microfrontend is scaffolded, and it is skipped if a variable of that name already exists in the group.
+frontend is scaffolded, and it is skipped if a variable of that name already exists in the group.
 
-Group scope means every microfrontend repository in that GitLab group can publish without further
+Group scope means every frontend repository in that GitLab group can publish without further
 setup. It also means the connection must have a group selected: without a group id the injector
 returns without creating anything.
 
@@ -196,7 +196,7 @@ git tag 1.4.0
 git push origin 1.4.0
 ```
 
-Or use the **Build** action on the microfrontend card in the console, which creates the tag for you.
+Or use the **Build** action on the frontend card in the console, which creates the tag for you.
 
 ## Adding this to an existing repository
 
@@ -241,7 +241,7 @@ The `dependencies: [build]` declaration is what carries the artifact across stag
 
 **Upload succeeds, app 404s**
 
-The **Entry Point** on the microfrontend does not match the build output. Vite Module Federation
+The **Entry Point** on the frontend does not match the build output. Vite Module Federation
 emits `assets/remoteEntry.js`.
 
 **Upload succeeds, users see the old version**
