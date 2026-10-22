@@ -2,7 +2,7 @@
 sidebar_position: 1
 title: Deployments overview
 sidebar_label: Overview
-description: "A deployment is an immutable snapshot of every microfrontend, service, variable and storage setting an environment needs, activated when you press Deploy."
+description: "A deployment is an immutable snapshot of every frontend, service, variable and storage setting an environment needs, activated when you press Deploy."
 keywords: [deployment, immutable snapshot, activation, release]
 ---
 
@@ -18,7 +18,7 @@ five minutes.
 
 When you deploy an environment, Flightroom copies into the snapshot:
 
-- **Every microfrontend** in the project — its selected version, hosting configuration, entry
+- **Every frontend** in the project — its selected version, hosting configuration, entry
   point, canary settings and relation graph
 - **Every backend service** of the project — its name, slug, domain, image and the version its CI
   registered last
@@ -27,13 +27,13 @@ When you deploy an environment, Flightroom copies into the snapshot:
 - **Every environment variable** of that environment
 - **Every storage configuration** of the project
 
-The snapshot is a copy, not a set of references. Editing a microfrontend afterwards does not
+The snapshot is a copy, not a set of references. Editing a frontend afterwards does not
 reach back into it.
 
 ### Deploying one domain
 
 A deploy limited to a [functional domain](../core-concepts.md#functional-domain) — and any deploy by
-a member whose access is limited to specific domains — ships only the microfrontends and services of
+a member whose access is limited to specific domains — ships only the frontends and services of
 those domains. Everything else the environment serves, environment variables and storages included,
 is carried over unchanged from the deployment it is serving now, so one team's deploy never ships
 what another domain has not released yet. Config maps and secrets are still recorded for the whole
@@ -79,7 +79,7 @@ cannot deploy a project with GitOps on.
 One thing travels with the new deployment without being part of your draft configuration: the
 **canary enrolment** of the deployment being replaced is copied into the new one, inside the same
 transaction, so deploying never silently drops the users you enrolled. See
-[canary users](../microfrontends/canary-releases.md#canary-users).
+[canary users](../frontends/canary-releases.md#canary-users).
 
 ## Reading the deployments page
 
@@ -87,9 +87,9 @@ The page has two parts:
 
 **Active deployment** — the snapshot currently serving this environment, expandable to show:
 
-- **Microfrontends** — one card each, with the version frozen in this snapshot and, when a canary
+- **Frontends** — one card each, with the version frozen in this snapshot and, when a canary
   is configured, the share of traffic it takes — or *Enrolled users*, for a
-  [*User* canary](../microfrontends/canary-releases.md#who--the-canary-type), which splits nothing
+  [*User* canary](../frontends/canary-releases.md#who--the-canary-type), which splits nothing
   — next to its canary type, its deployment type and its target version or URL
 - **Backends** — one card per backend service, with the version frozen in this snapshot
 - **Environment variables** — the values frozen in this snapshot
@@ -113,7 +113,7 @@ through Git.
 
 :::tip[Which version is where]
 The deployments page answers the question one environment at a time. For the whole project at a
-glance — every microfrontend, the version each environment serves, and whether its last CI run
+glance — every frontend, the version each environment serves, and whether its last CI run
 passed — use [Build status](./build-status.md).
 :::
 
@@ -122,7 +122,7 @@ passed — use [Build status](./build-status.md).
 There is no dedicated "promote" button, because promotion is just a deployment:
 
 1. Note the version live in the source environment (visible in its active deployment).
-2. Select that version on the microfrontend.
+2. Select that version on the frontend.
 3. Deploy the target environment.
 
 The artifact is not rebuilt or copied — both environments point at the same stored files. What
@@ -135,11 +135,11 @@ Most of the public serve API resolves against the active deployment:
 
 | Question from your app | Answered from |
 | --- | --- |
-| Which remotes do I load, and from where? | Active deployment's microfrontends |
+| Which remotes do I load, and from where? | Active deployment's frontends |
 | What is my runtime configuration? | Active deployment's variables |
-| Give me this microfrontend's files | The **newest** deployment of the environment, which is not always the active one |
+| Give me this frontend's files | The **newest** deployment of the environment, which is not always the active one |
 
-The third row is not a slip. The queries behind the manifest, the per-microfrontend configuration
+The third row is not a slip. The queries behind the manifest, the per-frontend configuration
 and the variables filter on the `active` flag. The three routes that stream files do not: each takes
 the newest deployment of the environment, and they do not agree on what "newest" means.
 

@@ -9,7 +9,7 @@ keywords: [kubernetes, one-click deploy, gitops, argo cd, deploy ai agents, name
 # Deploy to Kubernetes
 
 Flightroom deploys the backends of a project to your Kubernetes cluster with the same **Deploy**
-button that activates microfrontends. Behind the button, every deploy is a Git commit, and the Argo
+button that activates frontends. Behind the button, every deploy is a Git commit, and the Argo
 CD you already run applies that commit to the cluster.
 
 An **agent** is deployed exactly like any other backend: it is a **service** that happens to call a
@@ -50,17 +50,17 @@ deploys to the cluster it runs in.
 | In the console | Kind | Where it runs |
 | --- | --- | --- |
 | Backend service, or agent | Service | A container in Kubernetes, deployed through GitOps |
-| Web interface served by its container | Microfrontend of kind **Frontend** (badge **Docker**) | A container in Kubernetes, deployed like a service |
-| Web interface served by Flightroom | Microfrontend of kind **Microfrontend** | A static bundle served by Flightroom from your bucket, as described in [Deployments](../deployments/overview.md) |
+| Web interface served by its container | Frontend of kind **Docker** | A container in Kubernetes, deployed like a service |
+| Web interface served by Flightroom | Frontend of kind **Bundle** | A static bundle served by Flightroom from your bucket, as described in [Deployments](../deployments/overview.md) |
 
 A service or a Docker frontend is deployed once it has an **Image repository** and a version
 registered by its CI pipeline. One without either is left out of the deploy. The first version the
 pipeline registers also fills the **Image repository** when it is still blank. See
 [Services](./services.md#image-versions).
 
-The same **Deploy** moves both worlds at once: the microfrontends are snapshotted and activated as
+The same **Deploy** moves both worlds at once: the frontends are snapshotted and activated as
 before, and the containers are committed to Git. The deployments page shows each deployment with its
-**Microfrontends**, **Backends**, **Config maps** and **Secrets**.
+**Frontends**, **Backends**, **Config maps** and **Secrets**.
 
 ## What each app gets in each environment
 

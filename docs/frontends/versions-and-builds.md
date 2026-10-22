@@ -1,14 +1,14 @@
 ---
 sidebar_position: 4
-title: Microfrontend versions and builds
+title: Frontend versions and builds
 sidebar_label: Versions and builds
-description: How a microfrontend version comes into existence, what a version string means to the platform, and the two ways to produce and upload build artifacts.
+description: How a frontend version comes into existence, what a version string means to the platform, and the two ways to produce and upload build artifacts.
 keywords: [versions, builds, artifacts, tags, upload]
 ---
 
-# Microfrontend versions and builds
+# Frontend versions and builds
 
-A microfrontend is only useful once there are artifacts to serve. This page describes how a
+A frontend is only useful once there are artifacts to serve. This page describes how a
 version comes into existence, and the two ways to trigger one.
 
 ## What a version is
@@ -17,14 +17,14 @@ A version is a string you choose — `1.0.0`, `2026.02.14`, `1.4.0-rc1` — unde
 built files is stored. Flightroom does not parse or order versions; it uses them as
 folder names and as the value it hands to your host application.
 
-Each microfrontend has one **selected version** in the project configuration, plus the history
+Each frontend has one **selected version** in the project configuration, plus the history
 of every version that has ever been uploaded. What your users actually load is the version
 captured in the [active deployment](../deployments/overview.md), not the one selected in the
 form.
 
 ## Triggering a build from the console
 
-If the microfrontend is linked to a code repository, its card shows a **Build** action. It opens
+If the frontend is linked to a code repository, its card shows a **Build** action. It opens
 a dialog asking for:
 
 - **Branch** — the branch to build. The list is read live from your provider, with the default
@@ -58,12 +58,12 @@ brought your own pipeline, make sure it triggers on tags — otherwise the **Bui
 create tags that nothing acts on.
 
 :::info
-The **Build** action requires a linked code repository: on a microfrontend without one the card
+The **Build** action requires a linked code repository: on a frontend without one the card
 does not show the button at all.
 :::
 
 You do not have to leave the console to know how that run went: the
-[Build status](../deployments/build-status.md) page lists the latest run of every microfrontend of
+[Build status](../deployments/build-status.md) page lists the latest run of every frontend of
 the project, reading it from GitHub Actions, GitLab pipelines or Azure DevOps, and updates while
 you watch.
 
@@ -86,41 +86,41 @@ repository provider — or, on a personal GitHub account, when it scaffolds a re
 See [CI/CD](../ci-cd/github-actions.md) for the full pipeline examples, and
 [Manual upload](../ci-cd/manual-upload.md) for the raw HTTP call.
 
-:::caution[Custom URL microfrontends cannot be uploaded to]
-Upload only works for microfrontends hosted on the **Flightroom Hub** or on a
+:::caution[Custom URL frontends cannot be uploaded to]
+Upload only works for frontends hosted on the **Flightroom Hub** or on a
 **Custom Source** bucket. For **Custom URL**, publishing is handled entirely by your own
 infrastructure — Flightroom only records which version to point at.
 
-A microfrontend of the **Frontend** kind takes no upload either — it is refused with
-`FRONTEND_UPLOAD_NOT_ALLOWED`. Its pipeline builds a Docker image and registers the version of each
+A frontend of the **Docker** kind takes no upload either — it is refused with
+`DOCKER_FRONTEND_UPLOAD_NOT_ALLOWED`. Its pipeline builds a Docker image and registers the version of each
 image instead, and that registration is what sets the version shown, read-only, in its form. See
-[Microfrontend or Frontend](./create-a-microfrontend.md#microfrontend-or-frontend).
+[Bundle or Docker](./create-a-frontend.md#bundle-or-docker).
 :::
 
 ## Selecting a version
 
-Once a version exists, open the microfrontend's form and pick it in the **Version** field, at the top
+Once a version exists, open the frontend's form and pick it in the **Version** field, at the top
 of the form in **Release**. The field offers the versions known to the platform, plus a
 **Custom version** option, which reveals a second box for typing one in directly — useful for Custom
-URL microfrontends, where the platform has no upload history to list.
+URL frontends, where the platform has no upload history to list.
 
-![The Version field listing the uploaded versions and a Custom version option](../assets/microfrontend-version-select.png)
+![The Version field listing the uploaded versions and a Custom version option](../assets/frontend-version-select.png)
 
-That list only appears when editing a microfrontend that already has uploads. On the creation form,
-and on any microfrontend nothing has been uploaded for, there is nothing to list, so the field is a
+That list only appears when editing a frontend that already has uploads. On the creation form,
+and on any frontend nothing has been uploaded for, there is nothing to list, so the field is a
 plain text box.
 
 Then [deploy](../deployments/overview.md) the environments you want to move.
 
 ## Continuous deployment
 
-The `continuousDeployment` flag marks a microfrontend as continuously deployed. It is stored on the
-microfrontend and published to consumers as `continuousDeployment` on the
+The `continuousDeployment` flag marks a frontend as continuously deployed. It is stored on the
+frontend and published to consumers as `continuousDeployment` on the
 [serve API](../integration/serve-api.md) payload.
 
-The microfrontend form no longer has a switch for it. Set it through the API, or ask an
-[MCP client](../build-with-ai/mcp-server.md) to update the microfrontend; saving the form keeps the
-value already stored, and a microfrontend created from the form starts with it off.
+The frontend form no longer has a switch for it. Set it through the API, or ask an
+[MCP client](../build-with-ai/mcp-server.md) to update the frontend; saving the form keeps the
+value already stored, and a frontend created from the form starts with it off.
 
 :::info[It is a marker, not an automation]
 The platform does not currently change version resolution based on this flag — it does not skip the

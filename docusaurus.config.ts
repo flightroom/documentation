@@ -214,8 +214,8 @@ const config: Config = {
               to: '/docs/environments/overview',
             },
             {
-              label: 'Microfrontends',
-              to: '/docs/microfrontends/overview',
+              label: 'Frontends',
+              to: '/docs/frontends/overview',
             },
           ],
         },

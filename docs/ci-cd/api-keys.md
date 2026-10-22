@@ -51,13 +51,13 @@ Exactly these endpoints accept a key — `<API_BASE>` is the API URL, e.g.
 
 | Endpoint | What it does | Body | Role |
 | --- | --- | --- | --- |
-| `POST <API_BASE>/microfrontends/by-slug/:slug/upload/:version` | [Uploads](./manual-upload.md) the bundle of a microfrontend version | multipart, field `file` (a ZIP) | any |
-| `POST <API_BASE>/microfrontends/by-slug/:slug/versions/:version` | Registers the image of a version of a microfrontend served by its own Docker container | JSON: `image` (required), `digest`, `commitSha` | `MANAGER` |
-| `POST <API_BASE>/microfrontends/by-slug/:slug/environments/:envSlug/deployments` | Reports that a version of that Docker microfrontend now runs in an environment | JSON: `version` (required), `image`, `commitSha` | `MANAGER` |
+| `POST <API_BASE>/frontends/by-slug/:slug/upload/:version` | [Uploads](./manual-upload.md) the bundle of a frontend version | multipart, field `file` (a ZIP) | any |
+| `POST <API_BASE>/frontends/by-slug/:slug/versions/:version` | Registers the image of a version of a frontend served by its own Docker container | JSON: `image` (required), `digest`, `commitSha` | `MANAGER` |
+| `POST <API_BASE>/frontends/by-slug/:slug/environments/:envSlug/deployments` | Reports that a version of that Docker frontend now runs in an environment | JSON: `version` (required), `image`, `commitSha` | `MANAGER` |
 | `POST <API_BASE>/services/by-slug/:slug/versions/:version` | Registers the image of a [service](../kubernetes/services.md) version | JSON: `image` (required), `digest`, `commitSha` | `MANAGER` |
 | `POST <API_BASE>/services/by-slug/:slug/environments/:envSlug/deployments` | Reports that a service version now runs in an environment | JSON: `version` (required), `image`, `commitSha` | `MANAGER` |
 
-The two `microfrontends/…/versions` and `…/deployments` routes refuse a microfrontend served by
+The two `frontends/…/versions` and `…/deployments` routes refuse a frontend served by
 Flightroom — its CI uploads a bundle instead — and the upload refuses a Docker one. The template
 pipelines call the right ones for you.
 
@@ -67,7 +67,7 @@ clients that cannot sign in with OAuth. There it goes in `Authorization: Bearer 
 this fallback off with `MCP_API_KEY_ENABLED=false` — see
 [environment variables](../self-hosting/environment-variables.md#mcp-server-and-oauth).
 
-Everything else on the API — creating a deployment, editing a microfrontend, reading the build
+Everything else on the API — creating a deployment, editing a frontend, reading the build
 status — is authenticated with the token of a signed-in user and answers an API key with an
 authentication error. So a pipeline can *publish* a version, and it cannot *deploy* it; see
 [publishing does not deploy](./manual-upload.md#publishing-does-not-deploy).
@@ -84,7 +84,7 @@ gives you anything to do with it.
 - **It is checked where it matters for CI and AI clients.** Registering the version of a service or
   a Docker frontend, and reporting where it was deployed, require a `MANAGER` key. The
   [MCP server](../build-with-ai/mcp-server.md) gives a `VIEWER` key read-only tools. Uploading a
-  microfrontend bundle does not read the role. A `VIEWER` key can be created through the
+  frontend bundle does not read the role. A `VIEWER` key can be created through the
   [console assistant](../build-with-ai/console-assistant.md), not from the create dialog.
 
 Treat the *key itself* as the credential to protect. Anywhere the
@@ -95,7 +95,7 @@ CI pages ask for a key, any key the console gives you is the right one.
 You often do not need to create a key at all. Connecting a code repository — or editing an existing
 connection — creates a key and writes it into your Git provider under the name the generated
 pipelines read, `MICROFRONTEND_ORCHESTRATOR_API_KEY`. It happens once per connection, not once per
-microfrontend, and is skipped when a secret of that name already exists.
+frontend, and is skipped when a secret of that name already exists.
 
 | Provider | Where the key is written | Scope |
 | --- | --- | --- |
@@ -133,14 +133,14 @@ Send it in the `api-key` header:
 curl -X POST \
   -H "api-key: $MFE_ORCHESTRATOR_API_KEY" \
   -F "file=@dist.zip" \
-  "<API_BASE>/microfrontends/by-slug/catalog/upload/1.4.0"
+  "<API_BASE>/frontends/by-slug/catalog/upload/1.4.0"
 ```
 
 On every endpoint except `/mcp`, a query parameter is also accepted, for clients that cannot set
 headers:
 
 ```
-<API_BASE>/microfrontends/by-slug/catalog/upload/1.4.0?apiKey=…
+<API_BASE>/frontends/by-slug/catalog/upload/1.4.0?apiKey=…
 ```
 
 :::caution[Prefer the header]
@@ -172,6 +172,6 @@ so secret scanners will not catch one you paste into a repository.
 key per project — which is the correct blast radius, not an inconvenience to work around.
 
 **Treat a leaked key as a live incident.** Any key can publish arbitrary JavaScript to your
-production microfrontends. **Delete it first, investigate second** — deleting is the only thing that
+production frontends. **Delete it first, investigate second** — deleting is the only thing that
 stops it, and nothing else you can do in the console reduces its access at all. Then create a
 replacement and update the consumer.

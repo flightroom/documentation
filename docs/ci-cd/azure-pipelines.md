@@ -86,7 +86,7 @@ The template in
 [`template-pipelines`](https://github.com/mfe-orchestrator/template-pipelines) carries
 `%microfrontendSlug%` and `%domain%` where this example has `catalog` and the console URL. The
 scaffolder replaces both before the initial commit, as it does on GitHub: the slug of the
-microfrontend, and the installation's `BACKEND_URL` inserted verbatim — or
+frontend, and the installation's `BACKEND_URL` inserted verbatim — or
 `https://console.flightroom.dev` when `BACKEND_URL` is not set. A pipeline variable named
 `MICROFRONTEND_ORCHESTRATOR_DOMAIN` wins over that default, so you can publish to another
 installation without editing the file.
@@ -116,10 +116,10 @@ is derived from the tag name by stripping `refs/tags/`.
 
 The publish task reads `$(MICROFRONTEND_ORCHESTRATOR_API_KEY)` from a variable group named
 **`MFE_ORCHESTRATOR_SECRETS`**. Flightroom creates the group and the key when you connect the
-Azure DevOps repository to a project — or edit that connection — not when a microfrontend is
+Azure DevOps repository to a project — or edit that connection — not when a frontend is
 scaffolded, and it skips the work when the variable already exists.
 
-The group is created at **project** scope, so several microfrontend repositories in the same Azure
+The group is created at **project** scope, so several frontend repositories in the same Azure
 DevOps project share it. That also means the connection must have a project selected: without an
 organization and a project id the injector returns without creating anything.
 
@@ -144,7 +144,7 @@ before a pipeline can use it.
 | Input | Meaning |
 | --- | --- |
 | `apiKey` | A Flightroom [API key](./api-keys.md) |
-| `microfrontendSlug` | The slug of the microfrontend to publish to |
+| `microfrontendSlug` | The slug of the frontend to publish to |
 | `filePath` | The directory containing the build output |
 | `version` | The version to publish |
 
@@ -168,7 +168,7 @@ the step below:
     curl --fail --show-error --silent -X POST \
       -H "api-key: $(MICROFRONTEND_ORCHESTRATOR_API_KEY)" \
       -F "file=@$(Build.ArtifactStagingDirectory)/dist.zip" \
-      "$(MICROFRONTEND_ORCHESTRATOR_DOMAIN)/api/microfrontends/by-slug/catalog/upload/$(VERSION)"
+      "$(MICROFRONTEND_ORCHESTRATOR_DOMAIN)/api/frontends/by-slug/catalog/upload/$(VERSION)"
   displayName: '🚀 Upload to Flightroom'
 ```
 
@@ -184,7 +184,7 @@ git tag 1.4.0
 git push origin 1.4.0
 ```
 
-Or use the **Build** action on the microfrontend card in the console, which creates the tag for you.
+Or use the **Build** action on the frontend card in the console, which creates the tag for you.
 
 ## Adding this to an existing repository
 

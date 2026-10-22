@@ -39,7 +39,7 @@ module.exports = {
 };
 ```
 
-Webpack writes `remoteEntry.js` to the root of your output directory, so the microfrontend's
+Webpack writes `remoteEntry.js` to the root of your output directory, so the frontend's
 **Entry Point** in Flightroom should read `remoteEntry.js` — unless you have customised
 `output.publicPath` or the filename.
 
@@ -47,14 +47,14 @@ Webpack writes `remoteEntry.js` to the root of your output directory, so the mic
 The form pre-fills the **Entry Point** with `assets/remoteEntry.js` — the *Vite* output layout, wrong
 for a Webpack build — and only falls back to **`index.js`** when the field is left empty. Where
 `remoteEntry.js` appears without you typing it, it came from the marketplace entry of the Webpack
-template the microfrontend was created from. Create the microfrontend with **Create From Scratch**
+template the frontend was created from. Create the frontend with **Create From Scratch**
 and you have to change the field yourself. Check it rather than assuming it.
 :::
 
 ## Configure the host
 
 Open **Integration → Frontend Integration**, select your host, set **Bundler** to Webpack (or leave
-it on Automatic if that is the microfrontend's stored stack) and copy the **Module Federation** tab:
+it on Automatic if that is the frontend's stored stack) and copy the **Module Federation** tab:
 
 ![The Module Federation tab with React and Webpack selected and the start of the generated webpack.config.js](../assets/integration-webpack.png)
 
@@ -103,7 +103,7 @@ module.exports = {
         './App': './src/App'
       },
       remotes: {
-        // One entry per microfrontend this host consumes. The key is the name you import
+        // One entry per frontend this host consumes. The key is the name you import
         // from ("catalog/Button"), the string passed to loadWebpackRemote() is the slug in
         // the orchestrator. Never write a url here: the backend resolves the version.
         // The second one is the name the remote gives its own ModuleFederationPlugin.
@@ -138,7 +138,7 @@ configure({
   projectId: process.env.MFE_PROJECT_ID,
   // Only a canary targeted on users reads this, and nothing else can supply it.
   // A getter is resolved right before the request, so an auth round trip is in
-  // time; later than that, use setUserId(). Without it those microfrontends
+  // time; later than that, use setUserId(). Without it those frontends
   // serve everyone the stable version.
   // userId: () => auth.currentUser?.id,
   ...(environment ? { environment } : {})
@@ -148,7 +148,7 @@ configure({
 
 This is a whole `webpack.config.js`, not a fragment to merge: loaders, `resolve.extensions` and
 `HtmlWebpackPlugin` are there for the detected framework (`vue-loader` and `VueLoaderPlugin` for Vue,
-`@ngtools/webpack` and `AngularWebpackPlugin` for Angular), and a microfrontend registered as a
+`@ngtools/webpack` and `AngularWebpackPlugin` for Angular), and a frontend registered as a
 **host** also gets an `exposes` block with its root component. Two things in it you will want to
 review before relying on it:
 
@@ -177,7 +177,7 @@ seconds with the "not configured" error.
 
 So the generated configuration contains **no URL** — no version, no environment, no CDN path. That is
 what keeps the resolution server-side and lets a
-[canary release](../microfrontends/canary-releases.md) decide which version this browser receives.
+[canary release](../frontends/canary-releases.md) decide which version this browser receives.
 See [Allowed domains](../environments/domains.md) for how the environment is resolved.
 
 Two things you have to do yourself:
@@ -263,7 +263,7 @@ The generated host configuration shares the framework core only — `react` and 
 `vue` for Vue, `@angular/core`, `@angular/common`, `@angular/platform-browser` and `rxjs` for Angular
 — each as `{ singleton: true }` and nothing more: no `requiredVersion`, so webpack reads the range
 from your own `package.json`, and no `eager`. If you share other libraries — a router, a state
-manager, a design system — add them to the `shared` block of every microfrontend in the graph.
+manager, a design system — add them to the `shared` block of every frontend in the graph.
 
 Because nothing is eager, shared modules are loaded asynchronously, and your entry point needs an
 async boundary before the first import that uses them:
@@ -288,8 +288,8 @@ chunk and removes the need for the boundary, at the cost of a larger first downl
 
 ## Version mismatches
 
-The generated config pins no `requiredVersion`, so webpack takes the range from each microfrontend's
+The generated config pins no `requiredVersion`, so webpack takes the range from each frontend's
 own `package.json`; with `singleton: true` it warns at runtime when a remote wants a different major
 version of a shared library than the host provides. Those warnings are worth taking seriously — a
-satisfied-but-mismatched React is the source of most confusing microfrontend bugs. Keep shared
+satisfied-but-mismatched React is the source of most confusing Module Federation bugs. Keep shared
 library versions aligned across the graph, and upgrade hosts and remotes together.

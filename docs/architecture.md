@@ -2,7 +2,7 @@
 sidebar_position: 3.5
 title: Architecture
 sidebar_label: Architecture
-description: "How Flightroom is put together: the orchestrator, the database and cache behind it, how AI changes reach your repositories, how a deploy reaches Kubernetes through Argo CD, and how microfrontend bundles are served."
+description: "How Flightroom is put together: the orchestrator, the database and cache behind it, how AI changes reach your repositories, how a deploy reaches Kubernetes through Argo CD, and how frontend bundles are served."
 keywords: [architecture, diagram, deployment, gitops, argo cd, kubernetes, ai, mongodb, redis, object storage, self-hosting]
 ---
 
@@ -10,7 +10,7 @@ keywords: [architecture, diagram, deployment, gitops, argo cd, kubernetes, ai, m
 
 Flightroom is a **control plane**. It never runs your apps itself: the AI writes their code into
 your Git repositories, a deploy is a commit to your GitOps repositories, and your Argo CD runs them
-on your Kubernetes. For microfrontends served by Flightroom, it also stores which versions belong
+on your Kubernetes. For frontends served by Flightroom, it also stores which versions belong
 to which environment and where their files live — then answers, at runtime, the single question
 the host application asks: *what should I load?*
 
@@ -23,7 +23,7 @@ The orchestrator ships as **one container**, listening on port 80. Inside it the
 processes: nginx serves the console as static files and proxies `/api/` to a Node process on
 localhost:3000, which is the authenticated management API and the public serve API together. All of
 it therefore arrives on one port, from one image. State lives in MongoDB — Redis is optional and
-holds only short-lived caches and locks, see below. Artifacts — the actual microfrontend bundles — live outside the database,
+holds only short-lived caches and locks, see below. Artifacts — the actual frontend bundles — live outside the database,
 either on the orchestrator's own storage or in a cloud bucket you own.
 
 ```mermaid
@@ -45,7 +45,7 @@ flowchart TB
 
     subgraph state["State, and one optional cache"]
         direction LR
-        mongo[("MongoDB<br/>projects · environments · microfrontends<br/>deployments · storages · members · API keys")]
+        mongo[("MongoDB<br/>projects · environments · frontends<br/>deployments · storages · members · API keys")]
         redis[("Redis · optional<br/>token and API-key caches · repository locks<br/>pending assistant actions")]
     end
 
@@ -92,12 +92,12 @@ flowchart TB
 A few things worth reading off the diagram:
 
 - **The browser never talks to your bucket.** For internal storage and for
-  [Custom Source](./microfrontends/hosting-options.md#custom-source-your-own-bucket) buckets, the
+  [Custom Source](./frontends/hosting-options.md#custom-source-your-own-bucket) buckets, the
   serve API reads the bytes server-side with your credentials and streams them back. Your bucket
   stays private and needs no CORS configuration.
-  [Custom URL](./microfrontends/hosting-options.md#custom-url) is the exception *in the manifest*:
+  [Custom URL](./frontends/hosting-options.md#custom-url) is the exception *in the manifest*:
   the platform returns the URL and the browser fetches it itself — though `/serve/mfe/files/...`,
-  called directly for a Custom URL microfrontend, proxies those bytes server-side like any other.
+  called directly for a Custom URL frontend, proxies those bytes server-side like any other.
 - **The serve API is public and unauthenticated** by design — it is called from browsers. The
   management API is the authenticated surface, used by the console and by CI with an
   [API key](./ci-cd/api-keys.md).
@@ -189,7 +189,7 @@ while you stage `1.4.0` in `uat` from the same project.
 
 ```mermaid
 flowchart TB
-    cfg["Project configuration — mutable drafts<br/>microfrontends with their selected version and hosting config<br/>environment variables, per environment · storage configuration"]
+    cfg["Project configuration — mutable drafts<br/>frontends with their selected version and hosting config<br/>environment variables, per environment · storage configuration"]
 
     subgraph prod["Environment: prod · isProduction"]
         direction TB
@@ -218,7 +218,7 @@ flowchart TB
     prodA -->|"answers every serve call for prod"| serveProd["app.example.com"]
 ```
 
-The snapshot is a **copy**, not a set of references — editing a microfrontend afterwards does not
+The snapshot is a **copy**, not a set of references — editing a frontend afterwards does not
 reach back into it. Two consequences:
 
 - **Rollback is activation, not rebuild.** Redeploying `#2` in `prod` re-activates an older
@@ -235,7 +235,7 @@ See [Deployments](./deployments/overview.md) for the full behaviour.
 
 ## How a request for a bundle is answered
 
-The hosting type of each microfrontend decides where the bytes come from. The host application's
+The hosting type of each frontend decides where the bytes come from. The host application's
 URL does not change between the three cases — only what the orchestrator does behind it.
 
 ```mermaid
@@ -250,7 +250,7 @@ sequenceDiagram
 
     B->>S: GET /serve/all/{projectId}/{envSlug}
     S->>DB: active deployment of this environment
-    DB-->>S: microfrontends + versions + variables
+    DB-->>S: frontends + versions + variables
     S-->>B: URLs, versions, globalVariables
 
     B->>S: GET /serve/mfe/files/.../assets/remoteEntry.js
@@ -279,7 +279,7 @@ without stale chunks. All served files carry `Cross-Origin-Resource-Policy: cros
 host on a different origin can load them.
 
 Details: [Serve API reference](./integration/serve-api.md),
-[Hosting options](./microfrontends/hosting-options.md), [Buckets](./buckets/overview.md).
+[Hosting options](./frontends/hosting-options.md), [Buckets](./buckets/overview.md).
 
 ### Artifact path layout
 
@@ -287,7 +287,7 @@ Both internal storage and your own bucket use the same deterministic layout, wit
 in the prefix so several projects — and several installations — can share one bucket:
 
 ```
-<root>/<projectSlug>-<projectId>/<microfrontendSlug>/<version>/…
+<root>/<projectSlug>-<projectId>/<frontendSlug>/<version>/…
 ```
 
 Versions sit side by side and nothing is overwritten on release. That is what makes rollback

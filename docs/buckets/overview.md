@@ -2,14 +2,14 @@
 sidebar_position: 1
 title: Storage overview
 sidebar_label: Overview
-description: "Connect object storage you own, on Amazon S3, Azure Blob Storage or Google Cloud Storage, so microfrontend builds land in your cloud account, not the platform."
+description: "Connect object storage you own, on Amazon S3, Azure Blob Storage or Google Cloud Storage, so frontend builds land in your cloud account, not the platform."
 keywords: [object storage, buckets, amazon s3, azure blob storage, google cloud storage]
 ---
 
 # Storage overview
 
 A **bucket** — a *storage* in the console — is a connection to object storage you own. With one
-configured, microfrontend builds are stored in your own cloud account instead of on the platform,
+configured, frontend builds are stored in your own cloud account instead of on the platform,
 while Flightroom continues to handle versioning, deployments and serving.
 
 Buckets live on the **Storages** page, under **Cloud** in the sidebar. It is also reachable from
@@ -44,7 +44,7 @@ already own the disk.
 
 ## How it works
 
-Once a storage is configured and selected on a microfrontend whose hosting type is
+Once a storage is configured and selected on a frontend whose hosting type is
 **Custom Source**:
 
 ```
@@ -73,7 +73,7 @@ Two things follow from this:
 Files are stored under a deterministic path:
 
 ```
-<storage path>/<projectSlug>-<projectId>/<microfrontendSlug>/<version>/…
+<storage path>/<projectSlug>-<projectId>/<frontendSlug>/<version>/…
 ```
 
 For example, with a storage `path` of `mfe`:
@@ -108,29 +108,29 @@ makes rollback instant: nothing is overwritten or deleted on a new release.
 
 :::caution[The provider cannot be changed later]
 A storage's provider type is fixed at creation. To move from S3 to GCS, create a new storage and
-re-point your microfrontends at it.
+re-point your frontends at it.
 :::
 
 You can mark one storage as the **default** for the project with the star in the **Default**
-column. A new microfrontend then starts on **Custom Source** with that storage already selected,
+column. A new frontend then starts on **Custom Source** with that storage already selected,
 instead of on the Flightroom Hub.
 
 Adding, editing, testing, deleting a storage and changing the default are refused to a **Viewer**,
-and they need access to the **whole project**: a storage can serve microfrontends of every domain, so
+and they need access to the **whole project**: a storage can serve frontends of every domain, so
 a member limited to specific domains cannot change one.
 
 ## Using a storage
 
-On the microfrontend, set **Hosting type** to **Custom Source** and pick the storage. Then upload
+On the frontend, set **Hosting type** to **Custom Source** and pick the storage. Then upload
 as usual — the platform routes the artifact to your bucket. See
-[Hosting options](../microfrontends/hosting-options.md).
+[Hosting options](../frontends/hosting-options.md).
 
-Existing versions are not migrated when you change a microfrontend's storage. Change it, then
+Existing versions are not migrated when you change a frontend's storage. Change it, then
 publish a new version.
 
 :::caution[Deleting a storage does not check who uses it]
-The console deletes a storage without looking at which microfrontends point at it. Those
-microfrontends keep referencing a storage that no longer exists, and their next deployment has
+The console deletes a storage without looking at which frontends point at it. Those
+frontends keep referencing a storage that no longer exists, and their next deployment has
 nothing to serve their files from. Re-point them first, then delete.
 :::
 
