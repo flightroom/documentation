@@ -1,3 +1,5 @@
+<p align="center"><img src="static/img/logo.png" alt="Flightroom" width="96"></p>
+
 # Flightroom documentation
 
 This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
