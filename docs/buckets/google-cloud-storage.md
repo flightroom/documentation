@@ -2,13 +2,13 @@
 sidebar_position: 4
 title: Store builds on Google Cloud Storage
 sidebar_label: Google Cloud Storage
-description: Connect a Google Cloud Storage bucket to MFE Orchestrator with a service account JSON key, so microfrontend builds are stored in your own Google Cloud project.
+description: Connect a Google Cloud Storage bucket to Flightroom with a service account JSON key, so microfrontend builds are stored in your own Google Cloud project.
 keywords: [google cloud storage, gcs, service account, object storage]
 ---
 
 # Store builds on Google Cloud Storage
 
-MFE Orchestrator authenticates to Google Cloud Storage with a **service account JSON key**.
+Flightroom authenticates to Google Cloud Storage with a **service account JSON key**.
 
 ## Prerequisites
 
@@ -26,14 +26,14 @@ In the Cloud console, open **Cloud Storage → Buckets → Create**:
 - **Public access prevention** — leave **enabled**
 
 :::tip Keep the bucket private
-MFE Orchestrator reads objects server-side with your credentials and streams them to browsers
+Flightroom reads objects server-side with your credentials and streams them to browsers
 itself. The bucket never needs to be public, and no CORS configuration is required.
 :::
 
 ## Step 2: Create a service account
 
 1. **IAM & Admin → Service accounts → Create service account**.
-2. Name it e.g. `mfe-orchestrator`.
+2. Name it e.g. `flightroom`.
 3. Skip the optional project-level role grant — you will grant access on the bucket instead, which
    is tighter.
 4. Create it.
@@ -67,13 +67,13 @@ The file looks like this:
   "project_id": "acme-prod",
   "private_key_id": "…",
   "private_key": "-----BEGIN PRIVATE KEY-----\n…\n-----END PRIVATE KEY-----\n",
-  "client_email": "mfe-orchestrator@acme-prod.iam.gserviceaccount.com",
+  "client_email": "flightroom@acme-prod.iam.gserviceaccount.com",
   "client_id": "…",
   "…": "…"
 }
 ```
 
-## Step 5: Add the storage in MFE Orchestrator
+## Step 5: Add the storage in Flightroom
 
 Go to **Settings → Storages → New Storage** and select **Google Cloud Storage**:
 
@@ -137,7 +137,7 @@ Service account JSON keys do not expire by default, which makes them convenient 
 risk. Rotate them on a schedule:
 
 1. Create a second key for the same service account.
-2. Update the storage in MFE Orchestrator with the new JSON.
+2. Update the storage in Flightroom with the new JSON.
 3. Verify a file still serves.
 4. Delete the old key in the Cloud console.
 

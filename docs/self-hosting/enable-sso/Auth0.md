@@ -1,24 +1,24 @@
 ---
 title: Enable SSO with Auth0
 sidebar_label: Auth0
-description: Configure an Auth0 application and point a self-hosted MFE Orchestrator at it, so users sign in with Auth0 instead of an email and password.
+description: Configure an Auth0 application and point a self-hosted Flightroom at it, so users sign in with Auth0 instead of an email and password.
 keywords: [auth0, sso, oauth, authentication, self-hosting]
 ---
 
 # Enable SSO with Auth0
 
-This guide will walk you through the process of enabling Auth0 authentication for your MFE Orchestrator instance.
+This guide will walk you through the process of enabling Auth0 authentication for your Flightroom instance.
 
 ## Prerequisites
 - An Auth0 account and access to the Auth0 dashboard
-- Docker environment for MFE Orchestrator (terraform, docker-compose, docker,..)
+- Docker environment for Flightroom (terraform, docker-compose, docker,..)
 
 ## Step 1: Configure Auth0 Application
 
 1. Log in to your [Auth0 Dashboard](https://manage.auth0.com/)
 2. Navigate to **Applications** > **Applications**
 3. Click **+ Create Application**
-4. Enter a name for your application (e.g., "MFE Orchestrator")
+4. Enter a name for your application (e.g., "Flightroom")
 5. Select **Single Page Web Applications** as the application type
 6. Click **Create**
 
@@ -34,7 +34,7 @@ This guide will walk you through the process of enabling Auth0 authentication fo
 
 1. Go to **Applications** > **APIs**
 2. Click **+ Create API**
-3. Enter a name (e.g., "MFE Orchestrator API")
+3. Enter a name (e.g., "Flightroom API")
 4. Set the **Identifier** (Audience) to a URL (e.g., `https://api.yourdomain.com`)
 5. Click **Create**
 6. Note down the **API Audience** value
@@ -69,7 +69,7 @@ If you are using docker comse add those variables to `docker-compose.yml` file u
 
 ```yaml
 services:
-  mfe-orchestrator:
+  flightroom:
     environment:
       - AUTH0_DOMAIN=${AUTH0_DOMAIN}
       - AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID}

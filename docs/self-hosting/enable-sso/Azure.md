@@ -1,24 +1,24 @@
 ---
 title: Enable SSO with Microsoft Entra ID
 sidebar_label: Azure AD (Entra ID)
-description: Register an application in Microsoft Entra ID (Azure AD) and point a self-hosted MFE Orchestrator at it, so users sign in with their organisation account.
+description: Register an application in Microsoft Entra ID (Azure AD) and point a self-hosted Flightroom at it, so users sign in with their organisation account.
 keywords: [entra id, azure ad, sso, oauth, authentication]
 ---
 
 # Enable SSO with Microsoft Entra ID
 
-This guide will walk you through the process of enabling Azure Active Directory (Azure AD) authentication for your MFE Orchestrator instance.
+This guide will walk you through the process of enabling Azure Active Directory (Azure AD) authentication for your Flightroom instance.
 
 ## Prerequisites
 - An Azure AD tenant
 - Global Administrator or Application Administrator access to your Azure AD tenant
-- Docker environment for MFE Orchestrator (Terraform, docker-compose, Docker, etc.)
+- Docker environment for Flightroom (Terraform, docker-compose, Docker, etc.)
 
 ## Step 1: Register a New Application in Azure AD
 
 1. Sign in to the [Azure Portal](https://portal.azure.com/)
 2. Navigate to **Azure Active Directory** > **App registrations** > **New registration**
-3. Enter a name for your application (e.g., "MFE Orchestrator")
+3. Enter a name for your application (e.g., "Flightroom")
 4. Select the supported account types (typically "Accounts in this organizational directory only")
 6. Click **Register**
 
@@ -71,7 +71,7 @@ If you are using Docker Compose, add these variables to your `docker-compose.yml
 
 ```yaml
 services:
-  mfe-orchestrator:
+  flightroom:
     environment:
       - AZURE_ENTRAID_TENANT_ID=${AZURE_ENTRAID_TENANT_ID}
       - AZURE_ENTRAID_CLIENT_ID=${AZURE_ENTRAID_CLIENT_ID}

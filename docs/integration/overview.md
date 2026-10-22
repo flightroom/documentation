@@ -2,13 +2,13 @@
 sidebar_position: 1
 title: Integration overview
 sidebar_label: Overview
-description: How your application consumes what you deployed with MFE Orchestrator — Module Federation configuration, runtime variables and the serve API.
+description: How your application consumes what you deployed with Flightroom — Module Federation configuration, runtime variables and the serve API.
 keywords: [integration, module federation, generated configuration, serve api]
 ---
 
 # Integration overview
 
-So far everything has happened inside MFE Orchestrator. This section is about the other side:
+So far everything has happened inside Flightroom. This section is about the other side:
 how your application actually consumes what you deployed.
 
 ## The Integration page
@@ -73,7 +73,7 @@ packages (`single-spa`, or `@micro-lc/orchestrator`) to `package.json`.
 
 ## The two integration models
 
-There are two quite different ways to consume MFE Orchestrator, and the right choice depends on
+There are two quite different ways to consume Flightroom, and the right choice depends on
 how dynamic you need to be.
 
 ### Generated bundler configuration
@@ -113,7 +113,7 @@ remotes starts changing often.
 
 ## Writing the integration into your repositories
 
-Rather than copy, paste and commit, you can have MFE Orchestrator write the integration into the
+Rather than copy, paste and commit, you can have Flightroom write the integration into the
 repositories itself. Both tabs offer it, and the two are separate integrations that are never
 committed together:
 

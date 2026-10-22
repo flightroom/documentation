@@ -16,7 +16,7 @@ five minutes.
 
 ## What gets captured
 
-When you deploy an environment, MFE Orchestrator copies into the snapshot:
+When you deploy an environment, Flightroom copies into the snapshot:
 
 - **Every microfrontend** in the project — its selected version, hosting configuration, entry
   point, canary settings and relation graph

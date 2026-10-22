@@ -2,18 +2,18 @@
 sidebar_position: 4
 title: Module Federation with Webpack
 sidebar_label: Webpack
-description: Wire an MFE Orchestrator deployment into a Webpack 5 host with ModuleFederationPlugin, using the configuration the console generates.
+description: Wire a Flightroom deployment into a Webpack 5 host with ModuleFederationPlugin, using the configuration the console generates.
 keywords: [webpack, module federation, ModuleFederationPlugin, remotes, host]
 ---
 
 # Module Federation with Webpack
 
-MFE Orchestrator generates configuration for Webpack 5's built-in
+Flightroom generates configuration for Webpack 5's built-in
 `ModuleFederationPlugin`. No extra dependency is needed — Module Federation ships with Webpack 5.
 
 ## Configure a remote
 
-A remote declares what it exposes; this is plain Module Federation with no MFE Orchestrator
+A remote declares what it exposes; this is plain Module Federation with no Flightroom
 involvement:
 
 ```js
@@ -40,7 +40,7 @@ module.exports = {
 ```
 
 Webpack writes `remoteEntry.js` to the root of your output directory, so the microfrontend's
-**Entry Point** in MFE Orchestrator should read `remoteEntry.js` — unless you have customised
+**Entry Point** in Flightroom should read `remoteEntry.js` — unless you have customised
 `output.publicPath` or the filename.
 
 :::caution `remoteEntry.js` is not a default you can rely on
@@ -68,7 +68,7 @@ module.exports = {
   // ... other webpack config
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.MFE_BACKEND_URL': JSON.stringify("https://console.mfe-orchestrator.dev/api"),
+      'process.env.MFE_BACKEND_URL': JSON.stringify("https://console.flightroom.dev/api"),
       'process.env.MFE_PROJECT_ID': JSON.stringify("68f1a2..."),
       // DefinePlugin pastes the text on the right into the bundle verbatim, so the bare
       // identifier `undefined` is what an unset environment looks like: the SDK then resolves

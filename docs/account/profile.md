@@ -94,7 +94,7 @@ withdrawn, and none is stored.
 
 :::info The platform records the consent and never sends a marketing email
 This is worth stating plainly, because a consent checkbox usually implies a mailing list behind it.
-MFE Orchestrator sends exactly four emails — account activation, password reset, project invitation,
+Flightroom sends exactly four emails — account activation, password reset, project invitation,
 organization invitation — and all four are transactional. There is no newsletter, no product-update
 mail, no announcement, and no code anywhere in the product that reads this field to decide who to
 mail.

@@ -19,7 +19,7 @@ recent history behind it, and the version each environment is currently serving.
 
 :::info Nothing is stored
 The runs are read from the providers when you open the page, and re-read while you keep it open.
-MFE Orchestrator keeps no build history of its own, so the page shows what the providers show and
+Flightroom keeps no build history of its own, so the page shows what the providers show and
 nothing more.
 :::
 

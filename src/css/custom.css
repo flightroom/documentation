@@ -1,37 +1,115 @@
 /**
- * Global styles, mapped onto the shared MFE Orchestrator design system
- * (@mfe-orchestrator/design-system/theme.css) so the documentation matches the
+ * Global styles, mapped onto the shared Flightroom design system
+ * (@flightroom/design-system/theme.css) so the documentation matches the
  * console and the public website. Docusaurus styles through Infima variables,
  * so the design tokens are translated here rather than imported directly:
  *
  *   font          Montserrat
- *   primary       hsl(262 83% 66%)  (violet, same light and dark)
- *   light bg      white   / foreground hsl(222 30% 16%)
- *   dark bg       hsl(220 26% 14%) / surface hsl(220 22% 17%)
+ *   palette       charcoal #233D4D · pumpkin #FE7F2D · sunglow #FCCA46
+ *                 olivine #A1C181 · zomp #619B8A
+ *   primary       light: pumpkin-600 #BC5503 (Infima uses it for links on
+ *                 white, where pumpkin-400 is only 2.5:1)
+ *                 dark:  pumpkin-400 #FE7F2D
+ *   light bg      white   / foreground charcoal-900 #233D4D
+ *   dark bg       #112631 / surface #193441 / foreground #FAF7F2
+ *   admonitions   note/info zomp · tip olivine · warning/caution sunglow
+ *                 danger red (#C4303D, dark #F2737A)
  *   radius        0.75rem
  */
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300..700;1,300..700&display=swap");
 
 :root {
-  /* Primary palette — design system --primary and its active/hover ramp */
-  --ifm-color-primary: hsl(262 83% 66%);
-  --ifm-color-primary-dark: hsl(262 83% 60%);
-  --ifm-color-primary-darker: hsl(262 83% 54%);
-  --ifm-color-primary-darkest: hsl(262 83% 44%);
-  --ifm-color-primary-light: hsl(262 83% 72%);
-  --ifm-color-primary-lighter: hsl(262 83% 78%);
-  --ifm-color-primary-lightest: hsl(262 83% 85%);
+  /* Primary — pumpkin scale, 600 as the base so links pass AA on white */
+  --ifm-color-primary: #BC5503; /* pumpkin-600 */
+  --ifm-color-primary-dark: #954203; /* pumpkin-700 */
+  --ifm-color-primary-darker: #702F00; /* pumpkin-800 */
+  --ifm-color-primary-darkest: #502000; /* pumpkin-900 */
+  --ifm-color-primary-light: #E4690A; /* pumpkin-500 */
+  --ifm-color-primary-lighter: #FE7F2D; /* pumpkin-400 */
+  --ifm-color-primary-lightest: #FEAF84; /* pumpkin-300 */
+  --ifm-color-primary-contrast-background: #FFF4EF; /* pumpkin-50 */
+  --ifm-color-primary-contrast-foreground: #702F00; /* pumpkin-800 */
+
+  /* Info (note, info) — zomp */
+  --ifm-color-info: #35695B; /* zomp-700 */
+  --ifm-color-info-dark: #204F42;
+  --ifm-color-info-darker: #0F382E;
+  --ifm-color-info-darkest: #02231B;
+  --ifm-color-info-light: #4C8474;
+  --ifm-color-info-lighter: #619B8A;
+  --ifm-color-info-lightest: #80B8A7;
+  --ifm-color-info-contrast-background: #E8F5F0;
+  --ifm-color-info-contrast-foreground: #0F382E;
+
+  /* Success (tip) — olivine */
+  --ifm-color-success: #4F6635; /* olivine-700 */
+  --ifm-color-success-dark: #384C22;
+  --ifm-color-success-darker: #263612;
+  --ifm-color-success-darkest: #142204;
+  --ifm-color-success-light: #67824A;
+  --ifm-color-success-lighter: #809E61;
+  --ifm-color-success-lightest: #A1C181;
+  --ifm-color-success-contrast-background: #EFF7E6;
+  --ifm-color-success-contrast-foreground: #263612;
+
+  /* Warning (warning, caution) — sunglow */
+  --ifm-color-warning: #755900; /* sunglow-700 */
+  --ifm-color-warning-dark: #574201;
+  --ifm-color-warning-darker: #3E2E00;
+  --ifm-color-warning-darkest: #261B01;
+  --ifm-color-warning-light: #947206;
+  --ifm-color-warning-lighter: #B58C05;
+  --ifm-color-warning-lightest: #D3A312;
+  --ifm-color-warning-contrast-background: #FEF6E3;
+  --ifm-color-warning-contrast-foreground: #3E2E00;
+
+  /* Danger — design system destructive, the one colour outside the palette */
+  --ifm-color-danger: #C4303D;
+  --ifm-color-danger-dark: #A12531;
+  --ifm-color-danger-darker: #8A1F2A;
+  --ifm-color-danger-darkest: #6B1720;
+  --ifm-color-danger-light: #D1505B;
+  --ifm-color-danger-lighter: #DB6F78;
+  --ifm-color-danger-lightest: #E89CA2;
+  --ifm-color-danger-contrast-background: #FCEBEC;
+  --ifm-color-danger-contrast-foreground: #6B1720;
+
+  /* Infima's neutral greys, retinted on the charcoal scale. The dark theme
+   * reads the same ramp in reverse, so this covers both modes. */
+  --ifm-color-gray-0: #FFFFFF;
+  --ifm-color-gray-100: #F1F5F8;
+  --ifm-color-gray-200: #E8EEF2;
+  --ifm-color-gray-300: #DCE4EA;
+  --ifm-color-gray-400: #CFDAE2;
+  --ifm-color-gray-500: #9BAEBB;
+  --ifm-color-gray-600: #566E7E;
+  --ifm-color-gray-700: #486172;
+  --ifm-color-gray-800: #2A4858;
+  --ifm-color-gray-900: #193441;
+  --ifm-color-gray-1000: #07202D;
+
+  /* Brand fills shared by the navbar CTA and the homepage. Filled buttons
+   * follow the design system: pumpkin with dark text, in both modes. */
+  --flightroom-primary: #FE7F2D; /* pumpkin-400 */
+  --flightroom-primary-foreground: #07202D; /* charcoal-950 */
+  --flightroom-primary-active: #E4690A; /* pumpkin-500 */
+  --flightroom-accent-foreground: #954203; /* pumpkin-700 */
+  --flightroom-sunglow: #FCCA46; /* sunglow-200 */
+  --flightroom-olivine: #A1C181; /* olivine-400 */
+  --flightroom-shadow: rgb(7 32 45 / 0.12); /* charcoal-950 */
 
   /* Typography */
   --ifm-font-family-base: "Montserrat", "system-ui", sans-serif;
   --ifm-heading-font-family: "Montserrat", "system-ui", sans-serif;
 
   /* Light theme — design system :root tokens */
-  --ifm-background-color: hsl(0 0% 100%);
-  --ifm-font-color-base: hsl(222 30% 16%);
-  --ifm-color-content-secondary: hsl(222 12% 40%);
-  --ifm-hr-border-color: hsl(262 20% 93%);
-  --ifm-toc-border-color: hsl(262 20% 90%);
+  --ifm-background-color: #FFFFFF;
+  --ifm-color-content: #233D4D;
+  --ifm-font-color-base: #233D4D;
+  --ifm-color-content-secondary: #486172;
+  --ifm-hr-border-color: #E8EEF2;
+  --ifm-toc-border-color: #DCE4EA;
+  --ifm-code-background: var(--ifm-color-emphasis-100);
 
   /* Radius — design system --radius */
   --ifm-global-radius: 0.75rem;
@@ -40,44 +118,112 @@
 
   /* Code block styling */
   --ifm-code-font-size: 95%;
-  --docusaurus-highlighted-code-line-bg: hsl(240 20% 96%);
+  --docusaurus-highlighted-code-line-bg: #FEE8DC; /* pumpkin-100 */
 }
 
-[data-theme='dark'] {
-  /* Primary stays the same violet in dark mode, as in the design system */
-  --ifm-color-primary: hsl(262 83% 66%);
-  --ifm-color-primary-dark: hsl(262 83% 60%);
-  --ifm-color-primary-darker: hsl(262 83% 54%);
-  --ifm-color-primary-darkest: hsl(262 83% 44%);
-  --ifm-color-primary-light: hsl(262 83% 72%);
-  --ifm-color-primary-lighter: hsl(262 83% 78%);
-  --ifm-color-primary-lightest: hsl(262 83% 85%);
+/* Infima declares its dark tokens on html[data-theme='dark']; the same
+ * selector is needed here to win the cascade. */
+html[data-theme='dark'] {
+  /* Primary — pumpkin-400 reads at 6:1 on the charcoal background */
+  --ifm-color-primary: #FE7F2D; /* pumpkin-400 */
+  --ifm-color-primary-dark: #E4690A;
+  --ifm-color-primary-darker: #BC5503;
+  --ifm-color-primary-darkest: #954203;
+  --ifm-color-primary-light: #FEAF84;
+  --ifm-color-primary-lighter: #FECFB7;
+  --ifm-color-primary-lightest: #FEE8DC;
+  --ifm-color-primary-contrast-background: #4A2E1E;
+  --ifm-color-primary-contrast-foreground: #FECFB7;
+
+  --ifm-color-info: #80B8A7; /* zomp-400 */
+  --ifm-color-info-dark: #619B8A;
+  --ifm-color-info-darker: #4C8474;
+  --ifm-color-info-darkest: #35695B;
+  --ifm-color-info-light: #9CD1C1;
+  --ifm-color-info-lighter: #B6E7D8;
+  --ifm-color-info-lightest: #CAF9EA;
+  --ifm-color-info-contrast-background: #1D3D3C;
+  --ifm-color-info-contrast-foreground: #CAF9EA;
+
+  --ifm-color-success: #A1C181; /* olivine-400 */
+  --ifm-color-success-dark: #809E61;
+  --ifm-color-success-darker: #67824A;
+  --ifm-color-success-darkest: #4F6635;
+  --ifm-color-success-light: #B0D191;
+  --ifm-color-success-lighter: #C7E7A8;
+  --ifm-color-success-lightest: #DAF9BC;
+  --ifm-color-success-contrast-background: #263B2A;
+  --ifm-color-success-contrast-foreground: #DAF9BC;
+
+  --ifm-color-warning: #FCCA46; /* sunglow-200 */
+  --ifm-color-warning-dark: #EEBD36;
+  --ifm-color-warning-darker: #D3A312;
+  --ifm-color-warning-darkest: #B58C05;
+  --ifm-color-warning-light: #FFEBBE;
+  --ifm-color-warning-lighter: #FEF6E3;
+  --ifm-color-warning-lightest: #FEF6E3;
+  --ifm-color-warning-contrast-background: #3C3622;
+  --ifm-color-warning-contrast-foreground: #FFEBBE;
+
+  --ifm-color-danger: #F2737A;
+  --ifm-color-danger-dark: #EE5A62;
+  --ifm-color-danger-darker: #E9434C;
+  --ifm-color-danger-darkest: #D42A34;
+  --ifm-color-danger-light: #F59BA0;
+  --ifm-color-danger-lighter: #F8B9BC;
+  --ifm-color-danger-lightest: #FBD7D9;
+  --ifm-color-danger-contrast-background: #3A2329;
+  --ifm-color-danger-contrast-foreground: #FBD7D9;
+
+  --flightroom-primary-active: #FEAF84; /* pumpkin-300 */
+  --flightroom-accent-foreground: #FECFB7; /* pumpkin-200 */
+  --flightroom-shadow: rgb(0 0 0 / 0.3);
 
   /* Dark theme — design system .dark tokens */
-  --ifm-background-color: hsl(220 26% 14%);
-  --ifm-background-surface-color: hsl(220 22% 17%);
-  --ifm-font-color-base: hsl(210 40% 98%);
-  --ifm-color-content-secondary: hsl(217 10% 70%);
-  --ifm-hr-border-color: hsl(220 15% 22%);
-  --ifm-toc-border-color: hsl(220 15% 25%);
+  --ifm-background-color: #112631;
+  --ifm-background-surface-color: #193441;
+  --ifm-color-content: #FAF7F2;
+  --ifm-font-color-base: #FAF7F2;
+  --ifm-color-content-secondary: #B7C7D2;
+  --ifm-hr-border-color: #223F4F;
+  --ifm-toc-border-color: #2A4858;
+  --ifm-code-background: var(--ifm-color-emphasis-100);
 
   /* Code block styling */
-  --docusaurus-highlighted-code-line-bg: hsl(220 15% 25%);
+  --docusaurus-highlighted-code-line-bg: #4A2E1E;
+}
+
+/* Notes render as Infima's grey "secondary" alert; give them the zomp
+ * colours of info instead of retinting the secondary scale site-wide. */
+.alert.theme-admonition-note {
+  --ifm-alert-background-color: var(--ifm-color-info-contrast-background);
+  --ifm-alert-foreground-color: var(--ifm-color-info-contrast-foreground);
+  --ifm-alert-border-color: var(--ifm-color-info-dark);
+}
+
+/* Footer: charcoal in both modes instead of Infima's slate #303846 */
+.footer--dark {
+  --ifm-footer-background-color: #07202D; /* charcoal-950 */
+  --ifm-footer-color: #B7C7D2;
+  --ifm-footer-link-color: #D0DDE6;
+  --ifm-footer-link-hover-color: #FEAF84; /* pumpkin-300 */
+  --ifm-footer-title-color: #FAF7F2;
 }
 
 /* Navbar link towards the hosted console, styled like the design system's
  * primary button so the docs carry the same call to action as the website. */
 .navbar__cta {
   padding: 0.35rem 0.9rem;
-  border: 1px solid hsl(262 83% 66%);
+  border: 1px solid var(--flightroom-primary);
   border-radius: 0.75rem;
-  background: hsl(262 83% 66%);
-  color: hsl(0 0% 100%) !important;
+  background: var(--flightroom-primary);
+  color: var(--flightroom-primary-foreground) !important;
   font-weight: 600;
 }
 
 .navbar__cta:hover {
-  background: hsl(262 83% 58%);
+  border-color: var(--flightroom-primary-active);
+  background: var(--flightroom-primary-active);
   text-decoration: none;
 }
 

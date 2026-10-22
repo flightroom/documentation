@@ -1,12 +1,42 @@
-import {themes as prismThemes} from 'prism-react-renderer';
+import type {PrismTheme} from 'prism-react-renderer';
 import type {Config} from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import llmsTxt from './plugins/llms-txt';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
+// Token colours from the design system scales. Light: every colour is at
+// least 4.5:1 on the muted background; dark: on charcoal-950.
+const prismLight: PrismTheme = {
+  plain: {color: '#233D4D', backgroundColor: '#F1F5F8'},
+  styles: [
+    {types: ['comment', 'prolog', 'doctype', 'cdata'], style: {color: '#566E7E', fontStyle: 'italic'}},
+    {types: ['punctuation', 'operator'], style: {color: '#486172'}},
+    {types: ['keyword', 'atrule', 'selector', 'important'], style: {color: '#954203'}},
+    {types: ['string', 'char', 'attr-value', 'regex', 'url', 'inserted'], style: {color: '#4F6635'}},
+    {types: ['function', 'function-variable', 'class-name', 'builtin'], style: {color: '#35695B'}},
+    {types: ['number', 'boolean', 'constant', 'symbol'], style: {color: '#755900'}},
+    {types: ['tag', 'attr-name', 'property', 'namespace'], style: {color: '#204F42'}},
+    {types: ['deleted'], style: {color: '#A12531'}},
+  ],
+};
+
+const prismDark: PrismTheme = {
+  plain: {color: '#FAF7F2', backgroundColor: '#07202D'},
+  styles: [
+    {types: ['comment', 'prolog', 'doctype', 'cdata'], style: {color: '#9BAEBB', fontStyle: 'italic'}},
+    {types: ['punctuation', 'operator'], style: {color: '#B7C7D2'}},
+    {types: ['keyword', 'atrule', 'selector', 'important'], style: {color: '#FE7F2D'}},
+    {types: ['string', 'char', 'attr-value', 'regex', 'url', 'inserted'], style: {color: '#B0D191'}},
+    {types: ['function', 'function-variable', 'class-name', 'builtin'], style: {color: '#FCCA46'}},
+    {types: ['number', 'boolean', 'constant', 'symbol'], style: {color: '#FEAF84'}},
+    {types: ['tag', 'attr-name', 'property', 'namespace'], style: {color: '#9CD1C1'}},
+    {types: ['deleted'], style: {color: '#F2737A'}},
+  ],
+};
+
 const config: Config = {
-  title: 'MFE Orchestrator',
+  title: 'Flightroom',
   tagline: 'The control plane for your microfrontends',
   favicon: 'img/favicon.ico',
 
@@ -16,7 +46,7 @@ const config: Config = {
   },
 
   // Set the production url of your site here
-  url: 'https://mfe-orchestrator.dev',
+  url: 'https://flightroom.dev',
   // Set the /<baseUrl>/ pathname under which your site is served
   // For GitHub pages deployment, it is often '/<projectName>/'
   baseUrl: '/documentation',
@@ -31,8 +61,8 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: 'mfe-orchestrator', // Usually your GitHub org/user name.
-  projectName: 'Microfrontend Orchestrator', // Usually your repo name.
+  organizationName: 'flightroom', // Usually your GitHub org/user name.
+  projectName: 'documentation', // Usually your repo name.
 
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -81,7 +111,7 @@ const config: Config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/mfe-orchestrator/documentation/blob/main',
+            'https://github.com/flightroom/documentation/blob/main',
         },
         // No blog: nothing links to it and it only carried the Docusaurus
         // sample posts, which were indexable. Set this back to an options
@@ -104,9 +134,9 @@ const config: Config = {
     // Rendered from static/img/social-card.source.html at 1200x630.
     image: 'img/social-card.png',
     navbar: {
-      title: 'MFE Orchestrator',
+      title: 'Flightroom',
       logo: {
-        alt: 'MFE Orchestrator logo',
+        alt: 'Flightroom logo',
         src: 'img/logo.png',
       },
       items: [
@@ -128,12 +158,12 @@ const config: Config = {
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
         {
-          href: 'https://github.com/mfe-orchestrator',
+          href: 'https://github.com/flightroom',
           label: 'GitHub',
           position: 'right',
         },
         {
-          href: 'https://console.mfe-orchestrator.dev',
+          href: 'https://console.flightroom.dev',
           label: 'Open the console',
           position: 'right',
           className: 'navbar__cta',
@@ -164,7 +194,7 @@ const config: Config = {
             },
             {
               label: 'Open the console',
-              href: 'https://console.mfe-orchestrator.dev',
+              href: 'https://console.flightroom.dev',
             },
           ],
         },
@@ -206,7 +236,7 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/mfe-orchestrator',
+              href: 'https://github.com/flightroom',
             },
           ],
         },
@@ -241,11 +271,13 @@ const config: Config = {
           ],
         },*/
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} MFE Orchestrator, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Flightroom, Inc. Built with Docusaurus.`,
     },
+    // Code highlighting in the Flightroom palette: the stock github and
+    // dracula themes both colour tokens in violet.
     prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
+      theme: prismLight,
+      darkTheme: prismDark,
     },
     mermaid: {
       theme: {light: 'neutral', dark: 'dark'},

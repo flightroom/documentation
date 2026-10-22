@@ -3,7 +3,7 @@
   "position": 14,
   "link": {
     "type": "generated-index",
-    "title": "Self-host MFE Orchestrator",
-    "description": "Run MFE Orchestrator on your own infrastructure with Docker, Docker Compose, Terraform or Helm, and configure the container it ships in."
+    "title": "Self-host Flightroom",
+    "description": "Run Flightroom on your own infrastructure with Docker, Docker Compose, Terraform or Helm, and configure the container it ships in."
   }
 }

@@ -8,7 +8,7 @@ keywords: [organization roles, owner, admin, member, permissions, project visibi
 
 # Organization roles and project visibility
 
-Access in MFE Orchestrator is decided at two levels, but only one of them restricts anything today.
+Access in Flightroom is decided at two levels, but only one of them restricts anything today.
 The **organization role** decides which projects you can reach at all, and it is enforced. The
 **project role** is a label: it is stored, shown and carried in invitation emails, but no
 authorization check consults it, so reaching a project at all is what grants full control of it. See

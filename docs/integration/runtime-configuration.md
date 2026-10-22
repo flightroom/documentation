@@ -18,7 +18,7 @@ The console generates both snippets with your ids already substituted, under
 
 ## Option 1: the generated script
 
-MFE Orchestrator can serve your variables as a JavaScript file that assigns them to
+Flightroom can serve your variables as a JavaScript file that assigns them to
 `window.globalConfig`. Add it to your `index.html` **before** your application bundle:
 
 ```html

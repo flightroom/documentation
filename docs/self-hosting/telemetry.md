@@ -119,7 +119,7 @@ Any one of these is enough:
 
 | Where | How |
 | --- | --- |
-| `docker-compose.yaml` | add `TELEMETRY_DISABLED: "true"` to the `mfe-orchestrator` `environment:` |
+| `docker-compose.yaml` | add `TELEMETRY_DISABLED: "true"` to the `flightroom` `environment:` |
 | `docker run` | `-e TELEMETRY_DISABLED=true` |
 | `.env`, or any host | `TELEMETRY_DISABLED=true` |
 | Machine-wide, across tools | `DO_NOT_TRACK=1`, the [consoledonottrack.com](https://consoledonottrack.com) convention |
@@ -192,7 +192,7 @@ user, returns the configuration and the payload as it would be sent right now:
   "intervalHours": 24,
   "payload": { "installationId": "cd937a0c-...", "version": "1.0.0", "...": "..." },
   "disableWith": "TELEMETRY_DISABLED=true",
-  "documentationUrl": "https://github.com/mfe-orchestrator/mfe-orchestrator/blob/main/docs/TELEMETRY.md"
+  "documentationUrl": "https://github.com/flightroom/flightroom/blob/main/docs/TELEMETRY.md"
 }
 ```
 

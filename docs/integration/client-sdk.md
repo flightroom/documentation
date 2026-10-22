@@ -102,7 +102,7 @@ fail politely:
 
 ```ts
 interface OrchestratorConfig {
-  backendUrl: string    // ex. "https://console.mfe-orchestrator.dev/api"
+  backendUrl: string    // ex. "https://console.flightroom.dev/api"
   projectId: string
   environment?: string  // environment slug, ex. "DEV" — omit to resolve it from the domain
   userId?: string | (() => string | undefined | Promise<string | undefined>)
@@ -256,7 +256,7 @@ nothing escapes the SDK as an exception.
 
 Identities are the reason a canary decision is sticky. They travel in the query string rather than
 in a cookie because module scripts are fetched with a fixed `same-origin` credentials mode, so no
-cookie of the MFE Orchestrator domain would ever reach the server —
+cookie of the Flightroom domain would ever reach the server —
 [the details are on the canary page](../microfrontends/canary-releases.md#who--the-canary-type).
 
 ## Bundler configuration

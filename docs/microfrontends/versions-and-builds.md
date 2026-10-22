@@ -14,7 +14,7 @@ version comes into existence, and the two ways to trigger one.
 ## What a version is
 
 A version is a string you choose — `1.0.0`, `2026.02.14`, `1.4.0-rc1` — under which a set of
-built files is stored. MFE Orchestrator does not parse or order versions; it uses them as
+built files is stored. Flightroom does not parse or order versions; it uses them as
 folder names and as the value it hands to your host application.
 
 Each microfrontend has one **selected version** in the project configuration, plus the history
@@ -40,14 +40,14 @@ Everything after that happens in your CI:
 Console: "Build 1.4.0 from main"
       │
       ▼
-MFE Orchestrator creates tag "1.4.0" on main's HEAD
+Flightroom creates tag "1.4.0" on main's HEAD
       │
       ▼
 Your pipeline triggers on tag push
       │
       ├── install dependencies
       ├── build
-      └── upload dist/ to MFE Orchestrator as version 1.4.0
+      └── upload dist/ to Flightroom as version 1.4.0
       │
       ▼
 Version 1.4.0 becomes selectable in the console
@@ -79,16 +79,16 @@ generated pipelines wrap it in a provider-specific task:
 | GitLab CI | Direct call to the upload endpoint |
 
 All of them read the API key from the secret
-`MICROFRONTEND_ORCHESTRATOR_API_KEY`, which MFE Orchestrator creates for you when it scaffolds a
+`MICROFRONTEND_ORCHESTRATOR_API_KEY`, which Flightroom creates for you when it scaffolds a
 repository.
 
 See [CI/CD](../ci-cd/github-actions.md) for the full pipeline examples, and
 [Manual upload](../ci-cd/manual-upload.md) for the raw HTTP call.
 
 :::caution Custom URL microfrontends cannot be uploaded to
-Upload only works for microfrontends hosted on the **MFE Orchestrator Hub** or on a
+Upload only works for microfrontends hosted on the **Flightroom Hub** or on a
 **Custom Source** bucket. For **Custom URL**, publishing is handled entirely by your own
-infrastructure — MFE Orchestrator only records which version to point at.
+infrastructure — Flightroom only records which version to point at.
 :::
 
 ## Selecting a version

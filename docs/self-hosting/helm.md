@@ -2,14 +2,14 @@
 sidebar_position: 4
 title: Self-host on Kubernetes with Helm
 sidebar_label: Helm (Kubernetes)
-description: "Install MFE Orchestrator Hub on Kubernetes with the official Helm chart: configuration, secrets, persistence of uploaded microfrontends, ingress and probes."
+description: "Install Flightroom on Kubernetes with the official Helm chart: configuration, secrets, persistence of uploaded microfrontends, ingress and probes."
 keywords: [helm, kubernetes, self-hosting, installation, chart, ingress, persistent volume]
 ---
 
 # Self-host on Kubernetes with Helm
 
 The chart lives in the repository, under
-[`helm/mfe-orchestrator`](https://github.com/mfe-orchestrator/mfe-orchestrator/tree/main/helm/mfe-orchestrator).
+[`helm/mfe-orchestrator`](https://github.com/flightroom/flightroom/tree/main/helm/mfe-orchestrator).
 It installs the standard image `lory1990/mfe-orchestrator`, which serves the frontend and the API
 behind nginx on port `80`.
 
@@ -28,8 +28,8 @@ their own charts — there is an example [below](#mongodb-and-redis).
 ## Install
 
 ```bash
-git clone https://github.com/mfe-orchestrator/mfe-orchestrator.git
-cd mfe-orchestrator
+git clone https://github.com/flightroom/flightroom.git
+cd flightroom
 
 helm install mfe-orchestrator ./helm/mfe-orchestrator \
   --namespace mfe-orchestrator --create-namespace \
@@ -198,4 +198,4 @@ detects it and runs the multi-document operations — creating a deployment amon
   `strategy.type` to `Recreate` so two pods never fight over the same PVC.
 
 The full values reference is in the
-[chart README](https://github.com/mfe-orchestrator/mfe-orchestrator/blob/main/helm/mfe-orchestrator/README.md).
+[chart README](https://github.com/flightroom/flightroom/blob/main/helm/mfe-orchestrator/README.md).
