@@ -165,7 +165,7 @@ and a JSON body:
 
 ```bash
 curl -X POST \
-  -H "api-key: $MFE_ORCHESTRATOR_API_KEY" \
+  -H "api-key: $FLIGHTROOM_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"image": "ghcr.io/acme/orders-api:1.2.0", "commitSha": "3f2c1ab"}' \
   "<API_BASE>/services/by-slug/orders-api/versions/1.2.0"

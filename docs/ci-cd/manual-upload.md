@@ -31,7 +31,7 @@ zip -r ../dist.zip .
 cd ..
 
 curl -X POST \
-  -H "api-key: $MFE_ORCHESTRATOR_API_KEY" \
+  -H "api-key: $FLIGHTROOM_API_KEY" \
   -F "file=@dist.zip" \
   "https://console.flightroom.dev/api/frontends/by-slug/catalog/upload/1.4.0"
 ```
@@ -119,7 +119,7 @@ For a CI system with no dedicated integration:
 #!/usr/bin/env bash
 set -euo pipefail
 
-: "${MFE_ORCHESTRATOR_API_KEY:?missing API key}"
+: "${FLIGHTROOM_API_KEY:?missing API key}"
 : "${VERSION:?missing version}"
 
 SLUG="catalog"
@@ -132,7 +132,7 @@ npm run build
 
 curl --fail --show-error --silent \
   -X POST \
-  -H "api-key: ${MFE_ORCHESTRATOR_API_KEY}" \
+  -H "api-key: ${FLIGHTROOM_API_KEY}" \
   -F "file=@dist.zip" \
   "${API_BASE}/frontends/by-slug/${SLUG}/upload/${VERSION}"
 

@@ -22,7 +22,7 @@ while doing nothing useful. Check the boot log rather than the container status.
 
 ```bash
 NOSQL_DATABASE_URL=mongodb+srv://cluster0.example.mongodb.net/?retryWrites=true&w=majority
-NOSQL_DATABASE_USERNAME=mfe-orchestrator
+NOSQL_DATABASE_USERNAME=flightroom
 NOSQL_DATABASE_PASSWORD=…
 NOSQL_DATABASE_NAME=microfrontend-orchestrator
 ```
