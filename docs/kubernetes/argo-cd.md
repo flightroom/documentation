@@ -24,7 +24,9 @@ organization can initialize it; the other members see its status.
   or a private link between the clusters. Argo CD itself never calls Flightroom: it reads the
   repositories from your Git provider.
 - **A certificate Node.js trusts.** For a private CA, set `NODE_EXTRA_CA_CERTS` on the Flightroom
-  backend.
+  backend. For a self-signed certificate, tick **Accept self-signed certificates** in the Argo CD
+  settings of the project: the certificate is then not verified, as with `argocd --insecure`, so use
+  it only over a network you trust.
 - **The URL Argo CD answers at**, without `/api/v1` and without redirects: for example
   `https://argocd.example.com`.
 
@@ -193,7 +195,7 @@ through.
 | Error | What to check |
 | --- | --- |
 | Argo CD cannot be reached | The URL, its DNS name, and that the Flightroom backend can reach the Argo CD API |
-| The certificate is not trusted | The certificate of Argo CD, or `NODE_EXTRA_CA_CERTS` |
+| The certificate is not trusted | The certificate of Argo CD, `NODE_EXTRA_CA_CERTS`, or **Accept self-signed certificates** for a self-signed one |
 | The token is not accepted | That it is a token of the `orchestrator` account, not expired or revoked |
 | The account lacks permissions | The policy in `argocd-rbac-cm` above |
 | Argo CD already has an object with that name | An AppProject, Application or ApplicationSet not created by this project: rename or delete it |
