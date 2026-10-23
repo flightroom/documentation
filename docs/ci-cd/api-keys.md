@@ -131,7 +131,7 @@ Send it in the `api-key` header:
 
 ```bash
 curl -X POST \
-  -H "api-key: $MFE_ORCHESTRATOR_API_KEY" \
+  -H "api-key: $FLIGHTROOM_API_KEY" \
   -F "file=@dist.zip" \
   "<API_BASE>/frontends/by-slug/catalog/upload/1.4.0"
 ```
