@@ -44,35 +44,37 @@ A connected code repository. If you have not connected one yet, follow
    ![The templates library page: the framework, compiler and type filters above the template cards grouped by framework](../assets/choose-a-template.png)
 
 3. Fill in the frontend details. The form is the same one you get when editing later, minus
-   the danger zone: a **Release** card on top, then the tabs.
+   the danger zone, and it has the tabs of a [service](../kubernetes/services.md): only the
+   **Kind** changes what they hold.
 
-   **Release**
+   **General** — three cards:
 
-   - **Version** — required, the version this frontend starts on. Pre-filled with `1.0.0`
-   - **Canary Settings** — off by default, and there is no reason to turn it on while creating.
-     When you do, the type starts on **Session** and the deployment type on **Based on Version**.
-     See [canary releases](./canary-releases.md)
-
-   **General**
-
-   - **Kind** — **Bundle** (served by Flightroom, the default) or **Docker** (served by
-     its Docker container). See [Bundle or Docker](#bundle-or-docker)
-   - **Name** — the display name, 3 to 100 characters
-   - **Slug** — 3 to 50 characters. While you type the name, the slug is derived from it: lowercase,
-     with every character other than a letter or a digit turned into `-`. You can still edit it
-     before saving. It ends up in your public URLs, so choose carefully
-   - **Description** — optional
+   - **General information**
+     - **Kind** — **Bundle** (served by Flightroom, the default) or **Docker** (served by
+       its Docker container). See [Bundle or Docker](#bundle-or-docker)
+     - **Name** — the display name, 3 to 100 characters
+     - **Slug** — 3 to 50 characters. While you type the name, the slug is derived from it: lowercase,
+       with every character other than a letter or a digit turned into `-`. You can still edit it
+       before saving. It ends up in your public URLs, so choose carefully
+     - **Description** — optional
    - **Domain** — optional, the [functional domain](../core-concepts.md#functional-domain) the
      frontend belongs to
+   - **Release**
+     - **Version** — the version this frontend starts on. A Bundle requires one, pre-filled with
+       `1.0.0`. A Docker frontend starts without: its version is the tag of its image, typed here
+       or set by its pipeline when it registers one
+     - **Canary Settings** — Bundle only, off by default, and there is no reason to turn it on
+       while creating. When you do, the type starts on **Session** and the deployment type on
+       **Based on Version**. See [canary releases](./canary-releases.md)
 
    ![The creation form: the Release card with the version, then the General tab with kind, name Wishlist, slug wishlist, description and domain](../assets/frontend-fill-information.png)
 
    **AI context** — optional Markdown notes for the AI agents that work on this frontend, at
-   most 20,000 characters. What applies to every frontend belongs in the project context, in
-   **Settings**.
+   most 20,000 characters, and the design system it builds with. What applies to every frontend
+   belongs in the project context, in **Settings**.
 
-   **Hosting** — see [hosting options](./hosting-options.md). A **Docker** frontend has a **Container**
-   tab here instead.
+   **Hosting** — see [hosting options](./hosting-options.md). A **Docker** frontend has the
+   **Runtime** and **Variables** tabs of a service here instead.
 
    **Repository** — only shown when the project has a code repository connection. Created from a
    template, its **Code Repository** switch is already on:
@@ -148,8 +150,8 @@ The **Kind** at the top of the **General** tab decides who serves the code:
 | | Bundle | Docker |
 | --- | --- | --- |
 | Served by | Flightroom, from the hub, your bucket or a custom URL | Its own Docker container |
-| Configured in | **Hosting** tab | **Container** tab — runtime, image, URLs, environment, config maps and secrets, as for a [service](../kubernetes/services.md) |
-| Version | Chosen in **Release** | Read-only: set by the pipeline each time it registers an image version |
+| Configured in | **Hosting** tab | **Runtime** tab (port, probes, image, endpoints, exposure) and **Variables** tab (environment, config maps and secrets), as for a [service](../kubernetes/services.md) |
+| Version | Chosen in **Release** from the uploaded bundles | The tag of its image: typed in **Release**, or set by the pipeline each time it registers an image version |
 | Canary | Available | None: Flightroom cannot split the traffic of a container |
 | Parents | Any | None. It cannot be the remote of a host, so in the Diagram view no link can end on it |
 | Bundle upload | Accepted | Refused with `DOCKER_FRONTEND_UPLOAD_NOT_ALLOWED`: its pipeline registers the image of each version instead |
@@ -164,19 +166,22 @@ loads it as a remote.
 
 ## Editing a frontend
 
-Opening a frontend from its card leads to the same form in edit mode — directly through
-**Configuration**, or, when the card offers **Edit with AI**, through the **Details & settings** tab
-next to the AI workspace. **Release** sits at the top, outside the tabs, because the version and the
-canary are what decide which bytes a browser gets; everything else is behind a tab:
+A frontend has the screens of a service: **Edit with AI** (when the project has an AI provider and
+the frontend a repository), **Overview** and **Settings**. **Settings** is the same form in edit mode,
+with the tabs of a [service](../kubernetes/services.md): only the Bundle or Docker kind changes them.
+Saving opens the frontend.
 
-| Where | Contains |
+| Tab | Contains |
 | --- | --- |
-| Release (above the tabs) | Version, and **Canary Settings** — progressive rollout, see [Canary releases](./canary-releases.md). A Docker frontend shows its version read-only and no canary |
-| General | Kind, name, slug (read-only), description, domain |
-| AI context | Markdown notes for AI agents, at most 20,000 characters |
-| Hosting | Hosting type, storage or URL, entry point. **Container** instead, for a Docker frontend |
+| General | **General information** (kind, name, slug read-only, description), **Domain**, and **Release**: the version and, for a Bundle, **Canary Settings** — progressive rollout, see [Canary releases](./canary-releases.md) |
+| AI context | Markdown notes for AI agents, at most 20,000 characters, and the design system it builds with |
+| Hosting | Bundle only: hosting type, storage or URL, entry point |
+| Runtime | Docker only: port, probes, image, endpoints and exposure path, as for a service |
+| Variables | Docker only: environment variables, config maps and secrets, as for a service |
 | Repository | The linked repository — only when the project has a code repository connection |
 | Danger Zone | Delete this frontend |
+
+A link to the old **Container** tab of a Docker frontend opens **Runtime**.
 
 In **Repository**, **Select Repository** lists the repositories of the chosen connection, so you can
 link one or change it. Once a repository is linked and saved, **Rename repository** renames it at the

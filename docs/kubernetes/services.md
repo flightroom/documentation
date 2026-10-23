@@ -41,6 +41,12 @@ Press **New service**. The form opens at `/service/new`.
 
 ![The New service form, with the General information card and the start of Runtime and image](../assets/service-new.png)
 
+The form, and the **Settings** of the service later, has the same tabs as the settings of a
+[Docker frontend](../frontends/create-a-frontend.md#bundle-or-docker): **General** (the general
+information, then the **Domain** and **Release** cards), **AI context**, **Runtime** (runtime and
+image, endpoints), **Variables** (environment variables, config maps and secrets, resources),
+**Repository** and, once the service exists, **Danger Zone**.
+
 ### General information
 
 | Field | Notes |
@@ -49,7 +55,15 @@ Press **New service**. The form opens at `/service/new`.
 | **Name** | 3 to 100 characters. Typing it fills the slug |
 | **Slug** | 2 to 50 lowercase letters, digits or dashes, not starting with a dash. Unique in the project, and fixed once the service exists: the CI registration URL is built on it |
 | **Description** | What the service does |
+
+### Domain and release
+
+Two cards of their own, under the general information:
+
+| Field | Notes |
+| --- | --- |
 | **Domain** | The functional domain it belongs to. Optional |
+| **Version** | The tag of the image deployed. Set it here, or the pipeline sets it when it registers a newer image. Blank until then |
 
 Choosing a template fills **Port**, the probe paths, **API docs path** and **OpenAPI spec path** with
 the template's values. Only the fields you have not edited by hand are replaced, so picking another

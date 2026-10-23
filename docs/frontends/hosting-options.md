@@ -13,7 +13,7 @@ Every frontend declares **where its files live**. This is the *hosting type*, se
 Flightroom resolves a request for `remoteEntry.js` into actual bytes.
 
 There are three options. They apply to the **Bundle** kind only: a **Docker** frontend is served by
-its own Docker container and has a **Container** tab in place of **Hosting** — see
+its own Docker container and has the **Runtime** and **Variables** tabs in place of **Hosting** — see
 [Bundle or Docker](./create-a-frontend.md#bundle-or-docker).
 
 ![The Hosting Type list open, offering Flightroom Hub and Custom URL](../assets/frontend-hosting-type.png)
