@@ -62,8 +62,7 @@ secret, remove it and add it again, then type its values again.
 ## Attaching them to a service
 
 A config map or a secret belongs to the project, and any number of services can attach it. Attach
-them in the settings of the service, under **Config maps and secrets**, or in the **Container** tab
-of a Docker frontend. The page of each map lists the services that use it, under **Used by**.
+them in the **Variables** tab of the settings of the service, or of a Docker frontend. The page of each map lists the services that use it, under **Used by**.
 
 No key may be set by two of the maps a service attaches: the console refuses the pair.
 

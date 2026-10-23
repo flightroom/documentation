@@ -52,7 +52,7 @@ refused.
 
 ### Exposure path of a service
 
-Set it in the service settings, or in the **Container** tab of a Docker frontend. The path is the same
+Set it in the **Runtime** tab of the settings of the service, or of a Docker frontend. The path is the same
 in every environment, and the prefix is stripped before the request reaches the container, so the app
 answers at its root: a request to `/api/orders/items` reaches the container as `/items`.
 
