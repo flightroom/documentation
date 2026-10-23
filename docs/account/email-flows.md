@@ -22,6 +22,28 @@ link somebody received by email:
 The token is the whole of the authentication: whoever holds the link is whoever the email was sent
 to, so it is worth treating one like a password until it is used.
 
+## What the emails say
+
+Each email is written in the language stored on the recipient's account, Italian or English — the
+one picked with the language selector of the sidebar. A new account starts out in Italian until its
+owner changes it, and that includes the accounts an invitation creates: their first email is in
+Italian.
+
+| Email | Subject in English | Subject in Italian |
+| --- | --- | --- |
+| Activation | 🎉 Activate Your Account | 🎉 Attiva il tuo account |
+| Password reset | 🔑 Reset Your Password | 🔑 Reimposta la password |
+| Project invitation | 🎉 You're invited to join *project* | 🎉 Invito a unirti a *project* |
+| Organization invitation | 🎉 You're invited to join *organization* | 🎉 Invito a unirti a *organization* |
+
+An invitation says who sent it — their name, or their email address when their profile has no name —
+and the role offered, with the role named as the console names it. An invitation sent through a
+project API key from the [MCP server](../build-with-ai/mcp-server.md) names nobody, since no person
+is behind it.
+
+Every email carries its link twice, as a button and written out in full under it, states how long
+the link lives, and comes with a plain-text version for mail clients that do not show HTML.
+
 :::danger[Without SMTP an installation cannot do any of this]
 Every one of those tokens is delivered by email and by no other means. There is no screen that
 prints a link, no CLI that generates one, and no way to read one back out of the console. An
