@@ -3,25 +3,16 @@ sidebar_position: 4
 title: Self-host on Kubernetes with Helm
 sidebar_label: Helm (Kubernetes)
 description: "Install Flightroom on Kubernetes with the official Helm chart: configuration, secrets, persistence of uploaded frontends, ingress and probes."
-keywords: [helm, kubernetes, self-hosting, installation, chart, ingress, persistent volume]
+keywords: [helm, kubernetes, self-hosting, installation, chart, oci, argo cd, ingress, persistent volume]
 ---
 
 # Self-host on Kubernetes with Helm
 
-The chart lives in the repository, under
-[`helm/mfe-orchestrator`](https://github.com/flightroom/flightroom/tree/main/helm/mfe-orchestrator).
-It installs the standard Flightroom image, which serves the frontend and the API behind nginx on
-port `80`.
-
-:::caution[Set the image explicitly]
-The chart in the repository still defaults to `lory1990/mfe-orchestrator` at tag `4.0.0`, its
-`appVersion`. Releases are now published as `lory1990/flightroom`, so pass the current image on
-every install and upgrade — see [Image version](#image-version):
-
-```bash
---set image.repository=lory1990/flightroom --set image.tag=5.1.0
-```
-:::
+Every release publishes the chart to the GitHub Container Registry, as
+`oci://ghcr.io/flightroom/charts/flightroom`; its source is
+[`helm/flightroom`](https://github.com/flightroom/flightroom/tree/main/helm/flightroom) in the
+repository. It installs the standard Flightroom image, which serves the frontend and the API behind
+nginx on port `80`.
 
 :::info[MongoDB and Redis are not part of the chart]
 The chart deploys the application only. Point it at instances you already run, or install them with
@@ -31,30 +22,27 @@ their own charts — there is an example [below](#mongodb-and-redis).
 ## Prerequisites
 
 - A Kubernetes cluster and [`kubectl`](https://kubernetes.io/docs/tasks/tools/) configured against it
-- [Helm](https://helm.sh/) 3
+- [Helm](https://helm.sh/) 3.8 or later, for OCI registries
 - A MongoDB and a Redis the cluster can reach
-- The repository cloned locally, or a packaged copy of the chart
 
 ## Install
 
 ```bash
-git clone https://github.com/flightroom/flightroom.git
-cd flightroom
-
-helm install mfe-orchestrator ./helm/mfe-orchestrator \
-  --namespace mfe-orchestrator --create-namespace \
-  --set image.repository=lory1990/flightroom \
-  --set image.tag=5.1.0 \
+helm install flightroom oci://ghcr.io/flightroom/charts/flightroom \
+  --namespace flightroom --create-namespace \
   --set env.NOSQL_DATABASE_URL="mongodb://root:example@mongodb:27017" \
   --set env.REDIS_URL="redis://redis:6379" \
   --set envSecrets.JWT_SECRET="$(openssl rand -hex 32)"
 ```
 
+Without `--version` Helm installs the latest chart; pin one with `--version 0.3.0` to keep upgrades
+deliberate. `helm show values oci://ghcr.io/flightroom/charts/flightroom` prints the default values.
+
 Reach the console once the pod is ready, and it will answer with the **Initial Setup** screen —
 an installation with no users has no login form:
 
 ```bash
-kubectl port-forward -n mfe-orchestrator svc/mfe-orchestrator 8080:80
+kubectl port-forward -n flightroom svc/flightroom 8080:80
 ```
 
 :::caution[Do the first startup before the ingress is open]
@@ -64,21 +52,67 @@ permanent slug, and it mishandles anything longer than two words. Configure the
 [ingress](#ingress) after the first account exists, not before.
 :::
 
-To distribute the chart instead of cloning it on every cluster:
-
-```bash
-helm package helm/mfe-orchestrator            # -> mfe-orchestrator-<version>.tgz
-helm install mfe-orchestrator mfe-orchestrator-<version>.tgz -f my-values.yaml
-```
-
 Useful while you iterate on your values:
 
 ```bash
-helm lint helm/mfe-orchestrator
-helm template mfe-orchestrator helm/mfe-orchestrator -f my-values.yaml
-helm test mfe-orchestrator      # hits /api/echo from inside the cluster
-helm upgrade mfe-orchestrator ./helm/mfe-orchestrator -f my-values.yaml
+helm template flightroom oci://ghcr.io/flightroom/charts/flightroom -f my-values.yaml
+helm test flightroom      # hits /api/echo from inside the cluster
+helm upgrade flightroom oci://ghcr.io/flightroom/charts/flightroom -f my-values.yaml
 ```
+
+### With Argo CD
+
+Register the registry as a Helm repository with OCI enabled, then point the `Application` at it —
+`repoURL` takes the registry without the `oci://` scheme and without the chart name:
+
+```bash
+argocd repo add ghcr.io/flightroom/charts --type helm --name flightroom --enable-oci
+```
+
+```yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: flightroom
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: ghcr.io/flightroom/charts
+    chart: flightroom
+    targetRevision: 0.3.0
+    helm:
+      valuesObject:
+        env:
+          NOSQL_DATABASE_URL: mongodb://root:example@mongodb:27017
+          REDIS_URL: redis://redis:6379
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: flightroom
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true
+```
+
+Keep the secrets out of the `Application`: create a Secret with `JWT_SECRET` and the other keys and
+list it under `existingSecret` (see [Configuration](#configuration)).
+
+### Upgrading from the `mfe-orchestrator` chart
+
+Chart `0.3.0` renamed the chart from `mfe-orchestrator` to `flightroom`. The name is part of the
+Deployment selector and of every resource name, so an upgrade of an existing release creates new
+resources and deletes the old ones — **including the PersistentVolumeClaim of the uploaded
+frontends**. Keep the claim and mount it from the new chart:
+
+```bash
+kubectl annotate pvc <release>-mfe-orchestrator-microfrontends helm.sh/resource-policy=keep
+helm upgrade <release> oci://ghcr.io/flightroom/charts/flightroom -f my-values.yaml \
+  --set persistence.existingClaim=<release>-mfe-orchestrator-microfrontends
+```
+
+If the release itself was called `mfe-orchestrator`, the claim is `mfe-orchestrator-microfrontends`.
+The Service changes name too, so update whatever addressed it: ingress backends, port-forwards,
+network policies.
 
 ## Configuration
 
@@ -135,14 +169,12 @@ effect.
 
 ## Image version
 
-`image.tag` defaults to the chart's `appVersion`, and `image.repository` to
-`lory1990/mfe-orchestrator`: chart `0.2.0` still ships `appVersion` `4.0.0` under the old image name.
-The image is published today as `lory1990/flightroom`, with the release tag (`5.1.0`) as its tag, so
-set both:
+`image.repository` defaults to `lory1990/flightroom` and `image.tag` to the chart's `appVersion`,
+which is always the Flightroom release the chart was published with: a plain install runs that
+release. Set `image.tag` only to pin a different one:
 
 ```yaml
 image:
-  repository: lory1990/flightroom
   tag: "5.1.0"
 ```
 
@@ -164,8 +196,31 @@ persistence:
 ```
 
 With `persistence.enabled: false` the frontends live in the container filesystem and are lost
-at every restart. If you scale beyond one replica, use a `ReadWriteMany` volume — otherwise keep
-`replicaCount: 1`.
+at every restart.
+
+### More than one replica needs ReadWriteMany
+
+The default claim is `ReadWriteOnce`: it attaches to a single node, and a pod scheduled on another
+node never mounts it. So the chart:
+
+- **refuses to render** `replicaCount` above `1`, or `autoscaling.enabled`, when
+  `persistence.accessModes` does not include `ReadWriteMany`;
+- deploys with the **`Recreate` strategy** on such a volume: a rolling update starts the new pod
+  before stopping the old one, and a new pod on another node would wait for the volume forever.
+
+To run several replicas, use a StorageClass that provides `ReadWriteMany` — NFS, Azure Files,
+Amazon EFS, CephFS — and the strategy becomes a rolling update with `maxUnavailable: 0`:
+
+```yaml
+replicaCount: 2
+persistence:
+  storageClass: azurefile-csi
+  accessModes:
+    - ReadWriteMany
+```
+
+With `persistence.existingClaim`, set `persistence.accessModes` to the modes of that claim: the
+chart cannot read them.
 
 ## Repository clones
 
@@ -199,7 +254,7 @@ ingress:
         - path: /
           pathType: Prefix
   tls:
-    - secretName: mfe-orchestrator-tls
+    - secretName: flightroom-tls
       hosts:
         - console.example.com
 ```
@@ -254,7 +309,7 @@ helm install mongodb oci://registry-1.docker.io/bitnamicharts/mongodb \
 helm install redis oci://registry-1.docker.io/bitnamicharts/redis \
   --set auth.enabled=false
 
-helm install mfe-orchestrator ./helm/mfe-orchestrator \
+helm install flightroom oci://ghcr.io/flightroom/charts/flightroom \
   --set env.NOSQL_DATABASE_URL="mongodb://root:example@mongodb:27017" \
   --set env.REDIS_URL="redis://redis-master:6379"
 ```
@@ -266,10 +321,10 @@ detects it and runs the multi-document operations — creating a deployment amon
 
 - **Probes** hit `/api/echo`, the public health endpoint of the backend. Liveness and readiness are
   on by default; a startup probe is available for slow clusters (`startupProbe.enabled`).
-- **Autoscaling** is off by default (`autoscaling.enabled`). Enable it only with a `ReadWriteMany`
-  volume, or the second pod cannot mount the same claim.
-- **Strategy** is a rolling update with `maxUnavailable: 0`. On a `ReadWriteOnce` volume, switch
-  `strategy.type` to `Recreate` so two pods never fight over the same PVC.
+- **Autoscaling** is off by default (`autoscaling.enabled`) and needs a `ReadWriteMany` volume —
+  see [More than one replica](#more-than-one-replica-needs-readwritemany).
+- **Strategy** follows the volume: `Recreate` on `ReadWriteOnce`, a rolling update with
+  `maxUnavailable: 0` on `ReadWriteMany`. Setting `strategy.type` overrides it.
 
 The full values reference is in the
-[chart README](https://github.com/flightroom/flightroom/blob/main/helm/mfe-orchestrator/README.md).
+[chart README](https://github.com/flightroom/flightroom/blob/main/helm/flightroom/README.md).
