@@ -102,7 +102,7 @@ Creating from a template is not just a `git init`. Flightroom:
 4. **Registers the frontend** in the project, linked to the new repository, with the
    template's entry point and stack.
 
-The pipeline authenticates its upload with the secret `MICROFRONTEND_ORCHESTRATOR_API_KEY`. Most of
+The pipeline authenticates its upload with the secret `FLIGHTROOM_API_KEY`. Most of
 the time that secret already exists before you create anything: an API key with the `MANAGER` role,
 valid for one year, is created when the code repository **connection** is made, and stored where
 every repository of the connection can read it — an organization secret on a GitHub organization, a

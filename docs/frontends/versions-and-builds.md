@@ -79,7 +79,7 @@ generated pipelines wrap it in a provider-specific task:
 | GitLab CI | Direct call to the upload endpoint |
 
 All of them read the API key from the secret
-`MICROFRONTEND_ORCHESTRATOR_API_KEY`, which Flightroom creates for you when you connect the code
+`FLIGHTROOM_API_KEY`, which Flightroom creates for you when you connect the code
 repository provider — or, on a personal GitHub account, when it scaffolds a repository. See
 [keys created for you](../ci-cd/api-keys.md#keys-created-for-you).
 

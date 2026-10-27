@@ -55,7 +55,7 @@ jobs:
     - name: 🚀 Publish to Flightroom
       uses: mfe-orchestrator-hub/github-action@0.0.29
       with:
-        apikey: ${{ secrets.MICROFRONTEND_ORCHESTRATOR_API_KEY }}
+        apikey: ${{ secrets.FLIGHTROOM_API_KEY }}
         microfrontend-slug: catalog
         domain: ${{ vars.MICROFRONTEND_ORCHESTRATOR_DOMAIN || 'https://console.flightroom.dev' }}
         file-path: './dist'
@@ -99,7 +99,7 @@ directory, not at a zip you made yourself.
 
 ## The secret
 
-The workflow reads `secrets.MICROFRONTEND_ORCHESTRATOR_API_KEY`. It is created when you **connect**
+The workflow reads `secrets.FLIGHTROOM_API_KEY`. It is created when you **connect**
 the GitHub repository to a project — or edit that connection — not when a frontend is
 scaffolded, and it is written as an **organization** secret visible to all repositories. Creating a
 second frontend does not create a second key: the injector skips the work when a secret of that
@@ -112,7 +112,7 @@ so those still work — but a pipeline you added to a repository you connected b
 all, and its publish step fails with an authentication error on the first run.
 
 Fix it by hand: create an [API key](./api-keys.md), then add it under
-**Settings → Secrets and variables → Actions** as `MICROFRONTEND_ORCHESTRATOR_API_KEY`.
+**Settings → Secrets and variables → Actions** as `FLIGHTROOM_API_KEY`.
 :::
 
 :::note[The key is dated 15 days out, and keeps working anyway]
@@ -127,7 +127,7 @@ publish fails that way, create a new key and update the pipeline secret. See
 For a repository Flightroom did not create:
 
 1. Create an [API key](./api-keys.md).
-2. Add it as a repository secret named `MICROFRONTEND_ORCHESTRATOR_API_KEY`
+2. Add it as a repository secret named `FLIGHTROOM_API_KEY`
    (**Settings → Secrets and variables → Actions**).
 3. Copy the workflow above into `.github/workflows/build-and-deploy.yml`, replacing
    `microfrontend-slug` and `domain` with your values.
@@ -160,7 +160,7 @@ between *published* and *live* is the platform's main safety property.
 **Publish step fails with an authentication error**
 
 The secret is missing, misnamed, or names a key that has been deleted, revoked or has expired. Check
-the exact spelling of `MICROFRONTEND_ORCHESTRATOR_API_KEY`, and that the key still exists in
+the exact spelling of `FLIGHTROOM_API_KEY`, and that the key still exists in
 **Settings → Access → API Keys** without an **Expired** badge: the error message says *API key
 expired on …* or *API key revoked* when that is the cause. On a personal GitHub account, suspect the
 missing organization secret described above.

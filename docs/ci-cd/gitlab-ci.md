@@ -120,7 +120,7 @@ deploy:
     - cd dist && zip -qr ../dist.zip . && cd ..
     - |
       curl --fail --show-error --silent -X POST \
-        -H "api-key: ${MICROFRONTEND_ORCHESTRATOR_API_KEY}" \
+        -H "api-key: ${FLIGHTROOM_API_KEY}" \
         -F "file=@dist.zip" \
         "${MICROFRONTEND_ORCHESTRATOR_DOMAIN%/}/api/frontends/by-slug/${FRONTEND_SLUG}/upload/${CI_COMMIT_TAG}"
     - echo "published ${FRONTEND_SLUG} ${CI_COMMIT_TAG}"
@@ -168,7 +168,7 @@ Points worth noting:
 
 ## The CI/CD variable
 
-The job reads `MICROFRONTEND_ORCHESTRATOR_API_KEY`. It is created as a **group-level** CI/CD variable
+The job reads `FLIGHTROOM_API_KEY`. It is created as a **group-level** CI/CD variable
 when you connect the GitLab repository to a project — or edit that connection — not when a
 frontend is scaffolded, and it is skipped if a variable of that name already exists in the group.
 
@@ -201,7 +201,7 @@ Or use the **Build** action on the frontend card in the console, which creates t
 ## Adding this to an existing repository
 
 1. Create an [API key](./api-keys.md).
-2. Add it as a CI/CD variable named `MICROFRONTEND_ORCHESTRATOR_API_KEY`, at group or project level
+2. Add it as a CI/CD variable named `FLIGHTROOM_API_KEY`, at group or project level
    (**Settings → CI/CD → Variables**). Mark it **Masked**.
 3. Add the `deploy` job above to your `.gitlab-ci.yml`, with your slug and API base URL.
 4. If the variable is protected, protect your tag pattern too.
