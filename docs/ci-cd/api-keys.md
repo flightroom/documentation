@@ -94,7 +94,7 @@ CI pages ask for a key, any key the console gives you is the right one.
 
 You often do not need to create a key at all. Connecting a code repository — or editing an existing
 connection — creates a key and writes it into your Git provider under the name the generated
-pipelines read, `MICROFRONTEND_ORCHESTRATOR_API_KEY`. It happens once per connection, not once per
+pipelines read, `FLIGHTROOM_API_KEY`. It happens once per connection, not once per
 frontend, and is skipped when a secret of that name already exists.
 
 | Provider | Where the key is written | Scope |
@@ -112,7 +112,15 @@ authentication error on its first run and nothing in the console says why.
 For repositories the console creates itself under a personal connection it falls back to a
 **repository** secret of the same name, so those work. Repositories you connected by hand need the
 secret added by hand: create an [API key](#creating-a-key) and add it as a repository secret named
-`MICROFRONTEND_ORCHESTRATOR_API_KEY`.
+`FLIGHTROOM_API_KEY`.
+:::
+
+:::caution[Connections made before the rename have the old name]
+Older versions wrote the key as `MICROFRONTEND_ORCHESTRATOR_API_KEY`. Pipelines already in your
+repositories read that name and keep working. A frontend or backend created from a template now gets
+pipelines that read `FLIGHTROOM_API_KEY`, which a connection made before the rename does not have:
+edit the connection and save it once, and the secret is written under the new name. A secret you
+added by hand has to be added again under the new name.
 :::
 
 You will find these keys in the API Keys list named

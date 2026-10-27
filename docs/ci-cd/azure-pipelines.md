@@ -75,7 +75,7 @@ stages:
 
           - task: flightroom-upload@1
             inputs:
-              apiKey: '$(MICROFRONTEND_ORCHESTRATOR_API_KEY)'
+              apiKey: '$(FLIGHTROOM_API_KEY)'
               microfrontendSlug: 'catalog'
               filePath: '$(System.ArtifactsDirectory)/app'
               version: '$(VERSION)'
@@ -114,7 +114,7 @@ is derived from the tag name by stripping `refs/tags/`.
 
 ## The variable group
 
-The publish task reads `$(MICROFRONTEND_ORCHESTRATOR_API_KEY)` from a variable group named
+The publish task reads `$(FLIGHTROOM_API_KEY)` from a variable group named
 **`MFE_ORCHESTRATOR_SECRETS`**. Flightroom creates the group and the key when you connect the
 Azure DevOps repository to a project — or edit that connection — not when a frontend is
 scaffolded, and it skips the work when the variable already exists.
@@ -166,7 +166,7 @@ the step below:
     cd $(System.ArtifactsDirectory)/app
     zip -qr $(Build.ArtifactStagingDirectory)/dist.zip .
     curl --fail --show-error --silent -X POST \
-      -H "api-key: $(MICROFRONTEND_ORCHESTRATOR_API_KEY)" \
+      -H "api-key: $(FLIGHTROOM_API_KEY)" \
       -F "file=@$(Build.ArtifactStagingDirectory)/dist.zip" \
       "$(MICROFRONTEND_ORCHESTRATOR_DOMAIN)/api/frontends/by-slug/catalog/upload/$(VERSION)"
   displayName: '🚀 Upload to Flightroom'
@@ -191,7 +191,7 @@ Or use the **Build** action on the frontend card in the console, which creates t
 1. Create an [API key](./api-keys.md).
 2. Create a variable group named `MFE_ORCHESTRATOR_SECRETS`
    (**Pipelines → Library → Variable group**) with a secret variable
-   `MICROFRONTEND_ORCHESTRATOR_API_KEY`.
+   `FLIGHTROOM_API_KEY`.
 3. Commit the pipeline above as `azure-pipelines.yml`, with your slug.
 4. Create the pipeline definition pointing at that file.
 5. Authorize the variable group for the pipeline.

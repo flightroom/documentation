@@ -278,7 +278,7 @@ the repository's default branch is used.
 ### Where the API key lives
 
 The pipeline authenticates with an [API key](../ci-cd/api-keys.md) stored under the name
-`MICROFRONTEND_ORCHESTRATOR_API_KEY`. Where that secret is created, and when, depends on the provider
+`FLIGHTROOM_API_KEY`. Where that secret is created, and when, depends on the provider
 and on what kind of connection it is. It is created once and then reused — an existing secret is never
 overwritten.
 

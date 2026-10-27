@@ -274,7 +274,7 @@ What is *not* deleted:
 
 - Files already stored in **your own buckets** — the storage connection goes away, the objects stay
 - **Git repositories** created from templates — those live in your provider
-- Secrets written into your Git provider — remove `MICROFRONTEND_ORCHESTRATOR_API_KEY` yourself if
+- Secrets written into your Git provider — remove `FLIGHTROOM_API_KEY` yourself if
   you want it gone
 
 :::caution[Deleting a project breaks live applications]
