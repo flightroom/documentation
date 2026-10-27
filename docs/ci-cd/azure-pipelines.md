@@ -73,7 +73,7 @@ stages:
               artifactName: 'app'
               downloadPath: '$(System.ArtifactsDirectory)'
 
-          - task: mfe-orchestrator-upload@1
+          - task: flightroom-upload@1
             inputs:
               apiKey: '$(MICROFRONTEND_ORCHESTRATOR_API_KEY)'
               microfrontendSlug: 'catalog'
@@ -138,7 +138,7 @@ If the Deploy stage fails with a permissions error on the variable group, open
 
 ## The publish task
 
-`mfe-orchestrator-upload@1` is an Azure DevOps extension and must be installed in your organization
+`flightroom-upload@1` is an Azure DevOps extension and must be installed in your organization
 before a pipeline can use it.
 
 | Input | Meaning |
@@ -211,7 +211,7 @@ Expected on a branch push — it runs only for tags. Check `Build.SourceBranch` 
 
 The group must exist in the same project and be authorized for the pipeline. See the caution above.
 
-**Task `mfe-orchestrator-upload` not found**
+**Task `flightroom-upload` not found**
 
 The extension is not installed in the organization. Install it, or use the `curl` fallback.
 

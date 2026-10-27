@@ -75,7 +75,7 @@ generated pipelines wrap it in a provider-specific task:
 | Provider | Mechanism |
 | --- | --- |
 | GitHub Actions | `mfe-orchestrator-hub/github-action` |
-| Azure DevOps | `mfe-orchestrator-upload` task |
+| Azure DevOps | `flightroom-upload` task |
 | GitLab CI | Direct call to the upload endpoint |
 
 All of them read the API key from the secret
