@@ -83,7 +83,7 @@ maintenance agent, for each environment:
 | Variable | Value |
 | --- | --- |
 | `LOG_LEVEL` | The **Log level** of the environment: `trace`, `debug`, `info`, `warn`, `error` or `fatal`. `info` until you set one |
-| `LOG_JSON` | The **JSON logs** switch of the environment: `true` to log one JSON object per line, `false` for plain text |
+| `LOG_JSON` | The **JSON logs** switch of the environment: `true` to log one JSON object per line, `false` for plain text. `true` until you turn it off |
 | `FRONTEND_URL` | Where browsers reach the frontend in that environment: the environment's origin followed by an exposure path, without a trailing slash, e.g. `https://dev.example.com/shop`. A Docker frontend gets its own exposure path. A backend gets the path of the one exposed Docker frontend that calls it; when several call it or none does, it gets the environment's origin alone. A maintenance agent does not get it, and neither does any container while the project has no [exposure](./exposure.md) domain |
 
 Read them at startup: configure the logger from `LOG_LEVEL` and `LOG_JSON`, falling back to `info`
