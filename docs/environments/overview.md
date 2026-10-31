@@ -24,6 +24,8 @@ Click **New Environment** and fill in:
 | **Slug** | URL-friendly identifier, e.g. `prod`. Unique within the project, part of your public serve URLs, and read-only once the environment exists |
 | **Kubernetes namespace** | Only while [GitOps](../kubernetes/gitops.md) is on. The namespace the environment is deployed to: up to 63 lowercase letters, digits and dashes. Left empty, the slug in lowercase |
 | **Subdomain** | Only while GitOps is on. The host of the environment under the project's [exposure](../kubernetes/exposure.md) domain. Left empty, the domain itself for a production environment, the slug in lowercase for the others |
+| **Log level** | Only while GitOps is on. `trace`, `debug`, `info`, `warn`, `error` or `fatal`: every container of the environment gets it as `LOG_LEVEL` from its next deploy. `info` until you change it — see [Variables every container gets](../kubernetes/overview.md#variables-every-container-gets) |
+| **JSON logs** | Only while GitOps is on. Every container gets it as `LOG_JSON`: `true` for one JSON object per line, `false` (the default) for plain text |
 | **Description** | Free text |
 | **Allowed Domains** | The domains your app is served from — see [Allowed domains](./domains.md) |
 | **Color** | Used to tag the environment throughout the console |

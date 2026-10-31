@@ -75,6 +75,24 @@ before, and the containers are committed to Git. The deployments page shows each
 The values file sets one replica and the container port of the service, `8080` unless you change
 **Port**. The chart passes that port to the container as `HTTP_PORT`.
 
+### Variables every container gets
+
+Each deploy also writes these variables in the values file of every backend, Docker frontend and
+maintenance agent, for each environment:
+
+| Variable | Value |
+| --- | --- |
+| `LOG_LEVEL` | The **Log level** of the environment: `trace`, `debug`, `info`, `warn`, `error` or `fatal`. `info` until you set one |
+| `LOG_JSON` | The **JSON logs** switch of the environment: `true` to log one JSON object per line, `false` for plain text |
+| `FRONTEND_URL` | Where browsers reach the frontend in that environment: the environment's origin followed by an exposure path, without a trailing slash, e.g. `https://dev.example.com/shop`. A Docker frontend gets its own exposure path. A backend gets the path of the one exposed Docker frontend that calls it; when several call it or none does, it gets the environment's origin alone. A maintenance agent does not get it, and neither does any container while the project has no [exposure](./exposure.md) domain |
+
+Read them at startup: configure the logger from `LOG_LEVEL` and `LOG_JSON`, falling back to `info`
+and plain text when they are missing (e.g. on your machine), and build links, redirects and CORS
+origins from `FRONTEND_URL` rather than a hardcoded host. They take precedence over the config maps and
+secrets, so a config map setting `LOG_LEVEL` does not override the environment. A resource cannot set
+any of them. Change the log level or the JSON switch in the environment dialog, or with the MCP tool
+`environment_update`, then deploy the environment to apply it.
+
 ### Health checks from the templates
 
 The backend templates preset the probe paths, so Kubernetes knows when the app is up from its first
